@@ -19,4 +19,8 @@ android:
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-23
+    - sys-img-armeabi-v7a-android-22
+
+script:
+    - android list target
+    - ./gradlew build connectedAndroidTest -PdisablePreDex
