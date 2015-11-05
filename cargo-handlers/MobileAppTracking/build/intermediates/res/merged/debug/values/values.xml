@@ -226,7 +226,7 @@
     <!-- From: file:/Users/louis/Desktop/Cargo-Android/cargo-handlers/MobileAppTracking/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/res/values/admob_strings.xml -->
     <eat-comment/>
     <string name="accept">Accept</string>
-    <!-- From: file:/Users/louis/Desktop/Cargo-Android/cargo-handlers/MobileAppTracking/build/intermediates/exploded-aar/com.fiftyfive.cargo.handlers.MobileAppTracking/cargo/0.1.9/res/values/values.xml -->
+    <!-- From: file:/Users/louis/Desktop/Cargo-Android/cargo-handlers/MobileAppTracking/build/intermediates/exploded-aar/com.fiftyfive.cargo.handlers.MobileAppTracking/cargo/0.1.10/res/values/values.xml -->
     <eat-comment/>
     <string name="app_name">Cargo</string>
     <!-- From: file:/Users/louis/Desktop/Cargo-Android/cargo-handlers/MobileAppTracking/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.1.0/res/values/auth_strings.xml -->

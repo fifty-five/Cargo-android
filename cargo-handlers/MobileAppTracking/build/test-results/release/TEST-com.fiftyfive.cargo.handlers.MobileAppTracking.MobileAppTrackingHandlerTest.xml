@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2015-11-05T16:19:05" hostname="MacBook-Pro-de-louis.local" time="0.809">
+  <properties/>
+  <testcase name="testInitWithAllParameters" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.215"/>
+  <testcase name="testInitWithWrongParameters" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.009"/>
+  <testcase name="testUserGoogleIdWithInt" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.517"/>
+  <testcase name="testUserGoogleIdWithString" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.01"/>
+  <testcase name="testIdentifyMissingKey" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.011"/>
+  <testcase name="testScreenName" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.018"/>
+  <testcase name="testTransaction" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
