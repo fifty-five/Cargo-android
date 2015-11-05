@@ -22,5 +22,4 @@ android:
     - sys-img-armeabi-v7a-android-22
 
 script:
-    - android list target
-    - ./gradlew build connectedAndroidTest -PdisablePreDex
+    - ./gradlew test
