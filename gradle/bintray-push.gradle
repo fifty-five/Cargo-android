@@ -1,0 +1,30 @@
+
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'Cargo-Android'
+
+
+    publishedGroupId = 'com.fiftyfive.cargo.handlers.MobileAppTracking'
+    libraryName = 'Cargo-Android'
+    artifact = ARTIFACT
+
+
+    libraryDescription = 'Cargo-Android ease third party integration to Google Tag Manager'
+
+    siteUrl = 'https://github.com/fifty-five/Cargo-android'
+    gitUrl = 'https://github.com/fifty-five/Cargo-android.git'
+
+    libraryVersion = '0.1.10'
+
+    developerId = 'louischavane'
+    developerName = 'Louis Chavane'
+    developerEmail = 'contact@fifty-five.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: rootProject.file('gradle/installv1.gradle')
+apply from: rootProject.file('gradle/bintrayv1.gradle')

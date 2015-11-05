@@ -1,0 +1,6 @@
+-classpath '/usr/local/Cellar/android-sdk/24.0.2/platforms/android-23/android.jar'
+-d '/Users/louis/Desktop/Cargo-Android/cargo-handlers/MobileAppTracking/build/docs/javadoc'
+-doctitle 'MobileAppTracking 0.1.10 API'
+-quiet 
+-windowtitle 'MobileAppTracking 0.1.10 API'
+'/Users/louis/Desktop/Cargo-Android/cargo-handlers/MobileAppTracking/src/main/java/com/fiftyfive/cargo/handlers/mobileapptracking/MobileAppTrackingHandler.java'
