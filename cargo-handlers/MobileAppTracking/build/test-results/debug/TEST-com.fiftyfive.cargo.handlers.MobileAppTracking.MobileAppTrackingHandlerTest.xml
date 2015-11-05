@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2015-11-05T16:19:00" hostname="MacBook-Pro-de-louis.local" time="1.19">
+<testsuite name="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2015-11-05T16:59:21" hostname="MacBook-Pro-de-louis.local" time="1.155">
   <properties/>
-  <testcase name="testInitWithAllParameters" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.368"/>
-  <testcase name="testInitWithWrongParameters" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.027"/>
-  <testcase name="testUserGoogleIdWithInt" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.671"/>
-  <testcase name="testUserGoogleIdWithString" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.029"/>
-  <testcase name="testIdentifyMissingKey" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.02"/>
-  <testcase name="testScreenName" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.025"/>
-  <testcase name="testTransaction" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.013"/>
+  <testcase name="testInitWithAllParameters" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.444"/>
+  <testcase name="testInitWithWrongParameters" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.013"/>
+  <testcase name="testUserGoogleIdWithInt" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.631"/>
+  <testcase name="testUserGoogleIdWithString" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.012"/>
+  <testcase name="testIdentifyMissingKey" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.011"/>
+  <testcase name="testScreenName" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.017"/>
+  <testcase name="testTransaction" classname="com.fiftyfive.cargo.handlers.MobileAppTracking.MobileAppTrackingHandlerTest" time="0.01"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
