@@ -1,4 +1,4 @@
-package com.fiftyfive.cargo.handlers.mobileapptracking;
+package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
 import android.util.Log;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.PurchasedItem;
+import com.fiftyfive.cargo.models.TransactionProduct;
 import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.Transaction;
 import com.fiftyfive.cargo.models.User;
@@ -136,7 +136,7 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
 
 
         List<MATEventItem> matItems = new ArrayList<>();
-        for(PurchasedItem purchaseItem : transaction.getPurchasedItems()){
+        for(TransactionProduct purchaseItem : transaction.getTransactionProducts()){
             MATEventItem matItem = new MATEventItem(purchaseItem.getName());
             matItems.add(matItem);
         }

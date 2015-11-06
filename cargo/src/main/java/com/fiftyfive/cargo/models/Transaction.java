@@ -12,7 +12,7 @@ public class Transaction extends CargoModel {
     private String transactionId;
     private String transactionTotal;
 
-    private List<PurchasedItem> purchasedItems;
+    private List<TransactionProduct> transactionProducts;
 
 
     //user
@@ -44,12 +44,12 @@ public class Transaction extends CargoModel {
         this.transactionTotal = transactionTotal;
     }
 
-    public List<PurchasedItem> getPurchasedItems() {
-        return purchasedItems;
+    public List<TransactionProduct> getTransactionProducts() {
+        return transactionProducts;
     }
 
-    public void setPurchasedItems(List<PurchasedItem> purchasedItems) {
-        this.purchasedItems = purchasedItems;
+    public void setTransactionProducts(List<TransactionProduct> transactionProducts) {
+        this.transactionProducts = transactionProducts;
     }
 
     public String getUserGoogleId() {
