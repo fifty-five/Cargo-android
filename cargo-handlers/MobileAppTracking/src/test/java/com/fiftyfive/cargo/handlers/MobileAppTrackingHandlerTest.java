@@ -1,9 +1,9 @@
-package com.fiftyfive.cargo.handlers.MobileAppTracking;
+package com.fiftyfive.cargo.handlers;
 
 import android.app.Application;
 
 import com.fiftyfive.cargo.Cargo;
-import com.fiftyfive.cargo.handlers.mobileapptracking.MobileAppTrackingHandler;
+import com.fiftyfive.cargo.handlers.MobileAppTrackingHandler;
 import com.mobileapptracker.MATEvent;
 import com.mobileapptracker.MATEventItem;
 import com.mobileapptracker.MobileAppTracker;
