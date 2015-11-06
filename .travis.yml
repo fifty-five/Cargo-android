@@ -23,3 +23,7 @@ android:
 
 script:
     - ./gradlew test
+
+notifications:
+  slack: cargo55:q9T7nhZcJ7J0Gkl7UG2oVXao
+
