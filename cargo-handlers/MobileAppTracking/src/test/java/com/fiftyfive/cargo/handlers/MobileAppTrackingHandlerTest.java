@@ -33,6 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 
 /**
@@ -63,12 +64,13 @@ public class MobileAppTrackingHandlerTest extends TestCase {
 
     public void testInitWithAllParameters(){
         when(cargo.getApplication()).thenReturn(context);
+
         HashMap<String, Object> map= new HashMap<>();
         map.put("advertiserId", 123);
         map.put("conversionKey", 432);
 
         handler.execute("MAT_init", map);
-
+        verifyStatic();
         verify(mobileAppTrackerMock, times(1)).init(context, "123", "432");
         assertTrue(handler.isInitialized());
     }

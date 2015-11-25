@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class MobileAppTrackingHandler extends AbstractTagHandler {
 
-    public MobileAppTracker mobileAppTracker = null;
+    public MobileAppTracker mobileAppTracker;
     private boolean init = false;
 
     public Cargo cargo = Cargo.getInstance();
