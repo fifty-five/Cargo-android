@@ -45,7 +45,6 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 public class MobileAppTrackingHandlerTest extends TestCase {
 
-    //@Mock Application context;
     MobileAppTracker mobileAppTrackerMock = mock(MobileAppTracker.class);
     MobileAppTrackingHandler handler;
     @Mock Application context;
@@ -54,7 +53,6 @@ public class MobileAppTrackingHandlerTest extends TestCase {
 
     public void setUp() throws Exception {
         initMocks(this);
-        PowerMockito.mockStatic(MobileAppTracker.class);
         handler = new MobileAppTrackingHandler();
         handler.mobileAppTracker = mobileAppTrackerMock;
         handler.cargo = cargo;
@@ -64,6 +62,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
 
     public void testInitWithAllParameters(){
         when(cargo.getApplication()).thenReturn(context);
+        PowerMockito.mockStatic(MobileAppTracker.class);
 
         HashMap<String, Object> map= new HashMap<>();
         map.put("advertiserId", 123);
@@ -71,7 +70,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
 
         handler.execute("MAT_init", map);
         verifyStatic();
-        verify(mobileAppTrackerMock, times(1)).init(context, "123", "432");
+        MobileAppTracker.init(context, "123", "432");
         assertTrue(handler.isInitialized());
     }
 
