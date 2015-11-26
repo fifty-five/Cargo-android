@@ -136,8 +136,8 @@
       <file leaf-file-name="FacebookHandler.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.8855535">
-              <caret line="85" column="19" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.6622889">
+              <caret line="106" column="5" selection-start-line="106" selection-start-column="5" selection-end-line="106" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -4490,8 +4490,8 @@
         <option value="$PROJECT_DIR$/cargo/src/main/java/com/fiftyfive/cargo/models/Tracker.java" />
         <option value="$PROJECT_DIR$/cargo/src/main/java/com/fiftyfive/cargo/Cargo.java" />
         <option value="$PROJECT_DIR$/cargo-handlers/MobileAppTracking/src/test/java/com/fiftyfive/cargo/handlers/MobileAppTrackingHandlerTest.java" />
-        <option value="$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java" />
         <option value="$PROJECT_DIR$/cargo-handlers/Facebook/src/test/java/com/fiftyfive/cargo/handlers/FacebookHandlerTest.java" />
+        <option value="$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java" />
       </list>
     </option>
   </component>
@@ -5527,8 +5527,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.8855535">
-          <caret line="85" column="19" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.6622889">
+          <caret line="106" column="5" selection-start-line="106" selection-start-column="5" selection-end-line="106" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

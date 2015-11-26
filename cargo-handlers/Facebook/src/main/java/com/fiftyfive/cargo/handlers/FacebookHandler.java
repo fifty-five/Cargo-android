@@ -1,7 +1,6 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
-import android.app.Application;
 import android.util.Log;
 
 import com.facebook.appevents.AppEventsLogger;
@@ -10,15 +9,10 @@ import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Tracker;
-import com.fiftyfive.cargo.models.TransactionProduct;
-import com.fiftyfive.cargo.models.Screen;
-import com.fiftyfive.cargo.models.Transaction;
-import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.facebook.FacebookSdk;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Map;
 
 /**
