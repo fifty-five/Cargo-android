@@ -50,7 +50,6 @@ public class FacebookHandlerTest extends TestCase {
         initMocks(this);
         handler = new FacebookHandler();
         PowerMockito.mockStatic(FacebookSdk.class);
-        handler.facebookTracker = facebookTrackerMock;
         handler.facebookLogger = facebookLoggerMock;
         handler.cargo = cargo;
 
@@ -82,6 +81,16 @@ public class FacebookHandlerTest extends TestCase {
         verify(facebookLoggerMock, times(1)).logEvent("hello");
 
     }
+
+    public void testSetEnableDebug(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("enableDebug", "true");
+
+        handler.execute("FB_tagTracker", map);
+        verifyStatic();
+        FacebookSdk.setIsDebugEnabled(true);
+    }
+
 
     public void tearDown() throws Exception {
 

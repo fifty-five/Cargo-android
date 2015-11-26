@@ -27,7 +27,6 @@ import java.util.Map;
 
 public class FacebookHandler extends AbstractTagHandler {
 
-    public FacebookSdk facebookTracker;
     public AppEventsLogger facebookLogger;
     private boolean init = false;
 
@@ -64,11 +63,11 @@ public class FacebookHandler extends AbstractTagHandler {
 
     private void init(Map<String, Object> map) {
 
-        facebookTracker.sdkInitialize(cargo.getApplication());
+        FacebookSdk.sdkInitialize(cargo.getApplication());
         if(map.containsKey("applicationId")){
-            facebookTracker.setApplicationId(map.remove("applicationId").toString());
+            FacebookSdk.setApplicationId(map.remove("applicationId").toString());
         }
-        init = facebookTracker.isInitialized();
+        init = FacebookSdk.isInitialized();
 
       }
 
@@ -84,7 +83,7 @@ public class FacebookHandler extends AbstractTagHandler {
         final ObjectMapper mapper = new ObjectMapper();
         Tracker tracker = mapper.convertValue(map, Tracker.class);
 
-        facebookTracker.setIsDebugEnabled(tracker.isEnableDebug());
+        FacebookSdk.setIsDebugEnabled(tracker.isEnableDebug());
     }
 
 

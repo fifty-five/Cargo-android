@@ -133,11 +133,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FacebookHandler.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="FacebookHandler.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="43" column="18" selection-start-line="43" selection-start-column="18" selection-end-line="43" selection-end-column="18" />
+            <state vertical-scroll-proportion="1.8855535">
+              <caret line="85" column="19" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -157,11 +157,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FacebookHandlerTest.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FacebookHandlerTest.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/test/java/com/fiftyfive/cargo/handlers/FacebookHandlerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.60600376">
-              <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -4489,9 +4489,9 @@
         <option value="$PROJECT_DIR$/cargo-handlers/MobileAppTracking/src/main/java/com/fiftyfive/cargo/handlers/MobileAppTrackingHandler.java" />
         <option value="$PROJECT_DIR$/cargo/src/main/java/com/fiftyfive/cargo/models/Tracker.java" />
         <option value="$PROJECT_DIR$/cargo/src/main/java/com/fiftyfive/cargo/Cargo.java" />
+        <option value="$PROJECT_DIR$/cargo-handlers/MobileAppTracking/src/test/java/com/fiftyfive/cargo/handlers/MobileAppTrackingHandlerTest.java" />
         <option value="$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java" />
         <option value="$PROJECT_DIR$/cargo-handlers/Facebook/src/test/java/com/fiftyfive/cargo/handlers/FacebookHandlerTest.java" />
-        <option value="$PROJECT_DIR$/cargo-handlers/MobileAppTracking/src/test/java/com/fiftyfive/cargo/handlers/MobileAppTrackingHandlerTest.java" />
       </list>
     </option>
   </component>
@@ -4778,6 +4778,10 @@
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="handlers" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -4814,7 +4818,7 @@
     <property name="recentsLimit" value="5" />
     <property name="dynamic.classpath" value="false" />
   </component>
-  <component name="RunManager" selected="JUnit.MobileAppTrackingHandlerTest">
+  <component name="RunManager" selected="JUnit.FacebookHandlerTest">
     <configuration default="false" name="Cargo-Android:cargo [bintrayUpload]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -5079,8 +5083,8 @@
     </list>
     <recent_temporary>
       <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.MobileAppTrackingHandlerTest" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.FacebookHandlerTest" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.FacebookHandlerTest" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.MobileAppTrackingHandlerTest" />
         <item index="2" class="java.lang.String" itemvalue="Gradle.Cargo-Android:cargo [bintrayUpload]" />
       </list>
     </recent_temporary>
@@ -5160,11 +5164,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java</url>
-          <line>66</line>
-          <properties />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.android/facebook-android-sdk/4.7.0/652f551b051b3f739efee5a490ad84cd6665ac3/facebook-android-sdk-4.7.0-sources.jar!/com/facebook/FacebookSdk.java</url>
           <line>188</line>
@@ -5381,6 +5380,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2581262">
           <caret line="9" column="36" selection-start-line="9" selection-start-column="36" selection-end-line="9" selection-end-column="36" />
+          <folding>
+            <element signature="e#225#226#0" expanded="true" />
+            <element signature="e#280#281#0" expanded="true" />
+            <element signature="e#326#327#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -5405,14 +5409,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="2" column="34" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -5501,16 +5497,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="43" column="18" selection-start-line="43" selection-start-column="18" selection-end-line="43" selection-end-column="18" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cargo-handlers/MobileAppTracking/src/test/java/com/fiftyfive/cargo/handlers/MobileAppTrackingHandlerTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -5521,10 +5507,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2" column="34" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/test/java/com/fiftyfive/cargo/handlers/FacebookHandlerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.60600376">
-          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.8855535">
+          <caret line="85" column="19" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
