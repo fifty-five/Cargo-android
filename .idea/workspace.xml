@@ -136,8 +136,8 @@
       <file leaf-file-name="FacebookHandler.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6622889">
-              <caret line="106" column="5" selection-start-line="106" selection-start-column="5" selection-end-line="106" selection-end-column="5" />
+            <state vertical-scroll-proportion="2.7579737">
+              <caret line="98" column="4" selection-start-line="98" selection-start-column="4" selection-end-line="98" selection-end-column="4" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -5527,8 +5527,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cargo-handlers/Facebook/src/main/java/com/fiftyfive/cargo/handlers/FacebookHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6622889">
-          <caret line="106" column="5" selection-start-line="106" selection-start-column="5" selection-end-line="106" selection-end-column="5" />
+        <state vertical-scroll-proportion="2.7579737">
+          <caret line="98" column="4" selection-start-line="98" selection-start-column="4" selection-end-line="98" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
