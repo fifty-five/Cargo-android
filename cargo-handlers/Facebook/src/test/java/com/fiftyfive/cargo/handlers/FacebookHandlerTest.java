@@ -39,7 +39,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 public class FacebookHandlerTest extends TestCase {
 
-    FacebookSdk facebookTrackerMock = PowerMockito.mock(FacebookSdk.class);
+    FacebookSdk facebookTrackerMock = mock(FacebookSdk.class);
     AppEventsLogger facebookLoggerMock = mock(AppEventsLogger.class);
     FacebookHandler handler;
     @Mock Application context;
@@ -49,6 +49,7 @@ public class FacebookHandlerTest extends TestCase {
     public void setUp() throws Exception {
         initMocks(this);
         handler = new FacebookHandler();
+        PowerMockito.mockStatic(FacebookSdk.class);
         handler.facebookTracker = facebookTrackerMock;
         handler.facebookLogger = facebookLoggerMock;
         handler.cargo = cargo;
@@ -63,12 +64,13 @@ public class FacebookHandlerTest extends TestCase {
         map.put("applicationId", 123);
 
         handler.execute("FB_init", map);
+
         verifyStatic();
-        verify(facebookTrackerMock, times(1)).sdkInitialize(context);
+        FacebookSdk.sdkInitialize(context);
+
         verifyStatic();
-        verify(facebookTrackerMock, times(1)).sdkInitialize(context);
-        //cannot check that init=true because of permissions missing
-        assertTrue(handler.isInitialized());
+        FacebookSdk.setApplicationId("123");
+
     }
 
     public void testTagEvent(){
@@ -80,6 +82,7 @@ public class FacebookHandlerTest extends TestCase {
         verify(facebookLoggerMock, times(1)).logEvent("hello");
 
     }
+
     public void tearDown() throws Exception {
 
     }
