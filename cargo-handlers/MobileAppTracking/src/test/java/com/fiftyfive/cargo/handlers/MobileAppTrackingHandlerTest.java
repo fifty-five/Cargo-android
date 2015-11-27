@@ -33,6 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 
 /**
@@ -44,7 +45,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class MobileAppTrackingHandlerTest extends TestCase {
 
-    //@Mock Application context;
     MobileAppTracker mobileAppTrackerMock = mock(MobileAppTracker.class);
     MobileAppTrackingHandler handler;
     @Mock Application context;
@@ -53,7 +53,6 @@ public class MobileAppTrackingHandlerTest extends TestCase {
 
     public void setUp() throws Exception {
         initMocks(this);
-        PowerMockito.mockStatic(MobileAppTracker.class);
         handler = new MobileAppTrackingHandler();
         handler.mobileAppTracker = mobileAppTrackerMock;
         handler.cargo = cargo;
@@ -63,13 +62,15 @@ public class MobileAppTrackingHandlerTest extends TestCase {
 
     public void testInitWithAllParameters(){
         when(cargo.getApplication()).thenReturn(context);
+        PowerMockito.mockStatic(MobileAppTracker.class);
+
         HashMap<String, Object> map= new HashMap<>();
         map.put("advertiserId", 123);
         map.put("conversionKey", 432);
 
         handler.execute("MAT_init", map);
-
-        verify(mobileAppTrackerMock, times(1)).init(context, "123", "432");
+        verifyStatic();
+        MobileAppTracker.init(context, "123", "432");
         assertTrue(handler.isInitialized());
     }
 

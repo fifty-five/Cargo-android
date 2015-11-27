@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/cargo" />
             <option value="$PROJECT_DIR$/cargo-handlers" />
+            <option value="$PROJECT_DIR$/cargo-handlers/Facebook" />
             <option value="$PROJECT_DIR$/cargo-handlers/MobileAppTracking" />
           </set>
         </option>
