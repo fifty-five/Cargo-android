@@ -96,7 +96,7 @@ public class FacebookHandler extends AbstractTagHandler {
     public void onActivityPaused(Activity activity) {
         AppEventsLogger.deactivateApp(cargo.getApplication());
     }
-    
+
     @Override
     public void onActivityStopped(Activity activity) {
 
