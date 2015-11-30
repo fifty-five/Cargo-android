@@ -12,6 +12,17 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/cargo" />
             <option value="$PROJECT_DIR$/cargo-handlers" />
+            <option value="$PROJECT_DIR$/cargo-handlers/GoogleAnalytics" />
+            <option value="$PROJECT_DIR$/cargo-handlers/MobileAppTracking" />
+          </set>
+        </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/cargo" />
+            <option value="$PROJECT_DIR$/cargo-handlers" />
+            <option value="$PROJECT_DIR$/cargo-handlers/GoogleAnalytics" />
             <option value="$PROJECT_DIR$/cargo-handlers/MobileAppTracking" />
           </set>
         </option>
