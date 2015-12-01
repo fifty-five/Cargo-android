@@ -86,7 +86,7 @@ public class FacebookHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("enableDebug", "true");
 
-        handler.execute("FB_tagTracker", map);
+        handler.execute("FB_init", map);
         verifyStatic();
         FacebookSdk.setIsDebugEnabled(true);
     }

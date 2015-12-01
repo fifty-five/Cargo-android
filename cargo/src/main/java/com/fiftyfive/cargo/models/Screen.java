@@ -3,17 +3,9 @@ package com.fiftyfive.cargo.models;
 /**
  * Created by louis on 04/11/15.
  */
-public class Screen extends CargoModel{
+public final class Screen {
 
-    private String screenName;
+    public static final String SCREEN_NAME = "screenName";
 
-
-    public String getScreenName() {
-        return screenName;
-    }
-
-    public void setScreenName(Object screenName) {
-        this.screenName = screenName.toString();
-    }
 
 }

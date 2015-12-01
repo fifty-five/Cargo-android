@@ -3,11 +3,9 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Activity;
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.TransactionProduct;
 import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.Transaction;
 import com.fiftyfive.cargo.models.User;
@@ -19,6 +17,10 @@ import com.mobileapptracker.MobileAppTracker;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.fiftyfive.cargo.ModelsUtils.getList;
+import static com.fiftyfive.cargo.ModelsUtils.getString;
+import static com.fiftyfive.cargo.ModelsUtils.getDouble;
 
 /**
  * Created by louis on 03/11/15.
@@ -55,6 +57,11 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
         }
     }
 
+    @Override
+    public void initialize() {
+        //todo : check permissions
+        this.valid = true;
+    }
 
 
     @Override
@@ -89,12 +96,10 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
 
     private void tagScreen(Map<String, Object> parameters){
 
-        final ObjectMapper mapper = new ObjectMapper();
-        final Screen screen = mapper.convertValue(parameters, Screen.class);
-
+        String screenName = getString(parameters, Screen.SCREEN_NAME);
 
         List<MATEventItem> items = new ArrayList<>();
-        MATEventItem eventItem = new MATEventItem(screen.getScreenName());
+        MATEventItem eventItem = new MATEventItem(screenName);
         items.add(eventItem);
 
         mobileAppTracker.measureEvent(new MATEvent(MATEvent.CONTENT_VIEW).withEventItems(items));
@@ -102,10 +107,9 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
     }
 
     private void identify(Map<String, Object> map) {
-        final ObjectMapper mapper = new ObjectMapper();
-        User user = mapper.convertValue(map, User.class);
 
-        mobileAppTracker.setGoogleUserId(user.getUserGoogleId());
+        mobileAppTracker.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
+        mobileAppTracker.setFacebookUserId(getString(map, User.USER_FACEBOOK_ID));
 
 
     }
@@ -113,31 +117,19 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
 
     private void tagEvent(Map<String, Object> parameters){
 
-        if(!init){
-            //Log.w("55", "You should init MAT before tagging screen");
-            return;
-        }
-        final ObjectMapper mapper = new ObjectMapper();
-        Event event = mapper.convertValue(parameters, Event.class);
-        mobileAppTracker.measureEvent(event.getEventName());
+        mobileAppTracker.measureEvent(getString(parameters, Event.EVENT_NAME));
 
 
     }
 
     private void tagTransaction(Map<String, Object> parameters){
 
-        if(!init){
-            //Log.w("55", "You should init MAT before tagging screen");
-            return;
-        }
-
-        final ObjectMapper mapper = new ObjectMapper();
-        final Transaction transaction = mapper.convertValue(parameters, Transaction.class);
-
+        List<Map<String, Object>> transactionProducts = getList(parameters, Transaction.TRANSACTION_PRODUCTS);
 
         List<MATEventItem> matItems = new ArrayList<>();
-        for(TransactionProduct purchaseItem : transaction.getTransactionProducts()){
-            MATEventItem matItem = new MATEventItem(purchaseItem.getName());
+        for(Map<String, Object> purchaseItem : transactionProducts){
+            String itemName = getString(purchaseItem, Transaction.TRANSACTION_PRODUCT_NAME);
+            MATEventItem matItem = new MATEventItem(itemName);
             matItems.add(matItem);
         }
 
@@ -145,7 +137,7 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
 
         MATEvent matEvent = new MATEvent(MATEvent.PURCHASE)
                 .withEventItems(matItems)
-                .withRevenue(Double.parseDouble(transaction.getTransactionTotal()));
+                .withRevenue(getDouble(parameters, Transaction.TRANSACTION_TOTAL, (double) 0));
 
 
         mobileAppTracker.measureEvent(matEvent);
