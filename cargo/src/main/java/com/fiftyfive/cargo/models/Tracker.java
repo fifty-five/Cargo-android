@@ -6,8 +6,8 @@ package com.fiftyfive.cargo.models;
 public class Tracker extends CargoModel  {
 
     private boolean enableDebug;
-    private boolean optOut;
-    private boolean dryRun;
+    private boolean enableOptOut;
+    private boolean disableTracking;
     private int trackerDispatchPeriod;
 
     public boolean isEnableDebug() {
@@ -18,20 +18,20 @@ public class Tracker extends CargoModel  {
         this.enableDebug = enableDebug;
     }
 
-    public boolean isOptOut() {
-        return optOut;
+    public boolean isEnableOptOut() {
+        return enableOptOut;
     }
 
-    public void setOptOut(boolean optOut) {
-        this.optOut = optOut;
+    public void setEnableOptOut(boolean enableOptOut) {
+        this.enableOptOut = enableOptOut;
     }
 
-    public boolean isDryRun() {
-        return dryRun;
+    public boolean isDisableTracking() {
+        return disableTracking;
     }
 
-    public void setDryRun(boolean dryRun) {
-        this.dryRun = dryRun;
+    public void setDisableTracking(boolean disableTracking) {
+        this.disableTracking = disableTracking;
     }
 
     public int getTrackerDispatchPeriod() {

@@ -24,14 +24,8 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
     @Override
     public void execute(String s, Map<String, Object> map) {
         switch (s) {
-            case "GA_setOptOut":
-                setOptOut(map);
-                break;
-            case "GA_setDryRun":
-                setDryRun(map);
-                break;
-            case "GA_setTrackerDispatchPeriod":
-                setTrackerDispatchPeriod(map);
+            case "GA_init":
+                init(map);
                 break;
             default:
                 Log.i("55", "Function " + s + " is not registered");
@@ -40,27 +34,23 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
 
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback("GA_setOptOut", this);
-        container.registerFunctionCallTagCallback("GA_setDryRun", this);
-        container.registerFunctionCallTagCallback("GA_setTrackerDispatchPeriod", this);
+        container.registerFunctionCallTagCallback("GA_init", this);
     }
 
-    private void setOptOut(Map<String, Object> parameters){
-        final ObjectMapper mapper = new ObjectMapper();
-        Tracker tracker = mapper.convertValue(parameters, Tracker.class);
-        analytics.setAppOptOut(tracker.isOptOut());
-    }
+    private void init(Map<String, Object> map){
 
-    private void setDryRun(Map<String, Object> parameters){
         final ObjectMapper mapper = new ObjectMapper();
-        Tracker tracker = mapper.convertValue(parameters, Tracker.class);
-        analytics.setDryRun(tracker.isDryRun());
-    }
+        Tracker tracker = mapper.convertValue(map, Tracker.class);
 
-    private void setTrackerDispatchPeriod(Map<String, Object> parameters){
-        final ObjectMapper mapper = new ObjectMapper();
-        Tracker tracker = mapper.convertValue(parameters, Tracker.class);
-        analytics.setLocalDispatchPeriod(tracker.getTrackerDispatchPeriod());
+        if(map.containsKey("enableOptOut")){
+            analytics.setAppOptOut(tracker.isEnableOptOut());
+        }
+        if(map.containsKey("disableTracking")){
+            analytics.setDryRun(tracker.isDisableTracking());
+        }
+        if(map.containsKey("trackerDispatchPeriod")){
+            analytics.setLocalDispatchPeriod(tracker.getTrackerDispatchPeriod());
+        }
     }
 
     @Override

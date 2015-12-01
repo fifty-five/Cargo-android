@@ -47,27 +47,23 @@ public class GoogleAnalyticsHandlerTest extends TestCase {
 
     }
 
-    public void testSetOptOut(){
+    public void testInit(){
         HashMap<String, Object> map= new HashMap<>();
-        map.put("setOptOut", true);
+        map.put("enableOptOut", true);
 
-        handler.execute("GA_setOptOut", map);
-        verify(googleAnalyticsMock, times(1)).setAppOptOut(false);
+        handler.execute("GA_init", map);
+        verify(googleAnalyticsMock, times(1)).setAppOptOut(true);
     }
 
-    public void testSetDryRun(){
+    public void testInitWithAllParameters(){
         HashMap<String, Object> map= new HashMap<>();
-        map.put("dryRun", true);
-
-        handler.execute("GA_setDryRun", map);
-        verify(googleAnalyticsMock, times(1)).setDryRun(true);
-    }
-
-    public void testSetTrackerDispatchPeriod(){
-        HashMap<String, Object> map= new HashMap<>();
+        map.put("enableOptOut", true);
+        map.put("disableTracking", true);
         map.put("trackerDispatchPeriod", 123);
 
-        handler.execute("GA_setTrackerDispatchPeriod", map);
+        handler.execute("GA_init", map);
+        verify(googleAnalyticsMock, times(1)).setAppOptOut(true);
+        verify(googleAnalyticsMock, times(1)).setDryRun(true);
         verify(googleAnalyticsMock, times(1)).setLocalDispatchPeriod(123);
     }
 }
