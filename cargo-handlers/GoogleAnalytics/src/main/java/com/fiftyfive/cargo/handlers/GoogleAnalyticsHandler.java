@@ -1,17 +1,20 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.models.Tracker;
-import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.tagmanager.Container;
 
 import java.util.Map;
+
+import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
+import static com.fiftyfive.cargo.ModelsUtils.getInt;
 
 /**
  * Created by dali on 25/11/15.
@@ -19,19 +22,15 @@ import java.util.Map;
 
 public class GoogleAnalyticsHandler extends AbstractTagHandler {
 
-    public GoogleAnalytics analytics = null;
+    public Cargo cargo;
+    public GoogleAnalytics analytics;
+
 
     @Override
     public void execute(String s, Map<String, Object> map) {
         switch (s) {
-            case "GA_setOptOut":
-                setOptOut(map);
-                break;
-            case "GA_setDryRun":
-                setDryRun(map);
-                break;
-            case "GA_setTrackerDispatchPeriod":
-                setTrackerDispatchPeriod(map);
+            case "GA_init":
+                init(map);
                 break;
             default:
                 Log.i("55", "Function " + s + " is not registered");
@@ -39,29 +38,29 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
     }
 
     @Override
+    public void initialize() {
+        Context context = cargo.getApplication();
+        analytics = GoogleAnalytics.getInstance(context);
+
+        //todo : check permissions
+
+        this.valid = true;
+
+    }
+
+
+    private void init(Map<String, Object> parameters){
+
+        analytics.setAppOptOut(getBoolean(parameters, Tracker.ENABLE_OPT_OUT, false));
+        analytics.setDryRun(getBoolean(parameters, Tracker.DISABLE_TRACKING, false));
+        analytics.setLocalDispatchPeriod(getInt(parameters, Tracker.DISPATCH_PERIOD, 30));
+    }
+
+    @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback("GA_setOptOut", this);
-        container.registerFunctionCallTagCallback("GA_setDryRun", this);
-        container.registerFunctionCallTagCallback("GA_setTrackerDispatchPeriod", this);
+        container.registerFunctionCallTagCallback("GA_init", this);
     }
 
-    private void setOptOut(Map<String, Object> parameters){
-        final ObjectMapper mapper = new ObjectMapper();
-        Tracker tracker = mapper.convertValue(parameters, Tracker.class);
-        analytics.setAppOptOut(tracker.isOptOut());
-    }
-
-    private void setDryRun(Map<String, Object> parameters){
-        final ObjectMapper mapper = new ObjectMapper();
-        Tracker tracker = mapper.convertValue(parameters, Tracker.class);
-        analytics.setDryRun(tracker.isDryRun());
-    }
-
-    private void setTrackerDispatchPeriod(Map<String, Object> parameters){
-        final ObjectMapper mapper = new ObjectMapper();
-        Tracker tracker = mapper.convertValue(parameters, Tracker.class);
-        analytics.setLocalDispatchPeriod(tracker.getTrackerDispatchPeriod());
-    }
 
     @Override
     public void onActivityStarted(Activity activity) {

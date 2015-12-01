@@ -18,6 +18,7 @@ import java.util.HashMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
@@ -38,8 +39,11 @@ public class GoogleAnalyticsHandlerTest extends TestCase {
 
     public void setUp() throws Exception {
         initMocks(this);
-        PowerMockito.mockStatic(GoogleAnalytics.class);
+
+        when(cargo.getApplication()).thenReturn(context);
+
         handler = new GoogleAnalyticsHandler();
+        handler.cargo = cargo;
         handler.analytics = googleAnalyticsMock;
     }
 
@@ -47,27 +51,56 @@ public class GoogleAnalyticsHandlerTest extends TestCase {
 
     }
 
-    public void testSetOptOut(){
+    public void testInitWithBoolean(){
         HashMap<String, Object> map= new HashMap<>();
-        map.put("setOptOut", true);
+        map.put("enableOptOut", true);
+        handler.execute("GA_init", map);
 
-        handler.execute("GA_setOptOut", map);
+        verify(googleAnalyticsMock, times(1)).setAppOptOut(true);
+
+    }
+
+    public void testInitWithString(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("enableOptOut", "true");
+        handler.execute("GA_init", map);
+
+        verify(googleAnalyticsMock, times(1)).setAppOptOut(true);
+
+    }
+
+
+    public void testInitWithMap(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("enableOptOut", new HashMap<>());
+        handler.execute("GA_init", map);
+
         verify(googleAnalyticsMock, times(1)).setAppOptOut(false);
+
     }
 
-    public void testSetDryRun(){
+    public void testDefaultValuesForInit(){
         HashMap<String, Object> map= new HashMap<>();
-        map.put("dryRun", true);
+        handler.execute("GA_init", map);
 
-        handler.execute("GA_setDryRun", map);
+        verify(googleAnalyticsMock, times(1)).setAppOptOut(false);
+        verify(googleAnalyticsMock, times(1)).setDryRun(false);
+        verify(googleAnalyticsMock, times(1)).setLocalDispatchPeriod(30);
+    }
+
+    public void testSettingValueForDispatchPeriod(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("dispatchPeriod", "100");
+        handler.execute("GA_init", map);
+
+        verify(googleAnalyticsMock, times(1)).setLocalDispatchPeriod(100);
+    }
+
+    public void testSettingValueForDryRun(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("disableTracking", "true");
+        handler.execute("GA_init", map);
+
         verify(googleAnalyticsMock, times(1)).setDryRun(true);
-    }
-
-    public void testSetTrackerDispatchPeriod(){
-        HashMap<String, Object> map= new HashMap<>();
-        map.put("trackerDispatchPeriod", 123);
-
-        handler.execute("GA_setTrackerDispatchPeriod", map);
-        verify(googleAnalyticsMock, times(1)).setLocalDispatchPeriod(123);
     }
 }
