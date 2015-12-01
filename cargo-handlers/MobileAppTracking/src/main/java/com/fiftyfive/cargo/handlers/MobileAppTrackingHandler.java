@@ -3,11 +3,9 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Activity;
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.TransactionProduct;
 import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.Transaction;
 import com.fiftyfive.cargo.models.User;
@@ -21,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.fiftyfive.cargo.ModelsUtils.getList;
-import static com.fiftyfive.cargo.ModelsUtils.getMap;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
 import static com.fiftyfive.cargo.ModelsUtils.getDouble;
 

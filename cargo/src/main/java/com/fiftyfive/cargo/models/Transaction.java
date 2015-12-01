@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by louis on 04/11/15.
  */
-public final class Transaction extends CargoModel {
+public final class Transaction {
 
 
     public static final String TRANSACTION_ID = "transactionId";
