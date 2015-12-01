@@ -60,6 +60,9 @@ public class TagHandlerManager implements Application.ActivityLifecycleCallbacks
 
 
     public void registerHandler(AbstractTagHandler tagHandler) {
-        handlers.add(tagHandler);
+        tagHandler.initialize();
+        if(tagHandler.valid) {
+            handlers.add(tagHandler);
+        }
     }
 }

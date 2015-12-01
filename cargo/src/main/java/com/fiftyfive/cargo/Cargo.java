@@ -61,6 +61,7 @@ public class Cargo {
         }
 
         register("com.fiftyfive.cargo.handlers.MobileAppTracking");
+        register("com.fiftyfive.cargo.handlers.GoogleAnalytics");
 
     }
 

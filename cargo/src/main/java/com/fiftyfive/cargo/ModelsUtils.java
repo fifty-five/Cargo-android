@@ -1,6 +1,9 @@
 package com.fiftyfive.cargo;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,4 +34,41 @@ public class ModelsUtils {
         return defaultValue;
     }
 
+    public static String getString(Map<String, Object> params, String name){
+        Object value = params.get(name);
+        if(value instanceof String){
+            return value.toString();
+        }
+        else if (value != null){
+            return value.toString();
+        }
+        return null;
+    }
+
+    public static Map<String, Object> getMap(Map<String, Object> params, String name){
+        Object value = params.get(name);
+        if(value instanceof Map){
+            return (Map<String, Object>) value;
+        }
+        return null;
+    }
+
+    public static List getList(Map<String, Object> params, String name){
+        Object value = params.get(name);
+        if(value instanceof List){
+            return (List) value;
+        }
+        return null;
+    }
+
+    public static double getDouble(Map<String, Object> params, String name, double defaultValue) {
+        Object value = params.get(name);
+        if (value instanceof Double) {
+            return (double) value;
+        }
+        else if( value instanceof String){
+            return Double.parseDouble(value.toString());
+        }
+        return defaultValue;
+    }
 }

@@ -67,4 +67,6 @@ public class ModelUtilsTest extends TestCase {
         assertTrue(3 == getInt(sampleMap, "intValue", 10) );
     }
 
+
+
 }
