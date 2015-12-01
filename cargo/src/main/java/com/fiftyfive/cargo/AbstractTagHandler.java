@@ -16,6 +16,9 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     @Override
     public abstract void execute(String s, Map<String, Object> map);
 
+    public boolean valid;
+
+    public abstract void initialize();
 
     public abstract void register(Container container);
 
