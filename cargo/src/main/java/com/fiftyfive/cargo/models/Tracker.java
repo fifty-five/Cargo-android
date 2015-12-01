@@ -1,44 +1,15 @@
 package com.fiftyfive.cargo.models;
 
+
 /**
  * Created by louis on 04/11/15.
  */
-public class Tracker extends CargoModel  {
 
-    private boolean enableDebug;
-    private boolean optOut;
-    private boolean dryRun;
-    private int trackerDispatchPeriod;
+public final class  Tracker {
+    public static final String ENABLE_OPT_OUT = "enableOptOut";
+    public static final String ENABLE_DEBUG = "enableDebug";
+    public static final String DISABLE_TRACKING = "disableTracking";
+    public static final String DISPATCH_PERIOD = "disableTracking";
 
-    public boolean isEnableDebug() {
-        return enableDebug;
-    }
 
-    public void setEnableDebug(boolean enableDebug) {
-        this.enableDebug = enableDebug;
-    }
-
-    public boolean isOptOut() {
-        return optOut;
-    }
-
-    public void setOptOut(boolean optOut) {
-        this.optOut = optOut;
-    }
-
-    public boolean isDryRun() {
-        return dryRun;
-    }
-
-    public void setDryRun(boolean dryRun) {
-        this.dryRun = dryRun;
-    }
-
-    public int getTrackerDispatchPeriod() {
-        return trackerDispatchPeriod;
-    }
-
-    public void setTrackerDispatchPeriod(int trackerDispatchPeriod) {
-        this.trackerDispatchPeriod = trackerDispatchPeriod;
-    }
 }
