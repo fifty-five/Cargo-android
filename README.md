@@ -1,4 +1,4 @@
-# Cargo-ios
+# Cargo-Android
 
 ![Build Status](https://travis-ci.org/fifty-five/Cargo-android.svg?branch=master)
 
