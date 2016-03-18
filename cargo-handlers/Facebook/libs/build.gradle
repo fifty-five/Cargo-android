@@ -1,5 +1,0 @@
-apply from: rootProject.file('gradle/handlers.gradle')
-
-dependencies{
-    compile files('libs/MobileAppTracker-3.11.1.jar')
-}
