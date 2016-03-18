@@ -43,7 +43,7 @@ bintray {
         repo = bintrayRepo
         name = bintrayName
         desc = libraryDescription
-        userOrg = properties.getProperty("bintray.userOrg")
+        userOrg = "fifty-five"
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = allLicenses
