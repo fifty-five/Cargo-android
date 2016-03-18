@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/fifty-five/Cargo-android'
     gitUrl = 'https://github.com/fifty-five/Cargo-android.git'
 
-    libraryVersion = '0.1.11'
+    libraryVersion = System.getenv('CARGOVERSION')
 
     developerId = 'louischavane'
     developerName = 'Louis Chavane'
