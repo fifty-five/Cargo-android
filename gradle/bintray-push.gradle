@@ -5,7 +5,7 @@ ext {
     bintrayName = 'Cargo-Android'
 
 
-    publishedGroupId = 'com.fiftyfive.cargo.handlers.MobileAppTracking'
+    publishedGroupId = 'com.fiftyfive.cargo'
     libraryName = 'Cargo-Android'
     artifact = ARTIFACT
 
