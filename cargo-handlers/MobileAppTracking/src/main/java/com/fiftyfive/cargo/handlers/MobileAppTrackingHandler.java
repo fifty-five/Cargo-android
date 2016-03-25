@@ -12,6 +12,8 @@ import com.tune.TuneEvent;
 
 import java.util.Map;
 
+import static com.fiftyfive.cargo.ModelsUtils.getString;
+
 
 /**
  * Created by louis on 03/11/15.
@@ -32,8 +34,10 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
                 init(map);
                 break;
             case "Tune_purchase":
-                purchase();
+                purchase(map);
                 break;
+            case "Tune_identify":
+                identify(map);
             default:
                 Log.i("55", "Function "+s+" is not registered");
         }
@@ -50,6 +54,7 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
     public void register(Container container) {
         container.registerFunctionCallTagCallback("Tune_init", this);
         container.registerFunctionCallTagCallback("Tune_purchase", this);
+        container.registerFunctionCallTagCallback("Tune_identify", this);
 
     }
 
@@ -72,11 +77,16 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
       }
 
     // possibility to add more information to the event
-    private void purchase() {
-        tune.setUserId(User.USER_ID);
-        tune.setFacebookUserId(User.USER_FACEBOOK_ID);
-        tune.setGoogleUserId(User.USER_GOOGLE_ID);
+    private void purchase(Map<String, Object> map) {
         tune.measureEvent(new TuneEvent(TuneEvent.PURCHASE));
+    }
+
+    private void identify(Map<String, Object> map) {
+        tune.setUserId(User.USER_ID);
+        tune.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
+        tune.setFacebookUserId(getString(map, User.USER_FACEBOOK_ID));
+
+
     }
 
 
