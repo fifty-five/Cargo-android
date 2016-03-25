@@ -5,22 +5,13 @@ import android.util.Log;
 
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
-import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.Screen;
-import com.fiftyfive.cargo.models.Transaction;
 import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
-import com.mobileapptracker.MATEvent;
-import com.mobileapptracker.MATEventItem;
-import com.mobileapptracker.MobileAppTracker;
+import com.tune.Tune;
+import com.tune.TuneEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import static com.fiftyfive.cargo.ModelsUtils.getList;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
-import static com.fiftyfive.cargo.ModelsUtils.getDouble;
 
 /**
  * Created by louis on 03/11/15.
@@ -28,7 +19,7 @@ import static com.fiftyfive.cargo.ModelsUtils.getDouble;
 
 public class MobileAppTrackingHandler extends AbstractTagHandler {
 
-    public MobileAppTracker mobileAppTracker;
+    public Tune tune;
     private boolean init = false;
 
     public Cargo cargo = Cargo.getInstance();
@@ -37,20 +28,11 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
     public void execute(String s, Map<String, Object> map) {
 
         switch (s) {
-            case "MAT_init":
+            case "Tune_init":
                 init(map);
                 break;
-            case "MAT_tagEvent":
-                tagEvent(map);
-                break;
-            case "MAT_tagScreen":
-                tagScreen(map);
-                break;
-            case "MAT_tagTransaction":
-                tagTransaction(map);
-                break;
-            case "MAT_identify":
-                identify(map);
+            case "Tune_purchase":
+                purchase();
                 break;
             default:
                 Log.i("55", "Function "+s+" is not registered");
@@ -66,82 +48,35 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
 
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback("MAT_init", this);
-        container.registerFunctionCallTagCallback("MAT_tagScreen", this);
-        container.registerFunctionCallTagCallback("MAT_tagEvent", this);
-        container.registerFunctionCallTagCallback("MAT_tagTransaction", this);
-        container.registerFunctionCallTagCallback("MAT_identify", this);
+        container.registerFunctionCallTagCallback("Tune_init", this);
+        container.registerFunctionCallTagCallback("Tune_purchase", this);
 
     }
 
 
     private void init(Map<String, Object> map) {
-        //Log.i("55", "Init has been received");
-
-        //on Android the MAT tracker must be initialized before anything else
-        if(map.containsKey("advertiserId")
+        if(!init && map.containsKey("advertiserId")
                 && map.containsKey("conversionKey")){
             //set the required parameters
 
-            mobileAppTracker.init(cargo.getApplication(),
+            tune.init(cargo.getApplication(),
                     map.remove("advertiserId").toString(),
                     map.remove("conversionKey").toString());
 
             init = true;
         }
-
-        //Log.w("55", "Missing a required parameter to init MAT");
+        else if (!map.containsKey("advertiserId") || !map.containsKey("conversionKey"))
+            Log.w("55", "Missing a required parameter to init MAT");
+        else
+            Log.i("55", "MAT is already init");
       }
 
-
-    private void tagScreen(Map<String, Object> parameters){
-
-        String screenName = getString(parameters, Screen.SCREEN_NAME);
-
-        List<MATEventItem> items = new ArrayList<>();
-        MATEventItem eventItem = new MATEventItem(screenName);
-        items.add(eventItem);
-
-        mobileAppTracker.measureEvent(new MATEvent(MATEvent.CONTENT_VIEW).withEventItems(items));
-
-    }
-
-    private void identify(Map<String, Object> map) {
-
-        mobileAppTracker.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
-        mobileAppTracker.setFacebookUserId(getString(map, User.USER_FACEBOOK_ID));
-
-
-    }
-
-
-    private void tagEvent(Map<String, Object> parameters){
-
-        mobileAppTracker.measureEvent(getString(parameters, Event.EVENT_NAME));
-
-
-    }
-
-    private void tagTransaction(Map<String, Object> parameters){
-
-        List<Map<String, Object>> transactionProducts = getList(parameters, Transaction.TRANSACTION_PRODUCTS);
-
-        List<MATEventItem> matItems = new ArrayList<>();
-        for(Map<String, Object> purchaseItem : transactionProducts){
-            String itemName = getString(purchaseItem, Transaction.TRANSACTION_PRODUCT_NAME);
-            MATEventItem matItem = new MATEventItem(itemName);
-            matItems.add(matItem);
-        }
-
-
-
-        MATEvent matEvent = new MATEvent(MATEvent.PURCHASE)
-                .withEventItems(matItems)
-                .withRevenue(getDouble(parameters, Transaction.TRANSACTION_TOTAL, (double) 0));
-
-
-        mobileAppTracker.measureEvent(matEvent);
-
+    // possibility to add more information to the event
+    private void purchase() {
+        tune.setUserId(User.USER_ID);
+        tune.setFacebookUserId(User.USER_FACEBOOK_ID);
+        tune.setGoogleUserId(User.USER_GOOGLE_ID);
+        tune.measureEvent(new TuneEvent(TuneEvent.PURCHASE));
     }
 
 
@@ -152,11 +87,9 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
 
     @Override
     public void onActivityResumed(Activity activity) {
-        if(init) {
-            // Get source of open for app re-engagement
-            mobileAppTracker.setReferralSources(activity);
-            // MAT will not function unless the measureSession call is included
-            mobileAppTracker.measureSession();
+        if (init) {
+            Tune.getInstance().setReferralSources(activity);
+            Tune.getInstance().measureSession();
         }
     }
 
