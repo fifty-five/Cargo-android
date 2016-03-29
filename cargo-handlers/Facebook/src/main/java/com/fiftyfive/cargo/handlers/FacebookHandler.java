@@ -28,6 +28,8 @@ public class FacebookHandler extends AbstractTagHandler {
 
     public Cargo cargo;
 
+
+
     @Override
     public void initialize() {
         this.cargo = Cargo.getInstance();
@@ -37,6 +39,13 @@ public class FacebookHandler extends AbstractTagHandler {
         this.valid =true;
     }
 
+
+    @Override
+    public void register(Container container) {
+        container.registerFunctionCallTagCallback("FB_init", this);
+        container.registerFunctionCallTagCallback("FB_tagEvent", this);
+
+    }
 
     @Override
     public void execute(String s, Map<String, Object> map) {
@@ -55,14 +64,6 @@ public class FacebookHandler extends AbstractTagHandler {
 
 
 
-    @Override
-    public void register(Container container) {
-        container.registerFunctionCallTagCallback("FB_init", this);
-        container.registerFunctionCallTagCallback("FB_tagEvent", this);
-
-    }
-
-
     private void init(Map<String, Object> map) {
 
         FacebookSdk.sdkInitialize(cargo.getApplication());
@@ -73,16 +74,13 @@ public class FacebookHandler extends AbstractTagHandler {
 
         init = FacebookSdk.isInitialized();
 
-      }
+    }
 
 
     private void tagEvent(Map<String, Object> map){
 
-         facebookLogger.logEvent(getString(map, Event.EVENT_NAME));
+        facebookLogger.logEvent(getString(map, Event.EVENT_NAME));
     }
-
-
-
 
     @Override
     public void onActivityStarted(Activity activity) {
@@ -91,12 +89,12 @@ public class FacebookHandler extends AbstractTagHandler {
 
     @Override
     public void onActivityResumed(Activity activity) {
-        AppEventsLogger.activateApp(cargo.getApplication());
+        AppEventsLogger.activateApp(activity);
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        AppEventsLogger.deactivateApp(cargo.getApplication());
+        AppEventsLogger.deactivateApp(activity);
     }
 
     @Override
