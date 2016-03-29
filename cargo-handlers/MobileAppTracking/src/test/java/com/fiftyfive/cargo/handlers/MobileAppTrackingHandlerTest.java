@@ -4,9 +4,9 @@ import android.app.Application;
 
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.handlers.MobileAppTrackingHandler;
-import com.mobileapptracker.MATEvent;
-import com.mobileapptracker.MATEventItem;
-import com.mobileapptracker.MobileAppTracker;
+
+import com.tune.Tune;
+import com.tune.TuneTracker;
 
 import junit.framework.TestCase;
 
@@ -41,11 +41,11 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(MobileAppTracker.class)
+@PrepareForTest(Tune.class)
 
 public class MobileAppTrackingHandlerTest extends TestCase {
 
-    MobileAppTracker mobileAppTrackerMock = mock(MobileAppTracker.class);
+    Tune mobileAppTrackerMock = mock(Tune.class);
     MobileAppTrackingHandler handler;
     @Mock Application context;
     @Mock Cargo cargo;
@@ -54,7 +54,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
     public void setUp() throws Exception {
         initMocks(this);
         handler = new MobileAppTrackingHandler();
-        handler.mobileAppTracker = mobileAppTrackerMock;
+        handler.tune = mobileAppTrackerMock;
         handler.cargo = cargo;
 
     }
@@ -62,15 +62,15 @@ public class MobileAppTrackingHandlerTest extends TestCase {
 
     public void testInitWithAllParameters(){
         when(cargo.getApplication()).thenReturn(context);
-        PowerMockito.mockStatic(MobileAppTracker.class);
+        PowerMockito.mockStatic(Tune.class);
 
         HashMap<String, Object> map= new HashMap<>();
         map.put("advertiserId", 123);
         map.put("conversionKey", 432);
 
-        handler.execute("MAT_init", map);
+        handler.execute("Tune_init", map);
         verifyStatic();
-        MobileAppTracker.init(context, "123", "432");
+        Tune.init(context, "123", "432");
         assertTrue(handler.isInitialized());
     }
 
@@ -79,7 +79,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("conversionKey", 432);
 
-        handler.execute("MAT_init", map);
+        handler.execute("Tune_init", map);
 
         assertFalse(handler.isInitialized());
     }
@@ -88,7 +88,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("userGoogleId", 123);
 
-        handler.execute("MAT_identify", map);
+        handler.execute("Tune_identify", map);
         verify(mobileAppTrackerMock, times(1)).setGoogleUserId("123");
     }
 
@@ -96,7 +96,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("userGoogleId", "123");
 
-        handler.execute("MAT_identify", map);
+        handler.execute("Tune_identify", map);
         verify(mobileAppTrackerMock, times(1)).setGoogleUserId("123");
     }
 
@@ -104,27 +104,14 @@ public class MobileAppTrackingHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("userMissingId", "123");
 
-        handler.execute("MAT_identify", map);
+        handler.execute("Tune_identify", map);
         assertTrue(true);
     }
 
-    public void testScreenName(){
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("screenName", "Hello");
-        handler.execute("MAT_tagScreen", map);
-
-        List<MATEventItem> items = new ArrayList<>();
-        MATEventItem item = new MATEventItem("Hello");
-        items.add(item);
-        MATEvent event = new MATEvent(MATEvent.CONTENT_VIEW).withEventItems(items);
-
-        verify(mobileAppTrackerMock, times(1)).measureEvent(any(MATEvent.class));
+    public void testPurchase(){
 
     }
 
-    public void testTransaction(){
-
-    }
     public void tearDown() throws Exception {
 
     }
