@@ -9,7 +9,6 @@ import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.Transaction;
-import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.atinternet.tracker.ATInternet;
 import com.atinternet.tracker.Tracker;
@@ -42,7 +41,7 @@ public class ATInternetHandler extends AbstractTagHandler {
                 tagScreen(map);
                 break;
             case "AT_identify":
-                identify(map);
+                identify();
                 break;
             case "AT_tagTransaction":
                 tagTransaction(map);
@@ -109,18 +108,19 @@ public class ATInternetHandler extends AbstractTagHandler {
     }
 
 
-    private void identify(Map<String, Object> parameters){
-        String android_id = Settings.Secure.getString(cargo.getApplication().getContentResolver(), Secure.ANDROID_ID);
+    // as we look for unique visitor, we use the android ID which is unique for each android device
+    private void identify(){
+        final String android_id = Settings.Secure.getString(cargo.getApplication().getContentResolver(), Secure.ANDROID_ID);
 
         ((ATInternet) cargo.getApplication()).getDefaultTracker().setConfig("identifier", android_id, new SetConfigCallback() {
             @Override
             public void setConfigEnd() {
-                Log.i("atInternetHandler", "SDK is now using Android ID as visitor identifier");
+                Log.i("atInternetHandler", "SDK is now using Android ID as visitor identifier : " + android_id);
             }
         });
-        ((ATInternet) cargo.getApplication()).getDefaultTracker().setParam(User.USER_GOOGLE_ID, getString(parameters, User.USER_GOOGLE_ID));
-        ((ATInternet) cargo.getApplication()).getDefaultTracker().setParam(User.USER_FACEBOOK_ID, getString(parameters, User.USER_FACEBOOK_ID));
+
     }
+
 
     @Override
     public void onActivityStarted(Activity activity) {
@@ -141,8 +141,5 @@ public class ATInternetHandler extends AbstractTagHandler {
     public void onActivityStopped(Activity activity) {
 
     }
-
-
-
 
 }
