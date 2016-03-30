@@ -31,7 +31,7 @@ public class ATInternetHandler extends AbstractTagHandler {
 
     /** The AT Tracker */
     public Tracker atTracker;
-    private Cargo cargo;
+    public Cargo cargo;
 
     @Override
     public void execute(String s, Map<String, Object> map) {
