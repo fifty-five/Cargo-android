@@ -1,5 +1,0 @@
-apply from: rootProject.file('gradle/handlers.gradle')
-
-dependencies{
-    'com.facebook.android:facebook-android-sdk:4.7.0'
-}
