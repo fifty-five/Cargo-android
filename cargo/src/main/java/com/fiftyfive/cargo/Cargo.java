@@ -50,7 +50,7 @@ public class Cargo {
             return;
         }
 
-        register("com.fiftyfive.cargo.handlers.MobileAppTrackingHandler");
+        register("com.fiftyfive.cargo.handlers.TuneHandler");
         register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
         register("com.fiftyfive.cargo.handlers.FacebookHandler");
 

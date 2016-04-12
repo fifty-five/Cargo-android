@@ -19,7 +19,7 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  * Created by louis on 03/11/15.
  */
 
-public class MobileAppTrackingHandler extends AbstractTagHandler {
+public class TuneHandler extends AbstractTagHandler {
 
     public Tune tune;
     private boolean init = false;
@@ -32,9 +32,6 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
         switch (s) {
             case "Tune_init":
                 init(map);
-                break;
-            case "Tune_purchase":
-                purchase(map);
                 break;
             case "Tune_identify":
                 identify(map);
@@ -53,7 +50,6 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
     @Override
     public void register(Container container) {
         container.registerFunctionCallTagCallback("Tune_init", this);
-        container.registerFunctionCallTagCallback("Tune_purchase", this);
         container.registerFunctionCallTagCallback("Tune_identify", this);
 
     }
@@ -71,15 +67,10 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
             init = true;
         }
         else if (!map.containsKey("advertiserId") || !map.containsKey("conversionKey"))
-            Log.w("55", "Missing a required parameter to init MAT");
+            Log.w("55", "Missing a required parameter to init Tune");
         else
             Log.i("55", "MAT is already init");
       }
-
-    // possibility to add more information to the event
-    private void purchase(Map<String, Object> map) {
-        tune.measureEvent(new TuneEvent(TuneEvent.PURCHASE));
-    }
 
     private void identify(Map<String, Object> map) {
         tune.setUserId(User.USER_ID);

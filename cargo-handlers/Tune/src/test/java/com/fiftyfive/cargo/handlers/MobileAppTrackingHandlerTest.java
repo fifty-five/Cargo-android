@@ -3,10 +3,8 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Application;
 
 import com.fiftyfive.cargo.Cargo;
-import com.fiftyfive.cargo.handlers.MobileAppTrackingHandler;
 
 import com.tune.Tune;
-import com.tune.TuneTracker;
 
 import junit.framework.TestCase;
 
@@ -16,19 +14,13 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,14 +38,14 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 public class MobileAppTrackingHandlerTest extends TestCase {
 
     Tune mobileAppTrackerMock = mock(Tune.class);
-    MobileAppTrackingHandler handler;
+    TuneHandler handler;
     @Mock Application context;
     @Mock Cargo cargo;
 
 
     public void setUp() throws Exception {
         initMocks(this);
-        handler = new MobileAppTrackingHandler();
+        handler = new TuneHandler();
         handler.tune = mobileAppTrackerMock;
         handler.cargo = cargo;
 
