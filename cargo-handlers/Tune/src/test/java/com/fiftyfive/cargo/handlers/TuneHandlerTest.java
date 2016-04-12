@@ -35,9 +35,9 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Tune.class)
 
-public class MobileAppTrackingHandlerTest extends TestCase {
+public class TuneHandlerTest extends TestCase {
 
-    Tune mobileAppTrackerMock = mock(Tune.class);
+    Tune tuneMock = mock(Tune.class);
     TuneHandler handler;
     @Mock Application context;
     @Mock Cargo cargo;
@@ -46,7 +46,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
     public void setUp() throws Exception {
         initMocks(this);
         handler = new TuneHandler();
-        handler.tune = mobileAppTrackerMock;
+        handler.tune = tuneMock;
         handler.cargo = cargo;
 
     }
@@ -81,7 +81,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
         map.put("userGoogleId", 123);
 
         handler.execute("Tune_identify", map);
-        verify(mobileAppTrackerMock, times(1)).setGoogleUserId("123");
+        verify(tuneMock, times(1)).setGoogleUserId("123");
     }
 
     public void testUserGoogleIdWithString(){
@@ -89,7 +89,7 @@ public class MobileAppTrackingHandlerTest extends TestCase {
         map.put("userGoogleId", "123");
 
         handler.execute("Tune_identify", map);
-        verify(mobileAppTrackerMock, times(1)).setGoogleUserId("123");
+        verify(tuneMock, times(1)).setGoogleUserId("123");
     }
 
     public void testIdentifyMissingKey(){
@@ -98,10 +98,6 @@ public class MobileAppTrackingHandlerTest extends TestCase {
 
         handler.execute("Tune_identify", map);
         assertTrue(true);
-    }
-
-    public void testPurchase(){
-
     }
 
     public void tearDown() throws Exception {
