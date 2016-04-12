@@ -76,8 +76,6 @@ public class TuneHandler extends AbstractTagHandler {
         tune.setUserId(User.USER_ID);
         tune.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
         tune.setFacebookUserId(getString(map, User.USER_FACEBOOK_ID));
-        tune.setTwitterUserId(getString(map, User.USER_TWITTER_ID));
-        
     }
 
 
