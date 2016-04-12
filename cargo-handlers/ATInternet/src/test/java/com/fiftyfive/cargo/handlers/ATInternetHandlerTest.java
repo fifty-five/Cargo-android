@@ -1,10 +1,11 @@
 package com.fiftyfive.cargo.handlers;
 
+import android.app.Activity;
 import android.app.Application;
 
 import com.atinternet.tracker.Tracker;
 import com.fiftyfive.cargo.Cargo;
-import com.fiftyfive.cargo.models.Transaction;
+import com.fiftyfive.cargo.models.Screen;
 
 
 import junit.framework.TestCase;
@@ -19,12 +20,14 @@ import java.util.HashMap;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 
 /**
- * Created by dali on 10/12/15.
+ * Created by louis on 04/11/15.
  */
 
 @RunWith(PowerMockRunner.class)
@@ -41,38 +44,33 @@ public class ATInternetHandlerTest extends TestCase {
     public void setUp() throws Exception {
         initMocks(this);
         handler = new ATInternetHandler();
-        PowerMockito.mockStatic(Tracker.class);
-        handler.atTracker = atTrackerMock;
         handler.cargo = cargo;
+        handler.atTracker = atTrackerMock;
+
     }
+
+
+//    public void testIdentifyNumberOfCalls(){
+//        when(cargo.getApplication()).thenReturn(context);
+//
+//        HashMap<String, Object> map= new HashMap<>();
+//        map.put("test", 123);
+//
+//        handler.execute("AT_identify", map);
+//
+//        verify(atTrackerMock, times(1));
+//    }
 
     public void testTagScreen(){
+
         HashMap<String, Object> map= new HashMap<>();
-        map.put("screenName", "Home");
+        map.put(Screen.SCREEN_NAME, "HelloWorldScreen");
+        when(atTrackerMock.Screens().add("HelloWorldScreen")).thenReturn(null);
+
         handler.execute("AT_tagScreen", map);
-
-        verify(atTrackerMock, times(1));
-
+        verify(handler.atTracker, times(1)).Screens();
     }
 
-    public void testTagTransaction(){
-        HashMap<String, Object> item= new HashMap<>();
-        item.put(Transaction.TRANSACTION_PRODUCT_NAME, "TEST");
-        item.put(Transaction.TRANSACTION_PRODUCT_SKU, "123test");
-        item.put(Transaction.TRANSACTION_PRODUCT_CATEGORY, "catTest");
-        item.put(Transaction.TRANSACTION_PRODUCT_PRICE, "1000");
-        item.put(Transaction.TRANSACTION_PRODUCT_QUANTITY, "5");
-
-        HashMap<String, Object> param= new HashMap<>();
-        param.put(Transaction.TRANSACTION_PRODUCTS, item);
-        param.put(Transaction.TRANSACTION_ID, "transactionTest");
-        param.put(Transaction.TRANSACTION_TOTAL, 5000);
-        param.put("idCart", "lepanier");
-
-        handler.execute("AT_tagTransaction", param);
-
-        verify(atTrackerMock, times(1));
-    }
 
     public void tearDown() throws Exception {
 
