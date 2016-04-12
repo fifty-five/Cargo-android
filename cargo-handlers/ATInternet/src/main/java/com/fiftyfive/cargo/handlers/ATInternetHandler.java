@@ -8,7 +8,6 @@ import com.atinternet.tracker.SetConfigCallback;
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Screen;
-import com.fiftyfive.cargo.models.Transaction;
 import com.google.android.gms.tagmanager.Container;
 import com.atinternet.tracker.ATInternet;
 import com.atinternet.tracker.Tracker;
@@ -43,9 +42,6 @@ public class ATInternetHandler extends AbstractTagHandler {
             case "AT_identify":
                 identify();
                 break;
-            case "AT_tagTransaction":
-                tagTransaction(map);
-                break;
             default:
                 Log.i("55", "Function "+s+" is not registered");
         }
@@ -63,7 +59,6 @@ public class ATInternetHandler extends AbstractTagHandler {
     @Override
     public void register(Container container) {
         container.registerFunctionCallTagCallback("AT_tagScreen", this);
-        container.registerFunctionCallTagCallback("AT_tagTransaction", this);
         container.registerFunctionCallTagCallback("AT_identify", this);
     }
 
@@ -83,28 +78,6 @@ public class ATInternetHandler extends AbstractTagHandler {
             }});
         }
         atTracker.Screens().add(screenName).setLevel2(getInt(parameters, com.fiftyfive.cargo.models.Tracker.LEVEL2, 0)).sendView();
-    }
-
-
-    private void tagTransaction(Map<String, Object> parameters){
-        List<Map<String, Object>> transactionProducts = getList(parameters, Transaction.TRANSACTION_PRODUCTS);
-
-        atTracker.Cart().set(getString(parameters, "idCart"));
-
-        for(Map<String, Object> purchaseItem : transactionProducts){
-
-            atTracker.Cart().Products().add(getString(purchaseItem, Transaction.TRANSACTION_PRODUCT_NAME))
-                    .setProductId(getString(purchaseItem, Transaction.TRANSACTION_PRODUCT_SKU))
-                    .setCategory1(getString(purchaseItem, Transaction.TRANSACTION_PRODUCT_CATEGORY))
-                    .setQuantity(getInt(purchaseItem, Transaction.TRANSACTION_PRODUCT_QUANTITY, 0))
-                    .setUnitPriceTaxIncluded(getDouble(purchaseItem, Transaction.TRANSACTION_PRODUCT_PRICE, 0));
-        }
-
-
-        atTracker.Orders().add(getString(parameters, Transaction.TRANSACTION_ID),
-                getDouble(parameters, Transaction.TRANSACTION_TOTAL, 0));
-
-        atTracker.Cart().unset();
     }
 
 
