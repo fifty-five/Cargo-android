@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.atinternet.tracker.ATInternet;
 import com.atinternet.tracker.Gesture;
-import com.atinternet.tracker.SetConfigCallback;
 import com.atinternet.tracker.Tracker;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.Cargo;
@@ -66,18 +65,15 @@ public class ATInternetHandler extends AbstractTagHandler {
 
     // as we look for unique visitor, we use the android ID which is unique for each android device
     private void identify(Map<String, Object> parameters){
-        if (!parameters.containsKey(User.USER_ID)) {
-            Log.w("CARGO ATInternetHandler", " in identify() missing USER_ID (android_id) parameter. USER_ID hasn't been set");
-        }
+
         final String android_id = getString(parameters, User.USER_ID);
 
-        ((ATInternet) cargo.getApplication()).getDefaultTracker().setConfig("identifier", android_id, new SetConfigCallback() {
-            @Override
-            public void setConfigEnd() {
-                Log.i("atInternetHandler", "SDK is now using Android ID as visitor identifier : " + android_id);
-            }
-        });
+        if (android_id == null) {
+            Log.w("CARGO ATInternetHandler", " in identify() missing USER_ID (android_id) parameter. USER_ID hasn't been set");
+            return ;
+        }
 
+        atTracker.setConfig("identifier", android_id, null);
     }
 
 
@@ -98,8 +94,8 @@ public class ATInternetHandler extends AbstractTagHandler {
         }
         atTracker.Screens()
                 .add(screenName)
-                .setLevel2(getInt(parameters, com.fiftyfive.cargo.models.Tracker.LEVEL2, 0))
-                .sendView();
+                .setLevel2(getInt(parameters, com.fiftyfive.cargo.models.Tracker.LEVEL2, 0));
+//                .sendView();
     }
 
 
@@ -108,13 +104,15 @@ public class ATInternetHandler extends AbstractTagHandler {
         String eventName = getString(parameters, Event.EVENT_NAME);
         String eventType = getString(parameters, Event.EVENT_TYPE);
 
-        if (eventType == null)
+        if (eventType == null) {
             Log.w("CARGO ATInternetHandler", "in tagEvent() no EVENT_TYPE given, event hasn't been sent");
+            return ;
+        }
 
         // we don't even need to check if chapters are set
         // because in the gesture object, each chapter is set to null by default
         // and if getString fails, it returns null
-        gesture =  atTracker.Gestures().add(eventName, getString(parameters, "chapter1"), getString(parameters, "chapter2"), getString(parameters, "chapter3"));
+        gesture =  atTracker.Gestures().add(eventName, getString(parameters, "Chapter1"), getString(parameters, "Chapter2"), getString(parameters, "Chapter3"));
 
         gesture.setLevel2(getInt(parameters, com.fiftyfive.cargo.models.Tracker.LEVEL2, 0));
 
