@@ -94,8 +94,8 @@ public class ATInternetHandler extends AbstractTagHandler {
         }
         atTracker.Screens()
                 .add(screenName)
-                .setLevel2(getInt(parameters, com.fiftyfive.cargo.models.Tracker.LEVEL2, 0));
-//                .sendView();
+                .setLevel2(getInt(parameters, com.fiftyfive.cargo.models.Tracker.LEVEL2, 0))
+                .sendView();
     }
 
 

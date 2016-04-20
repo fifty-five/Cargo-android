@@ -74,7 +74,7 @@ public class ATInternetHandlerTest extends TestCase {
 
         when(screensMock.add(testName)).thenReturn(screenMock);
         when(screenMock.setLevel2(anyInt())).thenReturn(screenMock);
-//        doNothing().when(screenMock).sendView();
+        doNothing().when(screenMock).sendView();
 
         when(gesturesMock.add(anyString())).thenReturn(gestureMock);
         when(gesturesMock.add(anyString(), anyString())).thenReturn(gestureMock);
@@ -133,7 +133,7 @@ public class ATInternetHandlerTest extends TestCase {
         verify(screenMock, times(1)).setLevel2(55);
 
 //        /!\ CARE ! Needs to be times(1) but bug of NPE not fixed now
-//        verify(screenMock, times(1)).sendView();
+        verify(screenMock, times(1)).sendView();
     }
 
     public void testComplexTagScreen(){
@@ -153,7 +153,7 @@ public class ATInternetHandlerTest extends TestCase {
         verify(atTrackerMock.Screens(), times(1)).add(testName);
         verify(screenMock, times(1)).setLevel2(55);
 //        /!\ CARE ! Needs to be times(1) but bug of NPE not fixed now
-//        verify(screenMock, times(1)).sendView();
+        verify(screenMock, times(1)).sendView();
     }
 
 
