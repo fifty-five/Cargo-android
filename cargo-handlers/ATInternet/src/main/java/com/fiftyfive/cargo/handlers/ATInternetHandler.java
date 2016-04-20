@@ -100,7 +100,6 @@ public class ATInternetHandler extends AbstractTagHandler {
 
 
     private void tagEvent(Map<String, Object> parameters){
-        Gesture gesture;
         String eventName = getString(parameters, Event.EVENT_NAME);
         String eventType = getString(parameters, Event.EVENT_TYPE);
 
@@ -109,11 +108,7 @@ public class ATInternetHandler extends AbstractTagHandler {
             return ;
         }
 
-        // we don't even need to check if chapters are set
-        // because in the gesture object, each chapter is set to null by default
-        // and if getString fails, it returns null
-        gesture =  atTracker.Gestures().add(eventName, getString(parameters, "Chapter1"), getString(parameters, "Chapter2"), getString(parameters, "Chapter3"));
-
+        Gesture gesture = setChapters(eventName, parameters);
         gesture.setLevel2(getInt(parameters, com.fiftyfive.cargo.models.Tracker.LEVEL2, 0));
 
         switch (eventType) {
@@ -136,9 +131,23 @@ public class ATInternetHandler extends AbstractTagHandler {
                 Log.w("CARGO ATInternetHandler", "in tagEvent() wrong EVENT_TYPE given, event hasn't been sent");
                 break;
         }
-
     }
 
+
+    private Gesture setChapters(String eventName, Map<String, Object> parameters){
+        String chapter1 = getString(parameters, "Chapter1");
+        String chapter2 = getString(parameters, "Chapter2");
+        String chapter3 = getString(parameters, "Chapter3");
+
+        if (chapter1 == null)
+            return (atTracker.Gestures().add(eventName));
+        else if (chapter2 == null)
+            return (atTracker.Gestures().add(eventName, chapter1));
+        else if (chapter3 == null)
+            return (atTracker.Gestures().add(eventName, chapter1, chapter2));
+        else
+            return (atTracker.Gestures().add(eventName, chapter1, chapter2, chapter3));
+    }
 
 
     @Override

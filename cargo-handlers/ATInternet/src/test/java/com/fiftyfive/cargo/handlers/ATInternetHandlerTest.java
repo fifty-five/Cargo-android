@@ -18,9 +18,12 @@ import junit.framework.TestCase;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.anyInt;
@@ -73,6 +76,9 @@ public class ATInternetHandlerTest extends TestCase {
         when(screenMock.setLevel2(anyInt())).thenReturn(screenMock);
 //        doNothing().when(screenMock).sendView();
 
+        when(gesturesMock.add(anyString())).thenReturn(gestureMock);
+        when(gesturesMock.add(anyString(), anyString())).thenReturn(gestureMock);
+        when(gesturesMock.add(anyString(), anyString(), anyString())).thenReturn(gestureMock);
         when(gesturesMock.add(anyString(), anyString(), anyString(), anyString())).thenReturn(gestureMock);
         when(gestureMock.setLevel2(anyInt())).thenReturn(gestureMock);
 
@@ -125,6 +131,7 @@ public class ATInternetHandlerTest extends TestCase {
 
         verify(atTrackerMock.Screens(), times(1)).add(testName);
         verify(screenMock, times(1)).setLevel2(55);
+
 //        /!\ CARE ! Needs to be times(1) but bug of NPE not fixed now
 //        verify(screenMock, times(1)).sendView();
     }
@@ -160,7 +167,7 @@ public class ATInternetHandlerTest extends TestCase {
 
         handler.execute("AT_tagEvent", map);
 
-        verify(atTrackerMock.Gestures(), times(1)).add(testName, null, null, null);
+        verify(atTrackerMock.Gestures(), times(1)).add(testName);
         verify(gestureMock, times(1)).setLevel2(55);
         verify(gestureMock, times(1)).sendTouch();
         verify(gestureMock, times(0)).sendDownload();
@@ -236,7 +243,7 @@ public class ATInternetHandlerTest extends TestCase {
 
         handler.execute("AT_tagEvent", map);
 
-        verify(atTrackerMock.Gestures(), times(1)).add(testName, null, null, null);
+        verify(atTrackerMock.Gestures(), times(1)).add(testName);
         verify(gestureMock, times(1)).setLevel2(55);
         verify(gestureMock, times(1)).sendNavigation();
         verify(gestureMock, times(0)).sendTouch();
@@ -254,7 +261,7 @@ public class ATInternetHandlerTest extends TestCase {
 
         handler.execute("AT_tagEvent", map);
 
-        verify(atTrackerMock.Gestures(), times(1)).add(testName, null, null, null);
+        verify(atTrackerMock.Gestures(), times(1)).add(testName);
         verify(gestureMock, times(1)).setLevel2(55);
         verify(gestureMock, times(1)).sendExit();
         verify(gestureMock, times(0)).sendTouch();
@@ -272,7 +279,7 @@ public class ATInternetHandlerTest extends TestCase {
 
         handler.execute("AT_tagEvent", map);
 
-        verify(atTrackerMock.Gestures(), times(1)).add(testName, null, null, null);
+        verify(atTrackerMock.Gestures(), times(1)).add(testName);
         verify(gestureMock, times(1)).setLevel2(55);
         verify(gestureMock, times(1)).sendSearch();
         verify(gestureMock, times(0)).sendTouch();
