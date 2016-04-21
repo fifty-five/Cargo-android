@@ -2,7 +2,6 @@ package com.fiftyfive.cargo;
 
 import android.app.Application;
 import android.util.Log;
-
 import com.google.android.gms.tagmanager.Container;
 
 /**
