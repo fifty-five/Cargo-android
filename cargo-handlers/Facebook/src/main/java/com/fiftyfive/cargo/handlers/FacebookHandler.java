@@ -26,13 +26,11 @@ public class FacebookHandler extends AbstractTagHandler {
     public AppEventsLogger facebookLogger;
     private boolean init = false;
 
-    public Cargo cargo;
-
 
 
     @Override
     public void initialize() {
-        this.cargo = Cargo.getInstance();
+        super.initialize();
         facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
 
         //todo : check permissions
