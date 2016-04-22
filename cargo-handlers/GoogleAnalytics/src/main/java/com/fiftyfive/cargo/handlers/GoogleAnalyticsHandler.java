@@ -22,7 +22,6 @@ import static com.fiftyfive.cargo.ModelsUtils.getInt;
 
 public class GoogleAnalyticsHandler extends AbstractTagHandler {
 
-    public Cargo cargo;
     public GoogleAnalytics analytics;
 
 
@@ -39,6 +38,7 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
 
     @Override
     public void initialize() {
+        super.initialize();
         Context context = cargo.getApplication();
         analytics = GoogleAnalytics.getInstance(context);
 

@@ -18,7 +18,11 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
 
     public boolean valid;
 
-    public abstract void initialize();
+    protected static Cargo cargo;
+
+    public void initialize() {
+        cargo = Cargo.getInstance();
+    }
 
     public abstract void register(Container container);
 

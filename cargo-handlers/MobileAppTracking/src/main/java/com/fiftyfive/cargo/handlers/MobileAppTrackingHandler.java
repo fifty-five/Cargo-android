@@ -31,8 +31,6 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
     public MobileAppTracker mobileAppTracker;
     private boolean init = false;
 
-    public Cargo cargo = Cargo.getInstance();
-
     @Override
     public void execute(String s, Map<String, Object> map) {
 
@@ -59,6 +57,7 @@ public class MobileAppTrackingHandler extends AbstractTagHandler {
 
     @Override
     public void initialize() {
+        super.initialize();
         //todo : check permissions
         this.valid = true;
     }
