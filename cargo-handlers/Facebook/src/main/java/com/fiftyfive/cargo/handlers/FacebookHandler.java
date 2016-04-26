@@ -24,17 +24,18 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
 public class FacebookHandler extends AbstractTagHandler {
 
     public AppEventsLogger facebookLogger;
-    private boolean init = false;
 
 
 
     @Override
     public void initialize() {
         super.initialize();
+
+        FacebookSdk.sdkInitialize(cargo.getApplication());
         facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
 
         //todo : check permissions
-        this.valid =true;
+        this.valid = FacebookSdk.isInitialized();
     }
 
 
@@ -64,13 +65,10 @@ public class FacebookHandler extends AbstractTagHandler {
 
     private void init(Map<String, Object> map) {
 
-        FacebookSdk.sdkInitialize(cargo.getApplication());
         if(map.containsKey("applicationId")){
             FacebookSdk.setApplicationId(map.remove("applicationId").toString());
         }
         FacebookSdk.setIsDebugEnabled(getBoolean(map, Tracker.ENABLE_DEBUG, false));
-
-        init = FacebookSdk.isInitialized();
 
     }
 
