@@ -14,13 +14,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-import static junit.framework.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -35,37 +29,47 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FacebookSdk.class)
+@PrepareForTest({FacebookSdk.class, Cargo.class, AppEventsLogger.class})
 
 public class FacebookHandlerTest extends TestCase {
 
-    FacebookSdk facebookTrackerMock = mock(FacebookSdk.class);
     AppEventsLogger facebookLoggerMock = mock(AppEventsLogger.class);
     FacebookHandler handler;
     @Mock Application context;
-    @Mock Cargo cargo;
-
+    @Mock Cargo cargoMock;
 
     public void setUp() throws Exception {
         initMocks(this);
         handler = new FacebookHandler();
         PowerMockito.mockStatic(FacebookSdk.class);
+        PowerMockito.mockStatic(Cargo.class);
+        PowerMockito.mockStatic(AppEventsLogger.class);
         handler.facebookLogger = facebookLoggerMock;
-        handler.cargo = cargo;
-
     }
 
 
+    public void testInitialize(){
+        PowerMockito.when(Cargo.getInstance()).thenReturn(cargoMock);
+        when(cargoMock.getApplication()).thenReturn(context);
+
+        handler.initialize();
+
+        verifyStatic();
+        Cargo.getInstance();
+
+        verifyStatic();
+        FacebookSdk.sdkInitialize(context);
+
+        verifyStatic();
+        AppEventsLogger.newLogger(context);
+    }
+
     public void testInitWithAllParameters(){
-        when(cargo.getApplication()).thenReturn(context);
 
         HashMap<String, Object> map= new HashMap<>();
         map.put("applicationId", 123);
 
         handler.execute("FB_init", map);
-
-        verifyStatic();
-        FacebookSdk.sdkInitialize(context);
 
         verifyStatic();
         FacebookSdk.setApplicationId("123");
