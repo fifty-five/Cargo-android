@@ -20,7 +20,7 @@ public class Cargo {
 
     public static Cargo getInstance(){
         if(!init){
-            Log.w("55", "Cargo instance must be initialized");
+            Log.w("55", "Cargo instance must be initialized, null will be return");
         }
         return instance;
     }
