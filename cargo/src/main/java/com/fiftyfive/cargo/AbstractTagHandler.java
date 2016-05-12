@@ -20,6 +20,7 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
 
     public Cargo cargo;
 
+
     public void initialize(){
         cargo = Cargo.getInstance();
     }
