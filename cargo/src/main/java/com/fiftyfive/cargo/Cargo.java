@@ -98,7 +98,7 @@ public class Cargo {
      * Store each handler registered on the registerHandlers() method into the TagHandlerManager
      * Calls on the register method of each handler to register each callbacks based on GTM tags
      *
-     * Display an exception if a fail occur
+     * Display an exception if a fail occurs
      *
      * @param tagHandler    the class of the handler
      */
@@ -106,7 +106,7 @@ public class Cargo {
         try {
             AbstractTagHandler instance = tagHandler.newInstance();
 
-            //Store handlers in tagHandlerManager
+            // Calls the tagHandlerManager.registerHandler() method to store handlers in a list
             manager.registerHandler(instance);
 
             instance.register(this.getContainer());
