@@ -11,7 +11,7 @@ import java.util.List;
  * Author : louis
  * Created: 04/11/15
  *
- * The TagHandlerManager class allows each handler to override several methods
+ * The TagHandlerManager class calls on each handler override methods
  * which are called corresponding to the life cycle of the app.
  */
 public class TagHandlerManager implements Application.ActivityLifecycleCallbacks {
