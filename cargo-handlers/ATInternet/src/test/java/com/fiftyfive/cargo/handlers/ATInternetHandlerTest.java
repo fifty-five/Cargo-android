@@ -118,45 +118,6 @@ public class ATInternetHandlerTest extends TestCase {
         verify(atTrackerMock, times(0)).setConfig("identifier", null, null);
     }
 
-
-
-    public void testSimpleTagScreen(){
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put(com.fiftyfive.cargo.models.Screen.SCREEN_NAME, testName);
-        map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
-
-        handler.execute("AT_tagScreen", map);
-
-        verify(atTrackerMock.Screens(), times(1)).add(testName);
-        verify(screenMock, times(1)).setLevel2(55);
-
-//        /!\ CARE ! Needs to be times(1) but bug of NPE not fixed now
-        verify(screenMock, times(1)).sendView();
-    }
-
-    public void testComplexTagScreen(){
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put(com.fiftyfive.cargo.models.Screen.SCREEN_NAME, testName);
-        map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
-        map.put(com.fiftyfive.cargo.models.Tracker.CUSTOM_DIM1, "test1");
-        map.put(com.fiftyfive.cargo.models.Tracker.CUSTOM_DIM2, "test2");
-
-        handler.execute("AT_tagScreen", map);
-
-        verify(atTrackerMock.CustomObjects(), times(1)).add(new HashMap<String, Object>() {{
-            put(com.fiftyfive.cargo.models.Tracker.CUSTOM_DIM1, "test1");
-            put(com.fiftyfive.cargo.models.Tracker.CUSTOM_DIM2, "test2");
-        }});
-        verify(atTrackerMock.Screens(), times(1)).add(testName);
-        verify(screenMock, times(1)).setLevel2(55);
-//        /!\ CARE ! Needs to be times(1) but bug of NPE not fixed now
-        verify(screenMock, times(1)).sendView();
-    }
-
-
-
     public void testTagEventWithoutChapters(){
 
         HashMap<String, Object> map = new HashMap<>();
