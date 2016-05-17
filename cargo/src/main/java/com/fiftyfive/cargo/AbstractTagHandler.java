@@ -9,7 +9,10 @@ import com.google.android.gms.tagmanager.Container;
 import java.util.Map;
 
 /**
- * Created by louis on 03/11/15.
+ * Author : louis
+ * Created: 03/11/15
+ *
+ * An Abstract class which defines what are the methods which should be implemented in each handler
  */
 public abstract class AbstractTagHandler implements Container.FunctionCallTagCallback {
 
@@ -20,6 +23,11 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
 
     public Cargo cargo;
 
+    /**
+     * The only implemented method in this class, stores the Cargo instance as a variable to
+     * allow the handler to access to variables of the cargo instance
+     * as they are always needed to setup SDK
+     */
     public void initialize(){
         cargo = Cargo.getInstance();
     }
