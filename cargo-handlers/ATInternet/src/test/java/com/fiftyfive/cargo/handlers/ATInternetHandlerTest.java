@@ -74,7 +74,6 @@ public class ATInternetHandlerTest extends TestCase {
 
         when(screensMock.add(testName)).thenReturn(screenMock);
         when(screenMock.setLevel2(anyInt())).thenReturn(screenMock);
-        doNothing().when(screenMock).sendView();
 
         when(gesturesMock.add(anyString())).thenReturn(gestureMock);
         when(gesturesMock.add(anyString(), anyString())).thenReturn(gestureMock);
