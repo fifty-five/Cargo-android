@@ -4,7 +4,9 @@ import android.app.Application;
 
 import com.fiftyfive.cargo.Cargo;
 
+import com.fiftyfive.cargo.models.User;
 import com.tune.Tune;
+import com.tune.TuneGender;
 
 import junit.framework.TestCase;
 
@@ -78,7 +80,7 @@ public class TuneHandlerTest extends TestCase {
 
     public void testUserGoogleIdWithInt(){
         HashMap<String, Object> map= new HashMap<>();
-        map.put("userGoogleId", 123);
+        map.put(User.USER_GOOGLE_ID, 123);
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGoogleUserId("123");
@@ -86,10 +88,82 @@ public class TuneHandlerTest extends TestCase {
 
     public void testUserGoogleIdWithString(){
         HashMap<String, Object> map= new HashMap<>();
-        map.put("userGoogleId", "123");
+        map.put(User.USER_GOOGLE_ID, "234");
 
         handler.execute("Tune_identify", map);
-        verify(tuneMock, times(1)).setGoogleUserId("123");
+        verify(tuneMock, times(1)).setGoogleUserId("234");
+    }
+
+    public void testUserFacebookIdWithString(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_FACEBOOK_ID, "345");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setFacebookUserId("345");
+    }
+
+    public void testUserTwitterIdWithString(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_TWITTER_ID, "012");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setTwitterUserId("012");
+    }
+
+    public void testUserAgeWithString(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_AGE, "55");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setAge(55);
+    }
+
+    public void testUserAgeWithInt(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_AGE, 42);
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setAge(42);
+    }
+
+    public void testUserAgeWithFloat(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_AGE, 42.55);
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setAge(-1);
+    }
+
+    public void testUserGenderMale(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_GENDER, "male");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setGender(TuneGender.MALE);
+    }
+
+    public void testUserGenderFemale(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_GENDER, "female");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setGender(TuneGender.FEMALE);
+    }
+
+    public void testUserGenderUnknown(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_GENDER, "unknown");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setGender(TuneGender.UNKNOWN);
+    }
+
+    public void testUserWrongGender(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_GENDER, "");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(0)).setGender(TuneGender.UNKNOWN);
     }
 
     public void testIdentifyMissingKey(){
