@@ -9,9 +9,12 @@ import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.tune.Tune;
 import com.tune.TuneEvent;
+import com.tune.TuneGender;
 
+import java.util.Locale;
 import java.util.Map;
 
+import static com.fiftyfive.cargo.ModelsUtils.getInt;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 
@@ -69,13 +72,32 @@ public class TuneHandler extends AbstractTagHandler {
         else if (!map.containsKey("advertiserId") || !map.containsKey("conversionKey"))
             Log.w("55", "Missing a required parameter to init Tune");
         else
-            Log.i("55", "MAT is already init");
+            Log.i("55", "Tune is already init");
       }
 
     private void identify(Map<String, Object> map) {
-        tune.setUserId(User.USER_ID);
-        tune.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
-        tune.setFacebookUserId(getString(map, User.USER_FACEBOOK_ID));
+        if (map.containsKey(User.USER_ID))
+            tune.setUserId(getString(map, User.USER_ID));
+        if (map.containsKey(User.USER_GOOGLE_ID))
+            tune.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
+        if (map.containsKey(User.USER_FACEBOOK_ID))
+            tune.setFacebookUserId(getString(map, User.USER_FACEBOOK_ID));
+        if (map.containsKey(User.USER_TWITTER_ID))
+            tune.setTwitterUserId(getString(map, User.USER_TWITTER_ID));
+        if (map.containsKey(User.USER_AGE))
+            tune.setAge(getInt(map, User.USER_AGE, -1));
+        if (map.containsKey(User.USER_GENDER))
+            setGender(getString(map, User.USER_GENDER));
+
+    }
+
+
+    private void setGender(String val) {
+        String gender = val.toUpperCase(Locale.ENGLISH);
+        if (gender.equals("MALE") || gender.equals("FEMALE") || gender.equals("UNKNOWN"))
+            tune.setGender(TuneGender.forValue(val));
+        else
+            Log.w("Cargo TuneHandler", "tune.setGender() waits for MALE/FEMALE/UNKNOWN");
     }
 
 
