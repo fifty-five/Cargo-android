@@ -126,14 +126,6 @@ public class TuneHandlerTest extends TestCase {
         verify(tuneMock, times(1)).setAge(42);
     }
 
-    public void testUserAgeWithFloat(){
-        HashMap<String, Object> map= new HashMap<>();
-        map.put(User.USER_AGE, 42.55);
-
-        handler.execute("Tune_identify", map);
-        verify(tuneMock, times(1)).setAge(-1);
-    }
-
     public void testUserGenderMale(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GENDER, "male");
@@ -156,14 +148,6 @@ public class TuneHandlerTest extends TestCase {
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.UNKNOWN);
-    }
-
-    public void testUserWrongGender(){
-        HashMap<String, Object> map= new HashMap<>();
-        map.put(User.USER_GENDER, "");
-
-        handler.execute("Tune_identify", map);
-        verify(tuneMock, times(0)).setGender(TuneGender.UNKNOWN);
     }
 
     public void testIdentifyMissingKey(){
