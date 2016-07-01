@@ -9,9 +9,12 @@ import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.tune.Tune;
 import com.tune.TuneEvent;
+import com.tune.TuneGender;
 
+import java.util.Locale;
 import java.util.Map;
 
+import static com.fiftyfive.cargo.ModelsUtils.getInt;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 
@@ -94,32 +97,49 @@ public class TuneHandler extends AbstractTagHandler {
         else if (!parameters.containsKey(ADVERTISER_ID) || !parameters.containsKey(CONVERSION_KEY))
             Log.w("55", "Missing a required parameter to init Tune");
         else
-            Log.i("55", "MAT is already init");
+            Log.i("55", "Tune is already init");
       }
 
     /**
-      * In order to identify the user as a unique visitor,
-      * we use the android ID which is unique for each android device
-      * Check http://stackoverflow.com/a/2785493 if you don't know how to retrieve it
-      *
-      * @param parameters    the parameters given at the moment of the dataLayer.push(),
-      *                      passed through the GTM container and the execute method.
-      *                      The only parameter requested here is the android_id (User.USER_ID)
-      */
-    private void identify(Map<String, Object> parameters) {
+     * In order to identify the user as a unique visitor,
+     * we use the android ID which is unique for each android device
+     * Check http://stackoverflow.com/a/2785493 if you don't know how to retrieve it
+     *
+     * @param map    the parameters given at the moment of the dataLayer.push(),
+     *                      passed through the GTM container and the execute method.
+     *                      The only parameter requested here is the android_id (User.USER_ID)
+     */
+    private void identify(Map<String, Object> map) {
         // set the android id given through the User.USER_ID parameter in Tune
-        String android_id = getString(parameters, User.USER_ID);
+        String android_id = getString(map, User.USER_ID);
         if (android_id == null) {
-            Log.w("CARGO ATInternetHandler", " in identify() missing USER_ID (android_id) parameter. USER_ID hasn't been set");
+            Log.w("Cargo TuneHandler", " in identify() missing USER_ID (android_id) parameter. " +
+                    "USER_ID and any other parameters given haven't been set");
             return ;
         }
-
-        // set the USER_GOOGLE_ID & USER_FACEBOOK_ID if they exist
+        // set the GOOGLE_ID, FACEBOOK_ID, TWITTER_ID, AGE and GENDER if they exist
         tune.setUserId(android_id);
-        if (getString(parameters, User.USER_GOOGLE_ID) != null)
-            tune.setGoogleUserId(parameters.remove(User.USER_GOOGLE_ID).toString());
-        if (getString(parameters, User.USER_FACEBOOK_ID) != null)
-            tune.setFacebookUserId(parameters.remove(User.USER_FACEBOOK_ID).toString());
+        if (map.containsKey(User.USER_GOOGLE_ID))
+            tune.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
+        if (map.containsKey(User.USER_FACEBOOK_ID))
+            tune.setFacebookUserId(getString(map, User.USER_FACEBOOK_ID));
+        if (map.containsKey(User.USER_TWITTER_ID))
+            tune.setTwitterUserId(getString(map, User.USER_TWITTER_ID));
+        if (map.containsKey(User.USER_AGE))
+            tune.setAge(getInt(map, User.USER_AGE, -1));
+        if (map.containsKey(User.USER_GENDER))
+            setGender(getString(map, User.USER_GENDER));
+
+    }
+
+
+    private void setGender(String val) {
+        String gender = val.toUpperCase(Locale.ENGLISH);
+        if (gender.equals("MALE") || gender.equals("FEMALE") || gender.equals("UNKNOWN"))
+            tune.setGender(TuneGender.forValue(val));
+        else
+            Log.w("Cargo TuneHandler", "tune.setGender() waits for MALE/FEMALE/UNKNOWN");
+
     }
 
 
