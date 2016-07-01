@@ -78,9 +78,19 @@ public class TuneHandlerTest extends TestCase {
         assertFalse(handler.isInitialized());
     }
 
+    public void testUserIdWithString(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_ID, "123456-543210-55-42");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(1)).setUserId("123456-543210-55-42");
+    }
+
+
     public void testUserGoogleIdWithInt(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GOOGLE_ID, 123);
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGoogleUserId("123");
@@ -89,6 +99,7 @@ public class TuneHandlerTest extends TestCase {
     public void testUserGoogleIdWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GOOGLE_ID, "234");
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGoogleUserId("234");
@@ -97,6 +108,7 @@ public class TuneHandlerTest extends TestCase {
     public void testUserFacebookIdWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_FACEBOOK_ID, "345");
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setFacebookUserId("345");
@@ -105,6 +117,7 @@ public class TuneHandlerTest extends TestCase {
     public void testUserTwitterIdWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_TWITTER_ID, "012");
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setTwitterUserId("012");
@@ -113,6 +126,7 @@ public class TuneHandlerTest extends TestCase {
     public void testUserAgeWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_AGE, "55");
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setAge(55);
@@ -121,6 +135,7 @@ public class TuneHandlerTest extends TestCase {
     public void testUserAgeWithInt(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_AGE, 42);
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setAge(42);
@@ -129,6 +144,7 @@ public class TuneHandlerTest extends TestCase {
     public void testUserGenderMale(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GENDER, "male");
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.MALE);
@@ -137,6 +153,7 @@ public class TuneHandlerTest extends TestCase {
     public void testUserGenderFemale(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GENDER, "female");
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.FEMALE);
@@ -145,6 +162,7 @@ public class TuneHandlerTest extends TestCase {
     public void testUserGenderUnknown(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GENDER, "unknown");
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.UNKNOWN);
@@ -153,6 +171,7 @@ public class TuneHandlerTest extends TestCase {
     public void testIdentifyMissingKey(){
         HashMap<String, Object> map= new HashMap<>();
         map.put("userMissingId", "123");
+        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.execute("Tune_identify", map);
         assertTrue(true);

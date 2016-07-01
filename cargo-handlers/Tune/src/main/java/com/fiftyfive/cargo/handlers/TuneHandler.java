@@ -132,7 +132,6 @@ public class TuneHandler extends AbstractTagHandler {
 
     }
 
-
     private void setGender(String val) {
         String gender = val.toUpperCase(Locale.ENGLISH);
         if (gender.equals("MALE") || gender.equals("FEMALE") || gender.equals("UNKNOWN"))
