@@ -70,35 +70,39 @@ public class TuneHandler extends AbstractTagHandler {
             case "Tune_identify":
                 identify(map);
             default:
-                Log.i("55", "Function "+s+" is not registered");
+                Log.i("Cargo TuneHandler", "Function "+s+" is not registered");
         }
     }
 
     /**
      * The method you need to call first. Register your facebook app id to the facebook SDK
      *
-     * @param parameters   the parameters given at the moment of the dataLayer.push(),
+     * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
      *              * advertiserId & conversionKey : ids Tune gives you when you register your app
      *
      */
-    private void init(Map<String, Object> parameters) {
-        if(!init && parameters.containsKey(ADVERTISER_ID) && parameters.containsKey(CONVERSION_KEY)) {
+    private void init(Map<String, Object> map) {
+        if (init)
+            Log.i("Cargo TuneHandler", "Tune is already init");
+        else if(map.containsKey(ADVERTISER_ID) && map.containsKey(CONVERSION_KEY)) {
+            if (getString(map, ADVERTISER_ID) != null && getString(map, CONVERSION_KEY) != null) {
+                // set the required parameters
+                Tune.init(cargo.getApplication(),
+                        map.remove(ADVERTISER_ID).toString(),
+                        map.remove(CONVERSION_KEY).toString());
 
-            // set the required parameters
-            Tune.init(cargo.getApplication(),
-                    parameters.remove(ADVERTISER_ID).toString(),
-                    parameters.remove(CONVERSION_KEY).toString());
-
-            // retrieve the Tune instance
-            tune = Tune.getInstance();
-            init = true;
+                // retrieve the Tune instance
+                tune = Tune.getInstance();
+                init = true;
+            }
+            else
+                Log.w("Cargo TuneHandler", "At least one required parameter is set to null" +
+                        " in init Tune. Tune hasn't been init.");
         }
-        else if (!parameters.containsKey(ADVERTISER_ID) || !parameters.containsKey(CONVERSION_KEY))
-            Log.w("55", "Missing a required parameter to init Tune");
         else
-            Log.i("55", "Tune is already init");
-      }
+            Log.w("Cargo TuneHandler", "Missing a required parameter to init Tune");
+    }
 
     /**
      * In order to identify the user as a unique visitor,
@@ -113,7 +117,7 @@ public class TuneHandler extends AbstractTagHandler {
         // set the android id given through the User.USER_ID parameter in Tune
         String android_id = getString(map, User.USER_ID);
         if (android_id == null) {
-            Log.w("Cargo TuneHandler", " in identify() missing USER_ID (android_id) parameter. " +
+            Log.w("Cargo TuneHandler", " in identify() missing mandatory parameter USER_ID. " +
                     "USER_ID and any other parameters given haven't been set");
             return ;
         }
@@ -147,7 +151,7 @@ public class TuneHandler extends AbstractTagHandler {
 
     }
 
-    
+
     @Override
     public void onActivityResumed(Activity activity) {
         if (init) {
