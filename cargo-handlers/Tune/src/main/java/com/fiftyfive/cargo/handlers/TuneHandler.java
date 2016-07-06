@@ -5,16 +5,23 @@ import android.util.Log;
 
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
+import com.fiftyfive.cargo.models.Event;
+import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.tune.Tune;
 import com.tune.TuneEvent;
 import com.tune.TuneGender;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.fiftyfive.cargo.ModelsUtils.getDate;
+import static com.fiftyfive.cargo.ModelsUtils.getDouble;
 import static com.fiftyfive.cargo.ModelsUtils.getInt;
+import static com.fiftyfive.cargo.ModelsUtils.getList;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 
@@ -31,8 +38,32 @@ public class TuneHandler extends AbstractTagHandler {
 
     public Cargo cargo = Cargo.getInstance();
 
-    String ADVERTISER_ID = "advertiserId";
-    String CONVERSION_KEY = "conversionKey";
+    final String ADVERTISER_ID = "advertiserId";
+    final String CONVERSION_KEY = "conversionKey";
+
+    final String EVENT_RATING = "eventRating";
+    final String EVENT_DATE1 = "eventDate1";
+    final String EVENT_DATE2 = "eventDate2";
+    final String EVENT_REVENUE = "eventRevenue";
+    final String EVENT_ITEMS = "eventItems";
+    final String EVENT_LEVEL = "eventLevel";
+    final String EVENT_RECEIPT_DATA = "eventReceiptData";
+    final String EVENT_RECEIPT_SIGNATURE = "eventReceiptSignature";
+    final String EVENT_QUANTITY = "eventQuantity";
+
+    final String[] EVENT_PROPERTIES = {
+            "eventCurrencyCode",
+            "eventAdvertiserRefId",
+            "eventContentId",
+            "eventContentType",
+            "eventSearchString",
+            "eventAttribute1",
+            "eventAttribute2",
+            "eventAttribute3",
+            "eventAttribute4",
+            "eventAttribute5"
+    };
+
 
     /**
      * Init properly the SDK, not needed here
@@ -51,6 +82,8 @@ public class TuneHandler extends AbstractTagHandler {
     public void register(Container container) {
         container.registerFunctionCallTagCallback("Tune_init", this);
         container.registerFunctionCallTagCallback("Tune_identify", this);
+        container.registerFunctionCallTagCallback("Tune_tagEvent", this);
+        container.registerFunctionCallTagCallback("Tune_tagScreen", this);
 
     }
 
@@ -69,6 +102,10 @@ public class TuneHandler extends AbstractTagHandler {
                 break;
             case "Tune_identify":
                 identify(map);
+                break;
+            case "Tune_tagEvent":
+                tagEvent(map);
+                break;
             default:
                 Log.i("Cargo TuneHandler", "Function "+s+" is not registered");
         }
@@ -105,6 +142,25 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
     /**
+     * A simple method called by identify() to set the gender in a secured way
+     *
+     * @param val   The gender given in the identify method.
+     *              If the gender doesn't match with the Tune genders,
+     *              sets the gender to UNKNOWN.
+     */
+    private void setGender(String val) {
+        String gender = val.toUpperCase(Locale.ENGLISH);
+        if (gender.equals("MALE") || gender.equals("FEMALE") || gender.equals("UNKNOWN"))
+            tune.setGender(TuneGender.forValue(val));
+        else {
+            tune.setGender(TuneGender.UNKNOWN);
+            Log.w("Cargo TuneHandler", "in identify, waiting for MALE/FEMALE/UNKNOWN," +
+                    " gender has been set to UNKNOWN");
+        }
+
+    }
+
+    /**
      * In order to identify the user as a unique visitor,
      * we use the android ID which is unique for each android device
      * Check http://stackoverflow.com/a/2785493 if you don't know how to retrieve it
@@ -114,6 +170,7 @@ public class TuneHandler extends AbstractTagHandler {
      *                      The only parameter requested here is the android_id (User.USER_ID)
      */
     private void identify(Map<String, Object> map) {
+
         // set the android id given through the User.USER_ID parameter in Tune
         String android_id = getString(map, User.USER_ID);
         if (android_id == null) {
@@ -121,8 +178,9 @@ public class TuneHandler extends AbstractTagHandler {
                     "USER_ID and any other parameters given haven't been set");
             return ;
         }
-        // set the GOOGLE_ID, FACEBOOK_ID, TWITTER_ID, AGE and GENDER if they exist
         tune.setUserId(android_id);
+
+        // set the GOOGLE_ID, FACEBOOK_ID, TWITTER_ID, AGE and GENDER if they exist
         if (map.containsKey(User.USER_GOOGLE_ID))
             tune.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
         if (map.containsKey(User.USER_FACEBOOK_ID))
@@ -133,16 +191,64 @@ public class TuneHandler extends AbstractTagHandler {
             tune.setAge(getInt(map, User.USER_AGE, -1));
         if (map.containsKey(User.USER_GENDER))
             setGender(getString(map, User.USER_GENDER));
-
     }
 
-    private void setGender(String val) {
-        String gender = val.toUpperCase(Locale.ENGLISH);
-        if (gender.equals("MALE") || gender.equals("FEMALE") || gender.equals("UNKNOWN"))
-            tune.setGender(TuneGender.forValue(val));
-        else
-            Log.w("Cargo TuneHandler", "tune.setGender() waits for MALE/FEMALE/UNKNOWN");
+    private void tagEvent(Map<String, Object> map) {
 
+        TuneEvent tuneEvent;
+
+        if (map.containsKey(Event.EVENT_NAME))
+            tuneEvent = new TuneEvent(getString(map, Event.EVENT_NAME));
+        else if(map.containsKey(Event.EVENT_ID))
+            tuneEvent = new TuneEvent(getInt(map, Event.EVENT_ID, -1));
+        else {
+            Log.w("Cargo TuneHandler", " in order to create an event, " +
+                    "an eventName or eventId is mandatory. The event hasn't been created.");
+            return ;
+        }
+
+        tuneEvent = eventBuilder(map, tuneEvent);
+
+        if (tuneEvent != null)
+            tune.measureEvent(tuneEvent);
+    }
+
+    private TuneEvent eventBuilder(Map<String, Object> map, TuneEvent tuneEvent) {
+
+        if (map.containsKey(EVENT_RATING))
+            tuneEvent.withRating(getDouble(map, EVENT_RATING, -1));
+        if (map.containsKey(EVENT_DATE1))
+            tuneEvent.withDate1(getDate(map, EVENT_DATE1));
+        if (map.containsKey(EVENT_DATE2))
+            tuneEvent.withDate2(getDate(map, EVENT_DATE2));
+        if (map.containsKey(EVENT_REVENUE))
+            tuneEvent.withRevenue(getDouble(map, EVENT_REVENUE, -1));
+        if (map.containsKey(EVENT_ITEMS))
+            tuneEvent.withEventItems(getList(map, EVENT_ITEMS));
+        if (map.containsKey(EVENT_LEVEL))
+            tuneEvent.withLevel(getInt(map, EVENT_LEVEL, -1));
+        if (map.containsKey(EVENT_RECEIPT_DATA))
+            tuneEvent.withReceipt(getString(map, EVENT_RECEIPT_DATA),
+                    getString(map, EVENT_RECEIPT_SIGNATURE));
+        if (map.containsKey(EVENT_QUANTITY))
+            tuneEvent.withQuantity(getInt(map, EVENT_QUANTITY, -1));
+
+        for (String property : EVENT_PROPERTIES) {
+            if (map.containsKey(property)) {
+                String mName = "with"+property.substring(5);
+                try {
+                    Method method = tuneEvent.getClass().getMethod(mName, String.class);
+                    method.invoke(tuneEvent, map.remove(property));
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return tuneEvent;
     }
 
 
