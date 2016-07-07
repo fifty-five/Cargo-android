@@ -280,6 +280,12 @@ public class TuneHandler extends AbstractTagHandler {
      */
     private TuneEvent eventBuilder(Map<String, Object> map, TuneEvent tuneEvent) {
 
+        if (tuneEvent == null) {
+            Log.w("Cargo TuneHandler", "trying to set properties on a nil TuneEvent. " +
+                    "Operation has been cancelled");
+            return null ;
+        }
+
         // for all the different parameters that could be add, we check if they exist,
         // and call on the appropriate TuneEvent method to set it.
         if (map.containsKey(EVENT_RATING))
