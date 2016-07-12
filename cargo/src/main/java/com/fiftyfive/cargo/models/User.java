@@ -11,4 +11,6 @@ public final class User {
     public static final String USER_GOOGLE_ID = "userGoogleId";
     public static final String USER_FACEBOOK_ID = "userFacebookId";
     public static final String USER_TWITTER_ID = "userTwitterId";
+    public static final String USERNAME = "userName";
+    public static final String USER_EMAIL = "userEmail";
 }
