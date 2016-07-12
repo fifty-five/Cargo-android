@@ -202,7 +202,7 @@ public class TuneHandler extends AbstractTagHandler {
 
         if (map.containsKey(Event.EVENT_NAME))
             tuneEvent = new TuneEvent(getString(map, Event.EVENT_NAME));
-        else if(map.containsKey(Event.EVENT_ID))
+        else if (map.containsKey(Event.EVENT_ID))
             tuneEvent = new TuneEvent(getInt(map, Event.EVENT_ID, -1));
         else {
             Log.w("Cargo TuneHandler", " in order to create an event, " +
@@ -288,23 +288,41 @@ public class TuneHandler extends AbstractTagHandler {
 
         // for all the different parameters that could be add, we check if they exist,
         // and call on the appropriate TuneEvent method to set it.
-        if (map.containsKey(EVENT_RATING))
+        if (map.containsKey(EVENT_RATING)) {
             tuneEvent.withRating(getDouble(map, EVENT_RATING, -1));
-        if (map.containsKey(EVENT_DATE1))
+            map.remove(EVENT_RATING);
+        }
+        if (map.containsKey(EVENT_DATE1)) {
             tuneEvent.withDate1(getDate(map, EVENT_DATE1));
-        if (map.containsKey(EVENT_DATE2))
-            tuneEvent.withDate2(getDate(map, EVENT_DATE2));
-        if (map.containsKey(EVENT_REVENUE))
+            map.remove(EVENT_DATE1);
+
+            if (map.containsKey(EVENT_DATE2)) {
+                tuneEvent.withDate2(getDate(map, EVENT_DATE2));
+                map.remove(EVENT_DATE2);
+            }
+        }
+        if (map.containsKey(EVENT_REVENUE)) {
             tuneEvent.withRevenue(getDouble(map, EVENT_REVENUE, -1));
-        if (map.containsKey(EVENT_ITEMS))
+            map.remove(EVENT_REVENUE);
+        }
+        if (map.containsKey(EVENT_ITEMS)) {
             tuneEvent.withEventItems(getList(map, EVENT_ITEMS));
-        if (map.containsKey(EVENT_LEVEL))
+            map.remove(EVENT_ITEMS);
+        }
+        if (map.containsKey(EVENT_LEVEL)) {
             tuneEvent.withLevel(getInt(map, EVENT_LEVEL, -1));
-        if (map.containsKey(EVENT_RECEIPT_DATA))
+            map.remove(EVENT_LEVEL);
+        }
+        if (map.containsKey(EVENT_RECEIPT_DATA)) {
             tuneEvent.withReceipt(getString(map, EVENT_RECEIPT_DATA),
                     getString(map, EVENT_RECEIPT_SIGNATURE));
-        if (map.containsKey(EVENT_QUANTITY))
+            map.remove(EVENT_RECEIPT_DATA);
+            map.remove(EVENT_RECEIPT_SIGNATURE);
+        }
+        if (map.containsKey(EVENT_QUANTITY)) {
             tuneEvent.withQuantity(getInt(map, EVENT_QUANTITY, -1));
+            map.remove(EVENT_QUANTITY);
+        }
 
         // for all the String format parameters that could be given, we check if they are set, and
         // we call on the corresponding TuneEvent method through reflection.
@@ -314,14 +332,15 @@ public class TuneHandler extends AbstractTagHandler {
                 try {
                     Method method = tuneEvent.getClass().getMethod(mName, String.class);
                     method.invoke(tuneEvent, map.remove(property));
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                } catch (Exception e) {
+                    Log.e("Cargo TuneHandler", "exception", e);
                     e.printStackTrace();
                 }
             }
+        }
+        for (Map.Entry<String, Object> entry : map.entrySet())
+        {
+            Log.w("Cargo TuneHandler", " the event builder couldn't find any match with the parameter key ["+entry.getKey()+"] with value ["+entry.getValue().toString()+"]");
         }
         return tuneEvent;
     }
