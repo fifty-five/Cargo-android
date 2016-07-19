@@ -28,7 +28,7 @@ public class ModelsUtils {
 
     public static int getInt(Map<String, Object> params, String name, int defaultValue){
         Object value = params.get(name);
-        if(value instanceof Integer){
+        if (value instanceof Integer){
             return (int) value;
         }
         else if (value instanceof String){
