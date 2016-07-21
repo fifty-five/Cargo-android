@@ -78,10 +78,11 @@ public class FirebaseHandler extends AbstractTagHandler {
 
     /**
      * The method you may call first if you want to disable the Firebase analytics collection
+     * This setting is persisted across app sessions. By default it is enabled.
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * ANALYTICS_COLLECTION : a boolean set to false to stop the data collection
+     *              * ANALYTICS_COLLECTION : a boolean true/false for collection enabled/disabled
      */
     private void init(Map<String, Object> map) {
 
