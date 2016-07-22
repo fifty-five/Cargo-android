@@ -200,17 +200,22 @@ public class TuneHandler extends AbstractTagHandler {
 
         TuneEvent tuneEvent;
 
-        if (map.containsKey(Event.EVENT_NAME))
+        if (map.containsKey(Event.EVENT_NAME)) {
             tuneEvent = new TuneEvent(getString(map, Event.EVENT_NAME));
-        else if (map.containsKey(Event.EVENT_ID))
+            map.remove(Event.EVENT_NAME);
+        }
+        else if (map.containsKey(Event.EVENT_ID)) {
             tuneEvent = new TuneEvent(getInt(map, Event.EVENT_ID, -1));
+            map.remove(Event.EVENT_ID);
+        }
         else {
             Log.w("Cargo TuneHandler", " in order to create an event, " +
                     "an eventName or eventId is mandatory. The event hasn't been created.");
             return ;
         }
 
-        tuneEvent = eventBuilder(map, tuneEvent);
+        if (map.size() > 0)
+            tuneEvent = eventBuilder(map, tuneEvent);
 
         // if the returned event is not null, the event is fired.
         if (tuneEvent != null)
@@ -234,15 +239,18 @@ public class TuneHandler extends AbstractTagHandler {
     private void tagScreen(Map<String, Object> map) {
         TuneEvent tuneEvent;
 
-        if (map.containsKey(Screen.SCREEN_NAME))
+        if (map.containsKey(Screen.SCREEN_NAME)) {
             tuneEvent = new TuneEvent(getString(map, Screen.SCREEN_NAME));
+            map.remove(Screen.SCREEN_NAME);
+        }
         else {
             Log.w("Cargo TuneHandler", " in order to tag a screen, " +
                     "an screenName is mandatory. The event hasn't been created.");
             return ;
         }
 
-        tuneEvent = eventBuilder(map, tuneEvent);
+        if (map.size() > 0)
+            tuneEvent = eventBuilder(map, tuneEvent);
 
         // if the returned event is not null, the event is fired.
         if (tuneEvent != null)
