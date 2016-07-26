@@ -1,6 +1,7 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.appevents.AppEventsLogger;
@@ -8,13 +9,17 @@ import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Tracker;
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.android.gms.tagmanager.Container;
 import com.facebook.FacebookSdk;
 
-
+import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.Map;
 
 import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
+import static com.fiftyfive.cargo.ModelsUtils.getDouble;
+import static com.fiftyfive.cargo.ModelsUtils.getInt;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 /**
@@ -58,6 +63,7 @@ public class FacebookHandler extends AbstractTagHandler {
     public void register(Container container) {
         container.registerFunctionCallTagCallback("FB_init", this);
         container.registerFunctionCallTagCallback("FB_tagEvent", this);
+        container.registerFunctionCallTagCallback("FB_purchase", this);
 
     }
 
@@ -76,6 +82,9 @@ public class FacebookHandler extends AbstractTagHandler {
                 break;
             case "FB_tagEvent":
                 tagEvent(map);
+                break;
+            case "FB_purchase":
+                purchase(map);
                 break;
             default:
                 Log.i("55", "Function "+s+" is not registered");
@@ -105,13 +114,104 @@ public class FacebookHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              The only parameter here is the event name
+     *              * event name : the only parameter requested here
+     *              * valueToSum : When reported, all of the valueToSum properties will be summed
+     *                              together. It is an arbitrary number that can represent any value
+     *                              (e.g., a price or a quantity).
+     *              * parameters : any other key in the map will be taken as a parameter linked
+     *                              to the event. You can set up to 25 parameters for a given event.
+     *
      */
     private void tagEvent(Map<String, Object> map){
 
-        facebookLogger.logEvent(getString(map, Event.EVENT_NAME));
+        String eventName;
+        double valueToSum;
+        Bundle parameters;
+
+        if (!map.containsKey(Event.EVENT_NAME)) {
+            Log.w("Cargo FacebookHandler", " in order to create an event, " +
+                    "an eventName is mandatory. The event hasn't been created.");
+            return ;
+        }
+
+        eventName = getString(map, Event.EVENT_NAME);
+        map.remove(Event.EVENT_NAME);
+
+        // attach a valueToSum to the event if it exists
+        if (map.containsKey("valueToSum")) {
+            valueToSum = getDouble(map, "valueToSum", 0);
+            map.remove("valueToSum");
+
+            // check for parameters and set them to the event if they exist.
+            if (map.size() > 0) {
+                parameters = eventParamBuilder(map);
+                // fire the tag with the given parameters & valueToSum
+                facebookLogger.logEvent(eventName, valueToSum, parameters);
+                return ;
+            }
+            // fire the tag with the given valueToSum
+            facebookLogger.logEvent(eventName, valueToSum);
+            return ;
+        }
+
+        // attach parameters to the event if they exist
+        if (map.size() > 0) {
+            parameters = eventParamBuilder(map);
+            // fire the tag with the given parameters
+            facebookLogger.logEvent(eventName, parameters);
+            return ;
+        }
+
+        // fire the tag
+        facebookLogger.logEvent(eventName);
     }
 
+    /**
+     * The method used to report a purchase event to your facebook app
+     *
+     * @param map   the parameters given at the moment of the dataLayer.push(),
+     *              passed through the GTM container and the execute method.
+     *              * cartPrice : represents the amount of money spent on the purchase
+     *              * currencyCode : the code of the currency the purchase has been registered with
+     *
+     */
+    private void purchase (Map<String, Object> map) {
+        if (!map.containsKey("cartPrice") || !map.containsKey("currencyCode")) {
+            Log.w("Cargo FacebookHandler", " in order to log a purchase, you have to " +
+                    "set a moneySpent and a currencyCode parameters. Operation has been cancelled");
+            return ;
+        }
+
+        double price = getDouble(map, "cartPrice", -1);
+        String currency = getString(map, "currencyCode");
+        facebookLogger.logPurchase(BigDecimal.valueOf(price), Currency.getInstance(currency));
+    }
+
+    /**
+     * A simple method to put the parameters given in a bundle and to return it
+     *
+     * @param map   the parameters given at the moment of the dataLayer.push(),
+     *              passed through the GTM container and the execute method.
+     * @return      the bundle containing all the parameters initially given for an event
+     *
+     */
+    protected Bundle eventParamBuilder(Map<String, Object> map) {
+        Bundle bundle = new Bundle();
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof String)
+                bundle.putString(entry.getKey(), getString(map, entry.getKey()));
+            else if (entry.getValue() instanceof Boolean) {
+                if (getBoolean(map, entry.getKey(), false))
+                    bundle.putInt(entry.getKey(), 1);
+                else
+                    bundle.putInt(entry.getKey(), 0);
+            }
+            else if (entry.getValue() instanceof Integer)
+                bundle.putInt(entry.getKey(), getInt(map, entry.getKey(), 0));
+        }
+        return bundle;
+    }
 
     @Override
     public void onActivityStarted(Activity activity) {
