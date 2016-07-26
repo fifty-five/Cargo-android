@@ -29,14 +29,19 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  * Author : louis
  * Created: 03/11/15
  *
- *  * The class which handles interactions with the Facebook SDK
+ *  * The class which handles interactions with the Tune SDK
  */
 public class TuneHandler extends AbstractTagHandler {
 
-    public Tune tune;
+    protected Tune tune;
     private boolean init = false;
 
     public Cargo cargo = Cargo.getInstance();
+
+    final String Tune_init = "Tune_init";
+    final String Tune_identify = "Tune_identify";
+    final String Tune_tagEvent = "Tune_tagEvent";
+    final String Tune_tagScreen = "Tune_tagScreen";
 
     final String ADVERTISER_ID = "advertiserId";
     final String CONVERSION_KEY = "conversionKey";
@@ -84,10 +89,10 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback("Tune_init", this);
-        container.registerFunctionCallTagCallback("Tune_identify", this);
-        container.registerFunctionCallTagCallback("Tune_tagEvent", this);
-        container.registerFunctionCallTagCallback("Tune_tagScreen", this);
+        container.registerFunctionCallTagCallback(Tune_init, this);
+        container.registerFunctionCallTagCallback(Tune_identify, this);
+        container.registerFunctionCallTagCallback(Tune_tagEvent, this);
+        container.registerFunctionCallTagCallback(Tune_tagScreen, this);
 
     }
 
@@ -101,16 +106,16 @@ public class TuneHandler extends AbstractTagHandler {
     public void execute(String s, Map<String, Object> map) {
 
         switch (s) {
-            case "Tune_init":
+            case Tune_init:
                 init(map);
                 break;
-            case "Tune_identify":
+            case Tune_identify:
                 identify(map);
                 break;
-            case "Tune_tagEvent":
+            case Tune_tagEvent:
                 tagEvent(map);
                 break;
-            case "Tune_tagScreen":
+            case Tune_tagScreen:
                 tagScreen(map);
                 break;
             default:
@@ -119,7 +124,7 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
     /**
-     * The method you need to call first. Register your facebook app id to the facebook SDK
+     * The method you need to call first. Register your tune app id to the tune SDK
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
@@ -127,8 +132,8 @@ public class TuneHandler extends AbstractTagHandler {
      */
     private void init(Map<String, Object> map) {
         if (init)
-            Log.i("Cargo TuneHandler", "Tune is already init");
-        else if(map.containsKey(ADVERTISER_ID) && map.containsKey(CONVERSION_KEY)) {
+            Log.i("Cargo TuneHandler", "Tune has already been initialized");
+        else if (map.containsKey(ADVERTISER_ID) && map.containsKey(CONVERSION_KEY)) {
             if (getString(map, ADVERTISER_ID) != null && getString(map, CONVERSION_KEY) != null) {
                 // set the required parameters
                 Tune.init(cargo.getApplication(),
@@ -148,9 +153,8 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
     /**
-     * In order to identify the user as a unique visitor,
-     * we use the android ID which is unique for each android device
-     * Check http://stackoverflow.com/a/2785493 if you don't know how to retrieve it
+     * In order to identify the user as a unique visitor and to associate to a unique id
+     * the related social networks ids, age, mail, username, gender...
      *
      * @param map    the parameters given at the moment of the dataLayer.push(),
      *               passed through the GTM container and the execute method.
@@ -159,13 +163,8 @@ public class TuneHandler extends AbstractTagHandler {
     private void identify(Map<String, Object> map) {
 
         // set the android id given through the User.USER_ID parameter in Tune
-        String android_id = getString(map, User.USER_ID);
-        if (android_id == null) {
-            Log.w("Cargo TuneHandler", " in identify() missing mandatory parameter USER_ID. " +
-                    "USER_ID and any other parameters given haven't been set");
-            return ;
-        }
-        tune.setUserId(android_id);
+        if (map.containsKey(User.USER_ID))
+            tune.setUserId(getString(map, User.USER_ID));
 
         // set the GOOGLE_ID, FACEBOOK_ID, TWITTER_ID, USERNAME, EMAIL, AGE and GENDER if they exist
         if (map.containsKey(User.USER_GOOGLE_ID))
@@ -354,13 +353,20 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
 
-
+    /**
+     * A callback triggered when an activity starts
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityStarted(Activity activity) {
 
     }
 
-
+    /**
+     * A callback triggered when an activity is resumed
+     * Used to get referring package name and url scheme from and for the session measurement
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityResumed(Activity activity) {
         if (init) {
@@ -369,15 +375,28 @@ public class TuneHandler extends AbstractTagHandler {
         }
     }
 
+    /**
+     * A callback triggered when an activity is paused
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityPaused(Activity activity) {
 
     }
 
+    /**
+     * The getter for the init boolean, returning if the tagHandler has been initialized
+     *
+     * @return the boolean
+     */
     public boolean isInitialized(){
         return init;
     }
 
+    /**
+     * A callback triggered when an activity stops
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityStopped(Activity activity) {
 
