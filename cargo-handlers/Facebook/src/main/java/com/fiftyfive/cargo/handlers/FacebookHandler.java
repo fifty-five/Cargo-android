@@ -200,6 +200,7 @@ public class FacebookHandler extends AbstractTagHandler {
      *
      */
     protected Bundle eventParamBuilder(Map<String, Object> map) {
+
         Bundle bundle = new Bundle();
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -217,15 +218,21 @@ public class FacebookHandler extends AbstractTagHandler {
         return bundle;
     }
 
+    /**
+     * A callback triggered when an activity starts
+     *
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityStarted(Activity activity) {
 
     }
 
     /**
-     * Logs the launch of an activity
+     * A callback triggered when an activity is resumed
+     * Logs the resume on facebook SDK to measure sessions
      *
-     * @param activity The current activity
+     * @param activity  the activity which triggered the callback
      */
     @Override
     public void onActivityResumed(Activity activity) {
@@ -233,15 +240,21 @@ public class FacebookHandler extends AbstractTagHandler {
     }
 
     /**
-     * Logs the pause of an activity
+     * A callback triggered when an activity is paused
+     * Logs the pause on facebook SDK to measure sessions
      *
-     * @param activity The current activity
+     * @param activity  the activity which triggered the callback
      */
     @Override
     public void onActivityPaused(Activity activity) {
         AppEventsLogger.deactivateApp(activity);
     }
 
+    /**
+     * A callback triggered when an activity stops
+     *
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityStopped(Activity activity) {
 
