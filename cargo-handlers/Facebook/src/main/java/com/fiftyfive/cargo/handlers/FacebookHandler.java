@@ -9,7 +9,7 @@ import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Tracker;
-import com.google.android.gms.common.api.BooleanResult;
+import com.fiftyfive.cargo.models.Transaction;
 import com.google.android.gms.tagmanager.Container;
 import com.facebook.FacebookSdk;
 
@@ -35,8 +35,12 @@ public class FacebookHandler extends AbstractTagHandler {
      * The AppEventsLogger class allows the developer to log various types of events back to Facebook.
      * (https://developers.facebook.com/docs/reference/android/current/class/AppEventsLogger/)
      */
-    public AppEventsLogger facebookLogger;
+    protected AppEventsLogger facebookLogger;
 
+    final String FB_init = "FB_init";
+    final String FB_tagEvent = "FB_tagEvent";
+    final String FB_purchase = "FB_purchase";
+    final String VALUE_TO_SUM = "valueToSum";
 
     /**
      * Init properly facebook SDK
@@ -61,9 +65,9 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback("FB_init", this);
-        container.registerFunctionCallTagCallback("FB_tagEvent", this);
-        container.registerFunctionCallTagCallback("FB_purchase", this);
+        container.registerFunctionCallTagCallback(FB_init, this);
+        container.registerFunctionCallTagCallback(FB_tagEvent, this);
+        container.registerFunctionCallTagCallback(FB_purchase, this);
 
     }
 
@@ -77,13 +81,13 @@ public class FacebookHandler extends AbstractTagHandler {
     public void execute(String s, Map<String, Object> map) {
 
         switch (s) {
-            case "FB_init":
+            case FB_init:
                 init(map);
                 break;
-            case "FB_tagEvent":
+            case FB_tagEvent:
                 tagEvent(map);
                 break;
-            case "FB_purchase":
+            case FB_purchase:
                 purchase(map);
                 break;
             default:
@@ -102,8 +106,8 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     private void init(Map<String, Object> map) {
 
-        if(map.containsKey("applicationId")){
-            FacebookSdk.setApplicationId(map.remove("applicationId").toString());
+        if(map.containsKey(Tracker.APPLICATION_ID)){
+            FacebookSdk.setApplicationId(map.remove(Tracker.APPLICATION_ID).toString());
         }
         FacebookSdk.setIsDebugEnabled(getBoolean(map, Tracker.ENABLE_DEBUG, false));
 
@@ -138,9 +142,9 @@ public class FacebookHandler extends AbstractTagHandler {
         map.remove(Event.EVENT_NAME);
 
         // attach a valueToSum to the event if it exists
-        if (map.containsKey("valueToSum")) {
-            valueToSum = getDouble(map, "valueToSum", 0);
-            map.remove("valueToSum");
+        if (map.containsKey(VALUE_TO_SUM)) {
+            valueToSum = getDouble(map, VALUE_TO_SUM, 0);
+            map.remove(VALUE_TO_SUM);
 
             // check for parameters and set them to the event if they exist.
             if (map.size() > 0) {
@@ -176,14 +180,14 @@ public class FacebookHandler extends AbstractTagHandler {
      *
      */
     private void purchase (Map<String, Object> map) {
-        if (!map.containsKey("cartPrice") || !map.containsKey("currencyCode")) {
+        if (!map.containsKey(Transaction.TRANSACTION_TOTAL) || !map.containsKey(Transaction.TRANSACTION_CURRENCY_CODE)) {
             Log.w("Cargo FacebookHandler", " in order to log a purchase, you have to " +
                     "set a moneySpent and a currencyCode parameters. Operation has been cancelled");
             return ;
         }
 
-        double price = getDouble(map, "cartPrice", -1);
-        String currency = getString(map, "currencyCode");
+        double price = getDouble(map, Transaction.TRANSACTION_TOTAL, -1);
+        String currency = getString(map, Transaction.TRANSACTION_CURRENCY_CODE);
         facebookLogger.logPurchase(BigDecimal.valueOf(price), Currency.getInstance(currency));
     }
 
