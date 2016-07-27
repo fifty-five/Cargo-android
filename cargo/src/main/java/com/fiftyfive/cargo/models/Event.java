@@ -6,5 +6,7 @@ package com.fiftyfive.cargo.models;
 public final class  Event {
 
     public final static String EVENT_NAME = "eventName";
+    public final static String EVENT_ID = "eventId";
+    public final static String EVENT_TYPE = "eventType";
 
 }

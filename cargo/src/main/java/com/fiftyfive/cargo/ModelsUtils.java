@@ -1,7 +1,10 @@
 package com.fiftyfive.cargo;
 
 
+import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,5 +73,13 @@ public class ModelsUtils {
             return Double.parseDouble(value.toString());
         }
         return defaultValue;
+    }
+
+    public static Date getDate(Map<String, Object> params, String name){
+        Object value = params.get(name);
+        if (value instanceof Date){
+            return (Date) value;
+        }
+        return null;
     }
 }
