@@ -11,8 +11,10 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Map;
+import java.util.Set;
 
 import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
+import static com.fiftyfive.cargo.ModelsUtils.getLong;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 
@@ -147,13 +149,15 @@ public class FirebaseHandler extends AbstractTagHandler {
             if (map.size() > 0) {
 
                 Bundle params = new Bundle();
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    if (entry.getValue() instanceof String)
-                        params.putString(entry.getKey(), getString(map, entry.getKey()));
-                    else if (entry.getValue() instanceof Long)
-                        params.putLong(entry.getKey(), (long) map.get(entry.getKey()));
+                Set<String> keys = map.keySet();
+
+                for (String key : keys) {
+                    if (map.get(key) instanceof String)
+                        params.putString(key, getString(map, key));
+                    else if (map.get(key) instanceof Long)
+                        params.putLong(key, getLong(map, key, 0));
                     else
-                        Log.i("Cargo FirebaseHandler", " parameter with key " + entry.getKey() + " isn't " +
+                        Log.i("Cargo FirebaseHandler", " parameter with key " + key + " isn't " +
                                 "recognize as String or long and will be ignored for event " + eventName);
                 }
                 mFirebaseAnalytics.logEvent(eventName, params);
