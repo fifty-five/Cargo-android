@@ -24,9 +24,13 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  */
 public class FirebaseHandler extends AbstractTagHandler {
 
+    final String Firebase_init = "Firebase_init";
+    final String Firebase_tagEvent = "Firebase_tagEvent";
+    final String Firebase_identify = "Firebase_identify";
     final String ENABLE_COLLECTION = "enableCollection";
 
-    public FirebaseAnalytics mFirebaseAnalytics;
+    protected FirebaseAnalytics mFirebaseAnalytics;
+
 
     /**
      * Init properly the SDK, getting the instance of Firebase.
@@ -48,8 +52,9 @@ public class FirebaseHandler extends AbstractTagHandler {
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback("Firebase_tagEvent", this);
-        container.registerFunctionCallTagCallback("Firebase_identify", this);
+        container.registerFunctionCallTagCallback(Firebase_init, this);
+        container.registerFunctionCallTagCallback(Firebase_identify, this);
+        container.registerFunctionCallTagCallback(Firebase_tagEvent, this);
     }
 
     /**
@@ -62,14 +67,14 @@ public class FirebaseHandler extends AbstractTagHandler {
     public void execute(String s, Map<String, Object> map) {
 
         switch (s) {
-            case "Firebase_init":
+            case Firebase_init:
                 init(map);
                 break;
-            case "Firebase_tagEvent":
-                tagEvent(map);
-                break;
-            case "Firebase_identify":
+            case Firebase_identify:
                 identify(map);
+                break;
+            case Firebase_tagEvent:
+                tagEvent(map);
                 break;
             default:
                 Log.i("Cargo TuneHandler", "Function "+s+" is not registered");
@@ -86,8 +91,10 @@ public class FirebaseHandler extends AbstractTagHandler {
      */
     private void init(Map<String, Object> map) {
 
-        boolean enabled = getBoolean(map, ENABLE_COLLECTION, true);
-        mFirebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+        if (map.containsKey(ENABLE_COLLECTION)) {
+            boolean enabled = getBoolean(map, ENABLE_COLLECTION, true);
+            mFirebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+        }
     }
 
     /**
@@ -131,44 +138,71 @@ public class FirebaseHandler extends AbstractTagHandler {
      */
     private void tagEvent(Map<String, Object> map) {
 
+        // check for the eventName parameter. If it doesn't exist, the tag is aborted
         if (map.containsKey(Event.EVENT_NAME)) {
             String eventName = map.remove(Event.EVENT_NAME).toString();
-            Bundle params = new Bundle();
 
-            // null means that there is no other parameters that the eventName
-            if (map.size() == 0) {
-                mFirebaseAnalytics.logEvent(eventName, null);
-                return ;
-            }
+            // if the map contains other parameters than the event name, loop on the parameters and
+            // put them in a bundle in order to send them as event parameters
+            if (map.size() > 0) {
 
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                if (entry.getValue() instanceof String)
-                    params.putString(entry.getKey(), getString(map, entry.getKey()));
-                else if (entry.getValue() instanceof Long)
-                    params.putLong(entry.getKey(), (long)map.get(entry.getKey()));
+                Bundle params = new Bundle();
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (entry.getValue() instanceof String)
+                        params.putString(entry.getKey(), getString(map, entry.getKey()));
+                    else if (entry.getValue() instanceof Long)
+                        params.putLong(entry.getKey(), (long) map.get(entry.getKey()));
+                    else
+                        Log.i("Cargo FirebaseHandler", " parameter with key " + entry.getKey() + " isn't " +
+                                "recognize as String or long and will be ignored for event " + eventName);
+                }
+                mFirebaseAnalytics.logEvent(eventName, params);
+                return;
             }
-            mFirebaseAnalytics.logEvent(eventName, params);
+            // use null which means that there is no parameters
+            mFirebaseAnalytics.logEvent(eventName, null);
         }
         else
             Log.w("Cargo FirebaseHandler", " in order to create an event, " +
                     "an eventName is required. The event hasn't been created.");
     }
 
+    /**
+     * A callback triggered when an activity starts
+     *
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityStarted(Activity activity) {
 
     }
 
+    /**
+     * A callback triggered when an activity is resumed
+     * Is used to measure session
+     *
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityResumed(Activity activity) {
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, new Bundle());
     }
 
+    /**
+     * A callback triggered when an activity is paused
+     *
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityPaused(Activity activity) {
 
     }
 
+    /**
+     * A callback triggered when an activity stops
+     *
+     * @param activity  the activity which triggered the callback
+     */
     @Override
     public void onActivityStopped(Activity activity) {
 
