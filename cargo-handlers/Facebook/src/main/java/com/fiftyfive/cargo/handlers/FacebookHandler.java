@@ -91,7 +91,7 @@ public class FacebookHandler extends AbstractTagHandler {
                 purchase(map);
                 break;
             default:
-                Log.i("55", "Function "+s+" is not registered");
+                Log.i("Cargo FacebookHandler", " Function "+s+" is not registered");
         }
     }
 
