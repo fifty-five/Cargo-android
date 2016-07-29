@@ -16,6 +16,7 @@ import com.facebook.FacebookSdk;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Map;
+import java.util.Set;
 
 import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
 import static com.fiftyfive.cargo.ModelsUtils.getDouble;
@@ -203,17 +204,18 @@ public class FacebookHandler extends AbstractTagHandler {
 
         Bundle bundle = new Bundle();
 
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof String)
-                bundle.putString(entry.getKey(), getString(map, entry.getKey()));
-            else if (entry.getValue() instanceof Boolean) {
-                if (getBoolean(map, entry.getKey(), false))
-                    bundle.putInt(entry.getKey(), 1);
+        Set<String> keys = map.keySet();
+        for (String key : keys) {
+            if (map.get(key) instanceof String)
+                bundle.putString(key, getString(map, key));
+            else if (map.get(key) instanceof Boolean) {
+                if (getBoolean(map, key, false))
+                    bundle.putInt(key, 1);
                 else
-                    bundle.putInt(entry.getKey(), 0);
+                    bundle.putInt(key, 0);
             }
-            else if (entry.getValue() instanceof Integer)
-                bundle.putInt(entry.getKey(), getInt(map, entry.getKey(), 0));
+            else if (map.get(key) instanceof Integer)
+                bundle.putInt(key, getInt(map, key, 0));
         }
         return bundle;
     }
