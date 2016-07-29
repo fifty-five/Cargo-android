@@ -1,7 +1,9 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Application;
+import android.os.BaseBundle;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.models.Event;
@@ -16,8 +18,11 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -25,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 
 /**
@@ -93,24 +98,28 @@ public class FirebaseHandlerTest extends TestCase {
         verify(fireMock, times(1)).logEvent("randomClick", null);
     }
 
-//    public void testTagEventWithParams() {
-//        HashMap<String, Object> map= new HashMap<>();
-//        map.put(Event.EVENT_NAME, "randomClick");
-//        map.put(Event.EVENT_TYPE, "click");
-//        map.put(Event.EVENT_ID, 5542);
-//        map.put(FirebaseAnalytics.Param.QUANTITY, 5);
-//        map.put(FirebaseAnalytics.Param.CURRENCY, "USD");
-//
-//        handler.execute("Firebase_tagEvent", map);
-//
+    public void testTagEventWithParams() throws Exception {
+
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(Event.EVENT_NAME, "randomClick");
+        map.put(Event.EVENT_TYPE, "click");
+        map.put(Event.EVENT_ID, 5542);
+        map.put(FirebaseAnalytics.Param.QUANTITY, 5);
+        map.put(FirebaseAnalytics.Param.CURRENCY, "USD");
+
+        handler.execute("Firebase_tagEvent", map);
+
 //        Bundle params = new Bundle();
 //        params.putString(Event.EVENT_TYPE, "click");
 //        params.putLong(Event.EVENT_ID, 5542);
 //        params.putLong(FirebaseAnalytics.Param.QUANTITY, 5);
 //        params.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
-//
-//        verify(fireMock, times(1)).logEvent("randomClick", params);
-//    }
+//        Field[] declaredFields = params.getClass().getDeclaredFields();
+
+        verify(fireMock, times(1)).logEvent(anyString(), any(Bundle.class));
+    }
+
+    public void test
 
     public void tearDown() throws Exception {
     }
