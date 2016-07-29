@@ -140,7 +140,6 @@ public class FacebookHandler extends AbstractTagHandler {
         }
 
         eventName = getString(map, Event.EVENT_NAME);
-        map.remove(Event.EVENT_NAME);
 
         // attach a valueToSum to the event if it exists
         if (map.containsKey(VALUE_TO_SUM)) {
@@ -148,7 +147,7 @@ public class FacebookHandler extends AbstractTagHandler {
             map.remove(VALUE_TO_SUM);
 
             // check for parameters and set them to the event if they exist.
-            if (map.size() > 0) {
+            if (map.size() > 1) {
                 parameters = eventParamBuilder(map);
                 // fire the tag with the given parameters & valueToSum
                 facebookLogger.logEvent(eventName, valueToSum, parameters);
@@ -160,7 +159,7 @@ public class FacebookHandler extends AbstractTagHandler {
         }
 
         // attach parameters to the event if they exist
-        if (map.size() > 0) {
+        if (map.size() > 1) {
             parameters = eventParamBuilder(map);
             // fire the tag with the given parameters
             facebookLogger.logEvent(eventName, parameters);
@@ -203,6 +202,8 @@ public class FacebookHandler extends AbstractTagHandler {
     protected Bundle eventParamBuilder(Map<String, Object> map) {
 
         Bundle bundle = new Bundle();
+        String eventName = getString(map, Event.EVENT_NAME);
+        map.remove(Event.EVENT_NAME);
 
         Set<String> keys = map.keySet();
         for (String key : keys) {
@@ -216,6 +217,9 @@ public class FacebookHandler extends AbstractTagHandler {
             }
             else if (map.get(key) instanceof Integer)
                 bundle.putInt(key, getInt(map, key, 0));
+            else
+                Log.i("Cargo FacebookHandler", " parameter with key " + key + " isn't " +
+                    "recognize as String, Boolean or int and will be ignored for event " + eventName);
         }
         return bundle;
     }
