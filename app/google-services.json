@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "328776563065",
+    "firebase_url": "https://cargo-f0ccf.firebaseio.com",
+    "project_id": "cargo-f0ccf",
+    "storage_bucket": "cargo-f0ccf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328776563065:android:bbf70be3ee46c4da",
+        "android_client_info": {
+          "package_name": "com.fiftyfive.cargo_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328776563065-tdp4q3qiponlfp42gkb2bfm08kcs7etb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi36Aun-dH2WFvS0NVDlHTWYD7SWxn8K8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

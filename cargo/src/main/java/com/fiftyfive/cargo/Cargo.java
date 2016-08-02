@@ -73,6 +73,7 @@ public class Cargo {
         register("com.fiftyfive.cargo.handlers.TuneHandler");
         register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
         register("com.fiftyfive.cargo.handlers.FacebookHandler");
+        register("com.fiftyfive.cargo.handlers.FirebaseHandler");
 
     }
 
