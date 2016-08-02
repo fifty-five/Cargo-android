@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.fiftyfive.cargo.Cargo;
+import com.fiftyfive.cargo.models.Transaction;
 
 import junit.framework.TestCase;
 
@@ -18,14 +19,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.HashMap;
-import java.util.Map;
 
-import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
-import static com.fiftyfive.cargo.ModelsUtils.getInt;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -40,12 +36,11 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({FacebookSdk.class, Cargo.class, AppEventsLogger.class, Bundle.class})
+@PrepareForTest({FacebookSdk.class, Cargo.class, AppEventsLogger.class})
 
 public class FacebookHandlerTest extends TestCase {
 
     AppEventsLogger facebookLoggerMock = mock(AppEventsLogger.class);
-    Bundle bundleMock = PowerMockito.mock(Bundle.class);
     FacebookHandler handler;
     @Mock Application context;
     @Mock Cargo cargoMock;
@@ -131,12 +126,21 @@ public class FacebookHandlerTest extends TestCase {
 
     public void testTagPurchase(){
         HashMap<String, Object> map= new HashMap<>();
-        map.put("cartPrice", 42.5);
-        map.put("currencyCode", "USD");
+        map.put(Transaction.TRANSACTION_TOTAL, 42.5);
+        map.put(Transaction.TRANSACTION_CURRENCY_CODE, "USD");
 
         handler.execute("FB_purchase", map);
 
         verify(facebookLoggerMock, times(1)).logPurchase(BigDecimal.valueOf(42.5), Currency.getInstance("USD"));
+    }
+
+    public void testFailedPurchase(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(Transaction.TRANSACTION_TOTAL, 42.5);
+
+        handler.execute("FB_purchase", map);
+
+        verify(facebookLoggerMock, times(0)).logPurchase(any(BigDecimal.class), any(Currency.class));
     }
 
     public void testSetEnableDebug(){
@@ -146,21 +150,6 @@ public class FacebookHandlerTest extends TestCase {
         handler.execute("FB_init", map);
         verifyStatic();
         FacebookSdk.setIsDebugEnabled(true);
-    }
-
-    public void testEventParamBuilder() throws Exception {
-        PowerMockito.whenNew(Bundle.class).withAnyArguments().thenReturn(bundleMock);
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("test0", false);
-        map.put("test1", true);
-        map.put("test2", 2);
-        map.put("test3", "test3");
-
-        handler.eventParamBuilder(map);
-
-        verify(bundleMock, times(3)).putInt(anyString(), anyInt());
-        verify(bundleMock).putString("test3", "test3");
     }
 
 
