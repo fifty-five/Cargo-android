@@ -108,7 +108,7 @@ public class FacebookHandler extends AbstractTagHandler {
     private void init(Map<String, Object> map) {
 
         if(map.containsKey(Tracker.APPLICATION_ID)){
-            FacebookSdk.setApplicationId(map.remove(Tracker.APPLICATION_ID).toString());
+            FacebookSdk.setApplicationId(getString(map, Tracker.APPLICATION_ID));
         }
         FacebookSdk.setIsDebugEnabled(getBoolean(map, Tracker.ENABLE_DEBUG, false));
 
