@@ -103,23 +103,23 @@ public class FirebaseHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put(Event.EVENT_NAME, "randomClick");
         map.put(Event.EVENT_TYPE, "click");
-        map.put(Event.EVENT_ID, 5542);
         map.put(FirebaseAnalytics.Param.QUANTITY, 5);
         map.put(FirebaseAnalytics.Param.CURRENCY, "USD");
 
         handler.execute("Firebase_tagEvent", map);
 
-//        Bundle params = new Bundle();
-//        params.putString(Event.EVENT_TYPE, "click");
-//        params.putLong(Event.EVENT_ID, 5542);
-//        params.putLong(FirebaseAnalytics.Param.QUANTITY, 5);
-//        params.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
-//        Field[] declaredFields = params.getClass().getDeclaredFields();
-
         verify(fireMock, times(1)).logEvent(anyString(), any(Bundle.class));
     }
 
-    public void test
+    public void testFailTagEvent() {
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(Event.EVENT_ID, 5542);
+        map.put(Event.EVENT_TYPE, "click");
+
+        handler.execute("Firebase_tagEvent", map);
+
+        verify(fireMock, times(0)).logEvent(anyString(), any(Bundle.class));
+    }
 
     public void tearDown() throws Exception {
     }
