@@ -1,12 +1,10 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Application;
-import android.os.Bundle;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.fiftyfive.cargo.Cargo;
-import com.fiftyfive.cargo.models.Transaction;
 
 import junit.framework.TestCase;
 
@@ -16,13 +14,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.math.BigDecimal;
-import java.util.Currency;
 import java.util.HashMap;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -80,67 +73,17 @@ public class FacebookHandlerTest extends TestCase {
 
         verifyStatic();
         FacebookSdk.setApplicationId("123");
+
     }
 
-    public void testSimpleTagEvent(){
+    public void testTagEvent(){
         HashMap<String, Object> map= new HashMap<>();
         map.put("eventName", "hello");
 
         handler.execute("FB_tagEvent", map);
 
         verify(facebookLoggerMock, times(1)).logEvent("hello");
-    }
 
-    public void testTagEventWithVTS(){
-        HashMap<String, Object> map= new HashMap<>();
-        map.put("eventName", "hello");
-        map.put("valueToSum", 55.42);
-
-        handler.execute("FB_tagEvent", map);
-
-        verify(facebookLoggerMock, times(1)).logEvent("hello", 55.42);
-    }
-
-    public void testTagEventWithVTSAndParams(){
-        HashMap<String, Object> map= new HashMap<>();
-        map.put("eventName", "addToCart");
-        map.put("valueToSum", 42.0);
-        map.put("itemName", "Power Ball");
-        map.put("itemId", 5542);
-
-        handler.execute("FB_tagEvent", map);
-
-        verify(facebookLoggerMock, times(1)).logEvent(anyString(), anyDouble(), any(Bundle.class));
-    }
-
-    public void testTagEventWithParams(){
-        HashMap<String, Object> map= new HashMap<>();
-        map.put("eventName", "addToCart");
-        map.put("itemName", "Power Ball");
-        map.put("itemId", 5542);
-
-        handler.execute("FB_tagEvent", map);
-
-        verify(facebookLoggerMock, times(1)).logEvent(anyString(), any(Bundle.class));
-    }
-
-    public void testTagPurchase(){
-        HashMap<String, Object> map= new HashMap<>();
-        map.put(Transaction.TRANSACTION_TOTAL, 42.5);
-        map.put(Transaction.TRANSACTION_CURRENCY_CODE, "USD");
-
-        handler.execute("FB_purchase", map);
-
-        verify(facebookLoggerMock, times(1)).logPurchase(BigDecimal.valueOf(42.5), Currency.getInstance("USD"));
-    }
-
-    public void testFailedPurchase(){
-        HashMap<String, Object> map= new HashMap<>();
-        map.put(Transaction.TRANSACTION_TOTAL, 42.5);
-
-        handler.execute("FB_purchase", map);
-
-        verify(facebookLoggerMock, times(0)).logPurchase(any(BigDecimal.class), any(Currency.class));
     }
 
     public void testSetEnableDebug(){

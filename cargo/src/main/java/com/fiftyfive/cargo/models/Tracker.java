@@ -7,7 +7,6 @@ package com.fiftyfive.cargo.models;
 
 
 public final class  Tracker {
-    public static final String APPLICATION_ID = "applicationId";
     public static final String ENABLE_OPT_OUT = "enableOptOut";
     public static final String ENABLE_DEBUG = "enableDebug";
     public static final String DISABLE_TRACKING = "disableTracking";

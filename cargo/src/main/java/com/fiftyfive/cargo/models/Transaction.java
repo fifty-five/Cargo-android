@@ -10,7 +10,6 @@ public final class Transaction {
 
     public static final String TRANSACTION_ID = "transactionId";
     public static final String TRANSACTION_TOTAL = "transactionTotal";
-    public static final String TRANSACTION_CURRENCY_CODE = "transactionCurrencyCode";
     public static final String TRANSACTION_PRODUCTS = "transactionProducts";
 
     public static final String TRANSACTION_PRODUCT_NAME = "name";
