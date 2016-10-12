@@ -83,8 +83,8 @@ public class ModelsUtils {
         else if (value instanceof String) {
             return Long.parseLong(value.toString());
         }
-        else if (value == (int)value) {
-            return (int)value;
+        else if (value instanceof Integer) {
+            return (Integer)value;
         }
         return defaultValue;
     }
