@@ -53,12 +53,14 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
     private boolean init = false;
 
+    protected A4S tracker;
     /**
      * Init properly the SDK
      */
     @Override
     public void initialize() {
         super.initialize();
+        tracker = A4S.get(cargo.getApplication());
         this.valid = true;
     }
 
@@ -88,33 +90,41 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     @Override
     public void execute(String s, Map<String, Object> map) {
 
-        switch (s) {
-            case ACC_init:
-                init(map);
-                break;
-            case ACC_intent:
-                setIntentA4S(map);
-                break;
-            case ACC_tagEvent:
-                tagEvent(map);
-                break;
-            case ACC_tagLead:
-                tagLead(map);
-                break;
-            case ACC_tagAddToCart:
-                tagAddToCart(map);
-                break;
-            case ACC_tagPurchase:
-                tagPurchase(map);
-                break;
-            case ACC_updateDeviceInfo:
-                updateDeviceInfo(map);
-                break;
-            case ACC_tagView:
-                tagView(map);
-                break;
-            default:
-                Log.i("55", "Function "+s+" is not registered");
+        if (s.equals(ACC_init))
+            init(map);
+        else if (!init) {
+            Log.i("Cargo AccengageHandler", " the handler hasn't be initialized, " +
+                    "please do so before doing anything else.");
+        }
+        else {
+            switch (s) {
+                case ACC_init:
+                    init(map);
+                    break;
+                case ACC_intent:
+                    setIntentA4S(map);
+                    break;
+                case ACC_tagEvent:
+                    tagEvent(map);
+                    break;
+                case ACC_tagLead:
+                    tagLead(map);
+                    break;
+                case ACC_tagAddToCart:
+                    tagAddToCart(map);
+                    break;
+                case ACC_tagPurchase:
+                    tagPurchase(map);
+                    break;
+                case ACC_updateDeviceInfo:
+                    updateDeviceInfo(map);
+                    break;
+                case ACC_tagView:
+                    tagView(map);
+                    break;
+                default:
+                    Log.i("55", "Function " + s + " is not registered");
+            }
         }
     }
 
@@ -154,14 +164,14 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
                     "the Accengage setIntentA4S method");
         }
         else {
-            getA4S().setIntent(intent);
+            tracker.setIntent(intent);
         }
     }
 
     /**
      * Method used to create and fire an event to the Accengage interface
      * The mandatory parameters are EVENT_NAME, EVENT_ID which are a necessity to build the event
-     * Without thess parameters, the event won't be built.
+     * Without these parameters, the event won't be built.
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
@@ -200,11 +210,11 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
                     parameters[arraySize++] = eventParam;
                 }
                 // fire the event with the array of parameters
-                getA4S().trackEvent(eventId, eventName, parameters);
+                tracker.trackEvent(eventId, eventName, parameters);
             }
             else {
                 // fire the event without an array of parameters
-                getA4S().trackEvent(eventId, eventName);
+                tracker.trackEvent(eventId, eventName);
             }
         }
     }
@@ -221,7 +231,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         String screenName = getString(map, Screen.SCREEN_NAME);
 
         if (screenName != null) {
-            getA4S().setView(screenName);
+            tracker.setView(screenName);
         }
         else {
             Log.w("Cargo AccengageHandler", " "+Screen.SCREEN_NAME+" is missing for " +
@@ -243,7 +253,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         String leadValue = getString(map, "leadValue");
 
         if (leadLabel != null && leadValue != null) {
-            getA4S().trackLead(new Lead(leadLabel, leadValue));
+            tracker.trackLead(new Lead(leadLabel, leadValue));
         }
         else {
             Log.w("Cargo AccengageHandler", " leadLabel and/or leadValue is missing for " +
@@ -265,7 +275,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         String cartId = getString(map, Transaction.TRANSACTION_ID);
 
         if (accItem != null && cartId != null) {
-            getA4S().trackAddToCart(new Cart(cartId, accItem.toItem()));
+            tracker.trackAddToCart(new Cart(cartId, accItem.toItem()));
         }
         else {
             Log.w("Cargo AccengageHandler", " item and/or "+Transaction.TRANSACTION_ID+
@@ -293,7 +303,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         List<AccItem> items = getList(map, Transaction.TRANSACTION_PRODUCTS);
 
         // check for the required parameters to be available
-        if (id != null && currencyCode != null && totalPrice > 0) {
+        if (id != null && currencyCode != null && totalPrice >= 0) {
             // if the optional parameter is present, get into this statement
             if (items != null) {
                 int size = items.size();
@@ -305,11 +315,12 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
                     purchaseItems[size++] = item.toItem();
                 }
                 // fires the purchase event with all the parameters
-                getA4S().trackPurchase(new Purchase(id, currencyCode, totalPrice, purchaseItems));
+                tracker.trackPurchase(new Purchase(id, currencyCode, totalPrice, purchaseItems));
             }
             else {
                 // fires the purchase event without the optional parameter
-                getA4S().trackPurchase(new Purchase(id, currencyCode, totalPrice));
+                Purchase purchase = new Purchase(id, currencyCode, totalPrice);
+                tracker.trackPurchase(purchase);
             }
         }
         // logs a warning for the missing mandatory parameters
@@ -356,10 +367,11 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
             else {
                 Log.w("Cargo AccengageHandler", " deviceInfoValue or deviceInfoDate" +
                         " is missing for the Accengage updateDeviceInfo method");
+                return ;
             }
 
             // send the update device event to the server
-            getA4S().updateDeviceInfo(bundle);
+            tracker.updateDeviceInfo(bundle);
         }
         // if the first required parameter isn't set, logs a warning
         else {
@@ -405,7 +417,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     @Override
     public void onActivityResumed(Activity activity) {
-        getA4S().startActivity(activity);
+        tracker.startActivity(activity);
     }
 
     /**
@@ -414,7 +426,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     @Override
     public void onActivityPaused(Activity activity) {
-        getA4S().stopActivity(activity);
+        tracker.stopActivity(activity);
     }
 
     /**
@@ -433,13 +445,12 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     public boolean isInitialized() { return init; }
 
     /**
-     * The getter for the A4S (aka Accengage) tracker,
-     * which is used to send all the data to Accengage.
+     * This setter is made for testing purpose and shouldn't be used outside of the test class.
      *
-     * @return the A4S tracker
+     * @param value the boolean value you want the "init" attribute to be set with.
      */
-    private A4S getA4S(){
-        return A4S.get(cargo.getApplication());
+    protected void setInitialize(boolean value) {
+        this.init = value;
     }
 
     /**
