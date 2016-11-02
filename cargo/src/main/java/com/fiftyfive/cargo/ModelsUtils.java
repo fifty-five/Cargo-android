@@ -1,8 +1,10 @@
 package com.fiftyfive.cargo;
 
 
+import java.lang.reflect.Array;
 import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,6 +43,9 @@ public class ModelsUtils {
         Object value = params.get(name);
         if (value instanceof String){
             return value.toString();
+        }
+        else if (value instanceof String[]) {
+            return Arrays.toString((String[]) value);
         }
         else if (value != null){
             return value.toString();
