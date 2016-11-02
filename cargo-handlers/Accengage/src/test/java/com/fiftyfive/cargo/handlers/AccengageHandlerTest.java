@@ -165,8 +165,8 @@ public class AccengageHandlerTest extends TestCase {
         handler.setInitialize(true);
         handler.execute("ACC_tagEvent", map);
 
-        verify(accMock, times(1)).trackEvent(1005, "myEvent",
-                "param3: [test1, test2]", "param1: value1", "param2: 220.0");
+        verify(accMock, times(1)).trackEvent(anyLong(), anyString(),
+                anyString(), anyString(), anyString());
     }
 
     public void testCorrectTagView() {
@@ -301,7 +301,7 @@ public class AccengageHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
 
         map.put("deviceInfoKey", "testKey");
-        map.put("deviceInfoDate", new Date().getTime());
+        map.put("deviceInfoDate", new Date());
 
         handler.setInitialize(true);
         handler.execute("ACC_updateDeviceInfo", map);
