@@ -23,6 +23,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
@@ -329,7 +330,7 @@ public class AccengageHandlerTest extends TestCase {
 
         AccItem item1 = new AccItem("itemId1", "item1", "category1", "EUR", 99.99, 1);
         AccItem item2 = new AccItem("itemId2", "item2", "category2", "EUR", 55.42, 2);
-        ArrayList list = new ArrayList();
+        List<AccItem> list = new ArrayList<AccItem>();
         list.add(item1);
         list.add(item2);
 
@@ -349,7 +350,7 @@ public class AccengageHandlerTest extends TestCase {
 
         Item item1 = new Item("itemId1", "item1", "category1", "EUR", 99.99, 1);
         Item item2 = new Item("itemId2", "item2", "category2", "EUR", 55.42, 2);
-        ArrayList list = new ArrayList();
+        List<Item> list = new ArrayList<Item>();
         list.add(item1);
         list.add(item2);
 
