@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.ad4screen.sdk.A4S;
 import com.ad4screen.sdk.analytics.Cart;
+import com.ad4screen.sdk.analytics.Item;
 import com.ad4screen.sdk.analytics.Lead;
 import com.ad4screen.sdk.analytics.Purchase;
 import com.fiftyfive.cargo.Cargo;
@@ -15,9 +16,11 @@ import junit.framework.TestCase;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -34,11 +37,16 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(A4S.class)
+@PrepareForTest({A4S.class, Lead.class, Cart.class, Item.class, Purchase.class})
 
 public class AccengageHandlerTest extends TestCase {
 
     A4S accMock = Mockito.mock(A4S.class);
+    Lead leadMock = Mockito.mock(Lead.class);
+    Cart cartMock = Mockito.mock(Cart.class);
+    Item itemMock = Mockito.mock(Item.class);
+    Purchase purchaseMock = Mockito.mock(Purchase.class);
+
     AccengageHandler handler;
     @Mock Application context;
     @Mock Cargo cargo;
@@ -200,17 +208,23 @@ public class AccengageHandlerTest extends TestCase {
         verify(accMock, times(0)).trackLead(any(Lead.class));
     }
 
-//    public void testCorrectTagLead() {
-//        HashMap<String, Object> map = new HashMap<>();
-//
-//        map.put("leadLabel", "label");
-//        map.put("leadValue", "value");
-//
-//        handler.setInitialize(true);
-//        handler.execute("ACC_tagLead", map);
-//
-//        verify(accMock, times(1)).trackLead(any(Lead.class));
-//    }
+    public void testCorrectTagLead() {
+        try {
+            PowerMockito.whenNew(Lead.class).withAnyArguments().thenReturn(leadMock);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put("leadLabel", "label");
+        map.put("leadValue", "value");
+
+        handler.setInitialize(true);
+        handler.execute("ACC_tagLead", map);
+
+        verify(accMock, times(1)).trackLead(any(Lead.class));
+    }
 
     public void testFailedTagLead2() {
         HashMap<String, Object> map = new HashMap<>();
@@ -223,18 +237,25 @@ public class AccengageHandlerTest extends TestCase {
         verify(accMock, times(0)).trackLead(any(Lead.class));
     }
 
-//    public void testCorrectAddToCart() {
-//        HashMap<String, Object> map = new HashMap<>();
-//
-//        AccItem item = new AccItem("111x6", "testItem", "testCat", "USD", 66.6, 1);
-//        map.put("transactionId", "500one+165");
-//        map.put("item", item);
-//
-//        handler.setInitialize(true);
-//        handler.execute("ACC_tagAddToCart", map);
-//
-//        verify(accMock, times(1)).trackAddToCart(any(Cart.class));
-//    }
+    public void testCorrectAddToCart() {
+        try {
+            PowerMockito.whenNew(Cart.class).withAnyArguments().thenReturn(cartMock);
+            PowerMockito.whenNew(Item.class).withAnyArguments().thenReturn(itemMock);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        AccItem item = new AccItem("111x6", "testItem", "testCat", "USD", 66.6, 1);
+        map.put("transactionId", "500one+165");
+        map.put("item", item);
+
+        handler.setInitialize(true);
+        handler.execute("ACC_tagAddToCart", map);
+
+        verify(accMock, times(1)).trackAddToCart(any(Cart.class));
+    }
 
     public void testFailedAddToCart() {
         HashMap<String, Object> map = new HashMap<>();
@@ -259,18 +280,24 @@ public class AccengageHandlerTest extends TestCase {
         verify(accMock, times(0)).trackAddToCart(any(Cart.class));
     }
 
-//    public void testCorrectSimpleTagPurchase() {
-//        HashMap<String, Object> map = new HashMap<>();
-//
-//        map.put("transactionId", "testID");
-//        map.put("transactionCurrencyCode", "USD");
-//        map.put("transactionTotal", 15.0);
-//
-//        handler.setInitialize(true);
-//        handler.execute("ACC_tagPurchase", map);
-//
-//        verify(accMock, times(1)).trackPurchase(any(Purchase.class));
-//    }
+    public void testCorrectSimpleTagPurchase() {
+        try {
+            PowerMockito.whenNew(Purchase.class).withAnyArguments().thenReturn(purchaseMock);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put("transactionId", "testID");
+        map.put("transactionCurrencyCode", "USD");
+        map.put("transactionTotal", 15.0);
+
+        handler.setInitialize(true);
+        handler.execute("ACC_tagPurchase", map);
+
+        verify(accMock, times(1)).trackPurchase(any(Purchase.class));
+    }
 
     public void testFailedSimpleTagPurchase() {
         HashMap<String, Object> map = new HashMap<>();
@@ -283,6 +310,58 @@ public class AccengageHandlerTest extends TestCase {
         handler.execute("ACC_tagPurchase", map);
 
         verify(accMock, times(0)).trackPurchase(any(Purchase.class));
+    }
+
+    public void testMissingArgSimpleTagPurchase() {
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put("transactionId", "testID");
+        map.put("transactionTotal", 99.99);
+
+        handler.setInitialize(true);
+        handler.execute("ACC_tagPurchase", map);
+
+        verify(accMock, times(0)).trackPurchase(any(Purchase.class));
+    }
+
+    public void testCorrectComplexTagPurchase() {
+        HashMap<String, Object> map = new HashMap<>();
+
+        AccItem item1 = new AccItem("itemId1", "item1", "category1", "EUR", 99.99, 1);
+        AccItem item2 = new AccItem("itemId2", "item2", "category2", "EUR", 55.42, 2);
+        ArrayList list = new ArrayList();
+        list.add(item1);
+        list.add(item2);
+
+        map.put("transactionId", "testID");
+        map.put("transactionCurrencyCode", "EUR");
+        map.put("transactionTotal", 15.0);
+        map.put("transactionProducts", list);
+
+        handler.setInitialize(true);
+        handler.execute("ACC_tagPurchase", map);
+
+        verify(accMock, times(1)).trackPurchase(any(Purchase.class));
+    }
+
+    public void testFailedComplexBecomesSimpleTagPurchase() {
+        HashMap<String, Object> map = new HashMap<>();
+
+        Item item1 = new Item("itemId1", "item1", "category1", "EUR", 99.99, 1);
+        Item item2 = new Item("itemId2", "item2", "category2", "EUR", 55.42, 2);
+        ArrayList list = new ArrayList();
+        list.add(item1);
+        list.add(item2);
+
+        map.put("transactionId", "testID");
+        map.put("transactionCurrencyCode", "EUR");
+        map.put("transactionTotal", 15.0);
+        map.put("transactionProducts", list);
+
+        handler.setInitialize(true);
+        handler.execute("ACC_tagPurchase", map);
+
+        verify(accMock, times(1)).trackPurchase(any(Purchase.class));
     }
 
     public void testCorrectUpdateDeviceInfo() {
