@@ -305,7 +305,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         // check for the required parameters to be available
         if (id != null && currencyCode != null && totalPrice >= 0) {
             // if the optional parameter is present, get into this statement
-            if (items != null) {
+            if (items != null && items.get(0) instanceof AccItem) {
                 int size = items.size();
                 Item[] purchaseItems = new Item[size];
 
@@ -319,8 +319,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
             }
             else {
                 // fires the purchase event without the optional parameter
-                Purchase purchase = new Purchase(id, currencyCode, totalPrice);
-                tracker.trackPurchase(purchase);
+                tracker.trackPurchase(new Purchase(id, currencyCode, totalPrice));
             }
         }
         // logs a warning for the missing mandatory parameters
