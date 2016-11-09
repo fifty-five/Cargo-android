@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<manifest package="com.fiftyfive.cargo.handlers.accengage"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <application/>
+
+    <service
+        android:name="com.ad4screen.sdk.A4SService"
+        android:label="Tester Service"
+        android:process=":A4SService" >
+        <meta-data
+            android:name="com.ad4screen.idsprovider"
+            android:value="com.fiftyfive.cargo.handlers" />
+        <meta-data
+            android:name="com.ad4screen.logging"
+            android:value="true" />
+    </service>
+</manifest>

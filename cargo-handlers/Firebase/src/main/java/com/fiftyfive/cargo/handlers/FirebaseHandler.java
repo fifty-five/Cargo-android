@@ -22,14 +22,14 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  * Author : louis
  * Created: 03/11/15
  *
- *  * The class which handles interactions with the Facebook SDK
+ *  * The class which handles interactions with the Firebase SDK
  */
 public class FirebaseHandler extends AbstractTagHandler {
 
-    final String Firebase_init = "Firebase_init";
-    final String Firebase_tagEvent = "Firebase_tagEvent";
-    final String Firebase_identify = "Firebase_identify";
-    final String ENABLE_COLLECTION = "enableCollection";
+    private final String Firebase_init = "Firebase_init";
+    private final String Firebase_tagEvent = "Firebase_tagEvent";
+    private final String Firebase_identify = "Firebase_identify";
+    private final String ENABLE_COLLECTION = "enableCollection";
 
     protected FirebaseAnalytics mFirebaseAnalytics;
 

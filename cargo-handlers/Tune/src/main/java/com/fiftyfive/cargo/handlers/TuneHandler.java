@@ -26,7 +26,7 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 
 /**
- * Author : louis
+ * Author : Julien Gil
  * Created: 03/11/15
  *
  *  * The class which handles interactions with the Tune SDK
@@ -99,7 +99,7 @@ public class TuneHandler extends AbstractTagHandler {
     /**
      * This one will be called after an event has been pushed to the dataLayer
      *
-     * @param s     The method you aime to call (this should be define in GTM interface)
+     * @param s     The method you aim to call (this should be define in GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
     @Override

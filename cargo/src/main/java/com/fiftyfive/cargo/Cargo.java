@@ -74,6 +74,7 @@ public class Cargo {
         register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
         register("com.fiftyfive.cargo.handlers.FacebookHandler");
         register("com.fiftyfive.cargo.handlers.FirebaseHandler");
+        register("com.fiftyfive.cargo.handlers.AccengageHandler");
 
     }
 
