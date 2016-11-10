@@ -437,6 +437,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     @Override
     public void onActivityStarted(Activity activity) {
+
     }
 
     /**
@@ -464,6 +465,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     @Override
     public void onActivityStopped(Activity activity) {
+
     }
 
     /**
