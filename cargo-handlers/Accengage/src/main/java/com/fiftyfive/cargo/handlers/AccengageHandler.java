@@ -50,7 +50,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     /** A boolean which defines if the instance has been correctly initialized */
     private boolean init = false;
 
-    /** Constants used to define callbacks in the register znd in the execute method */
+    /** Constants used to define callbacks in the register and in the execute method */
     private final String ACC_INIT = "ACC_init";
     private final String ACC_INTENT = "ACC_intent";
     private final String ACC_TAG_EVENT = "ACC_tagEvent";
@@ -250,7 +250,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
     /**
      * Method used to create and fire a screen view to Accengage
-     * The mandatory parameters is SCREEN_NAME which is a necessity to build the tagScreen.
+     * The mandatory parameter is SCREEN_NAME which is a necessity to build the tagScreen.
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
@@ -410,7 +410,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
 
 
-/* ************************************** Utilities methods ************************************* */
+/* ****************************************** Utility ******************************************* */
 
     /**
      * This method is used as an override of the Activity method onNewIntent(Intent intent)
