@@ -93,7 +93,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     }
 
     /**
-     * A callback method for the registered callbacks method name mentionned in the register method.
+     * A callback method for the registered callbacks method name mentioned in the register method.
      *
      * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
@@ -101,7 +101,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     @Override
     public void execute(String s, Map<String, Object> map) {
 
-        // a check fo the init method
+        // a check for the init method
         if (s.equals(ACC_INIT))
             init(map);
         // if the SDK hasn't been initialized, logs a warning
@@ -149,7 +149,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * privateKey & partnerId : ids Accengage gives you when you register your app
+     *              * privateKey & partnerId (String): ID Accengage gives when you register your app
      */
     private void init(Map<String, Object> map) {
         privateKey = getString(map, "privateKey");
