@@ -141,9 +141,9 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put(Event.EVENT_NAME, testName);
         map.put(Event.EVENT_TYPE, "sendDownload");
-        map.put("Chapter1", "chapter1");
-        map.put("Chapter2", "chapter2");
-        map.put("Chapter3", "chapter3");
+        map.put("chapter1", "chapter1");
+        map.put("chapter2", "chapter2");
+        map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
         handler.execute("AT_tagEvent", map);
@@ -161,9 +161,9 @@ public class ATInternetHandlerTest extends TestCase {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put(Event.EVENT_NAME, testName);
-        map.put("Chapter1", "chapter1");
-        map.put("Chapter2", "chapter2");
-        map.put("Chapter3", "chapter3");
+        map.put("chapter1", "chapter1");
+        map.put("chapter2", "chapter2");
+        map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
         handler.execute("AT_tagEvent", map);
@@ -178,9 +178,9 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put(Event.EVENT_NAME, testName);
         map.put(Event.EVENT_TYPE, "sendNothing");
-        map.put("Chapter1", "chapter1");
-        map.put("Chapter2", "chapter2");
-        map.put("Chapter3", "chapter3");
+        map.put("chapter1", "chapter1");
+        map.put("chapter2", "chapter2");
+        map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
         handler.execute("AT_tagEvent", map);
