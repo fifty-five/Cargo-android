@@ -34,28 +34,38 @@ import com.fiftyfive.cargo.models.Event;
  * Author : Julien Gil
  * Created: 12/10/16
  *
- *  * The class which handles interactions with the Accengage SDK
+ * The class which handles interactions with the Accengage SDK.
  */
 public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvider {
 
-    // define all the method names which can be called
-    private final String ACC_init = "ACC_init";
-    private final String ACC_intent = "ACC_intent";
-    private final String ACC_tagEvent = "ACC_tagEvent";
-    private final String ACC_tagLead = "ACC_tagLead";
-    private final String ACC_tagAddToCart = "ACC_tagAddToCart";
-    private final String ACC_tagPurchase = "ACC_tagPurchase";
-    private final String ACC_updateDeviceInfo = "ACC_updateDeviceInfo";
-    private final String ACC_tagView = "ACC_tagView";
+/* ************************************ Variables declaration *********************************** */
 
+    /** partnerId and privateKey are two mandatory parameters to initialize the Accengage SDK */
     private String partnerId = null;
     private String privateKey = null;
 
+    /** The tracker of the Accengage SDK which send the events */
+    protected A4S tracker;
+
+    /** A boolean which defines if the instance has been correctly initialized */
     private boolean init = false;
 
-    protected A4S tracker;
+    /** Constants used to define callbacks in the register znd in the execute method */
+    private final String ACC_INIT = "ACC_init";
+    private final String ACC_INTENT = "ACC_intent";
+    private final String ACC_TAG_EVENT = "ACC_tagEvent";
+    private final String ACC_TAG_LEAD = "ACC_tagLead";
+    private final String ACC_TAG_ADD_TO_CART = "ACC_tagAddToCart";
+    private final String ACC_TAG_PURCHASE = "ACC_tagPurchase";
+    private final String ACC_UPDATE_DEVICE_INFO = "ACC_updateDeviceInfo";
+    private final String ACC_TAG_VIEW = "ACC_tagView";
+
+
+
+/* ************************************ Handler core methods ************************************ */
+
     /**
-     * Init properly the SDK
+     * Called by the TagHandlerManager, initialize the core of the handler
      */
     @Override
     public void initialize() {
@@ -65,61 +75,62 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     }
 
     /**
-     * Register the callbacks to GTM. These will be triggered after a dataLayer.push()
+     * Register the callbacks to the container. After a dataLayer.push(),
+     * these will trigger the execute method of this handler.
      *
      * @param container The instance of the GTM container we register the callbacks to
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback(ACC_init, this);
-        container.registerFunctionCallTagCallback(ACC_intent, this);
-        container.registerFunctionCallTagCallback(ACC_tagEvent, this);
-        container.registerFunctionCallTagCallback(ACC_tagLead, this);
-        container.registerFunctionCallTagCallback(ACC_tagAddToCart, this);
-        container.registerFunctionCallTagCallback(ACC_tagPurchase, this);
-        container.registerFunctionCallTagCallback(ACC_updateDeviceInfo, this);
-        container.registerFunctionCallTagCallback(ACC_tagView, this);
+        container.registerFunctionCallTagCallback(ACC_INIT, this);
+        container.registerFunctionCallTagCallback(ACC_INTENT, this);
+        container.registerFunctionCallTagCallback(ACC_TAG_EVENT, this);
+        container.registerFunctionCallTagCallback(ACC_TAG_LEAD, this);
+        container.registerFunctionCallTagCallback(ACC_TAG_ADD_TO_CART, this);
+        container.registerFunctionCallTagCallback(ACC_TAG_PURCHASE, this);
+        container.registerFunctionCallTagCallback(ACC_UPDATE_DEVICE_INFO, this);
+        container.registerFunctionCallTagCallback(ACC_TAG_VIEW, this);
     }
 
     /**
-     * This one will be called after an event has been pushed to the dataLayer
+     * A callback method for the registered callbacks method name mentionned in the register method.
      *
-     * @param s     The method you aim to call (this should be define in GTM interface)
+     * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
 
-        if (s.equals(ACC_init))
+        // a check fo the init method
+        if (s.equals(ACC_INIT))
             init(map);
+        // if the SDK hasn't been initialized, logs a warning
         else if (!init) {
-            Log.i("Cargo AccengageHandler", " the handler hasn't be initialized, " +
+            Log.w("Cargo AccengageHandler", " the handler hasn't be initialized, " +
                     "please do so before doing anything else.");
         }
+        // if the SDK is properly initialized, check for which method is called
         else {
             switch (s) {
-                case ACC_init:
-                    init(map);
-                    break;
-                case ACC_intent:
+                case ACC_INTENT:
                     setIntentA4S(map);
                     break;
-                case ACC_tagEvent:
+                case ACC_TAG_EVENT:
                     tagEvent(map);
                     break;
-                case ACC_tagLead:
+                case ACC_TAG_LEAD:
                     tagLead(map);
                     break;
-                case ACC_tagAddToCart:
+                case ACC_TAG_ADD_TO_CART:
                     tagAddToCart(map);
                     break;
-                case ACC_tagPurchase:
+                case ACC_TAG_PURCHASE:
                     tagPurchase(map);
                     break;
-                case ACC_updateDeviceInfo:
+                case ACC_UPDATE_DEVICE_INFO:
                     updateDeviceInfo(map);
                     break;
-                case ACC_tagView:
+                case ACC_TAG_VIEW:
                     tagView(map);
                     break;
                 default:
@@ -127,6 +138,10 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
             }
         }
     }
+
+
+
+/* ************************************* SDK initialization ************************************* */
 
     /**
      * The method you need to call first.
@@ -150,23 +165,37 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     }
 
     /**
-     * This method is used as an override of the Activity method onNewIntent(Intent intent)
-     * You need to call it after the super.onNewIntent(intent) in all of your activities.
-     *
-     * @param map   the parameters given at the moment of the dataLayer.push(),
-     *              passed through the GTM container and the execute method
-     *              * intent : the intent given in the onNewIntent()  method of your activity
+     * A method needed in the Accengage SDK since we don't set the partner ID in the manifest.
+     * A service uses this method in order to retrieve the partner ID.
+     * @param context   the Application context
+     * @return          the partner ID
      */
-    private void setIntentA4S(Map<String, Object> map) {
-        Intent intent = (Intent)map.get("intent");
-        if (intent == null) {
-            Log.w("Cargo AccengageHandler", " intent is missing for " +
-                    "the Accengage setIntentA4S method");
-        }
-        else {
-            tracker.setIntent(intent);
-        }
+    @Override
+    public String getPartnerId(Context context) {
+        return partnerId;
     }
+
+    /**
+     * A method needed in the Accengage SDK since we don't set the private key in the manifest.
+     * A service uses this method in order to retrieve the private key.
+     * @param context   the Application context
+     * @return          the private key
+     */
+    @Override
+    public String getPrivateKey(Context context) {
+        return privateKey;
+    }
+
+    /**
+     * The getter for the init boolean, returning if the tagHandler has been initialized
+     *
+     * @return the boolean
+     */
+    public boolean isInitialized() { return init; }
+
+
+
+/* ****************************************** Tracking ****************************************** */
 
     /**
      * Method used to create and fire an event to the Accengage interface
@@ -379,26 +408,27 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         }
     }
 
-    /**
-     * A method needed in the Accengage SDK since we don't set the partner ID in the manifest.
-     * A service uses this method in order to retrieve the partner ID.
-     * @param context   the Application context
-     * @return          the partner ID
-     */
-    @Override
-    public String getPartnerId(Context context) {
-        return partnerId;
-    }
+
+
+/* ************************************** Utilities methods ************************************* */
 
     /**
-     * A method needed in the Accengage SDK since we don't set the private key in the manifest.
-     * A service uses this method in order to retrieve the private key.
-     * @param context   the Application context
-     * @return          the private key
+     * This method is used as an override of the Activity method onNewIntent(Intent intent)
+     * You need to call it after the super.onNewIntent(intent) in all of your activities.
+     *
+     * @param map   the parameters given at the moment of the dataLayer.push(),
+     *              passed through the GTM container and the execute method
+     *              * intent : the intent given in the onNewIntent()  method of your activity
      */
-    @Override
-    public String getPrivateKey(Context context) {
-        return privateKey;
+    private void setIntentA4S(Map<String, Object> map) {
+        Intent intent = (Intent)map.get("intent");
+        if (intent == null) {
+            Log.w("Cargo AccengageHandler", " intent is missing for " +
+                    "the Accengage setIntentA4S method");
+        }
+        else {
+            tracker.setIntent(intent);
+        }
     }
 
     /**
@@ -437,22 +467,6 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     }
 
     /**
-     * The getter for the init boolean, returning if the tagHandler has been initialized
-     *
-     * @return the boolean
-     */
-    public boolean isInitialized() { return init; }
-
-    /**
-     * This setter is made for testing purpose and shouldn't be used outside of the test class.
-     *
-     * @param value the boolean value you want the "init" attribute to be set with.
-     */
-    protected void setInitialize(boolean value) {
-        this.init = value;
-    }
-
-    /**
      * A short method used to get an AccItem typed object from a map.
      *
      * @param params    the map where is stored the AccItem as an Object
@@ -470,10 +484,24 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         }
         return null;
     }
+
+    /**
+     * This setter is made for testing purpose and shouldn't be used outside of the test class.
+     *
+     * @param value the boolean value you want the "init" attribute to be set with.
+     */
+    protected void setInitialize(boolean value) {
+        this.init = value;
+    }
+
+
+/* ********************************************************************************************** */
+
+
 }
 
 /**
- * A class to make the link between the app Item type and the Accengage Item type.
+ * A class designed to make the link between the app Item type and the Accengage Item type.
  * Properties are public in order to make any changes if needed, as a discount or whatever.
  */
 class AccItem {
@@ -508,9 +536,9 @@ class AccItem {
     /**
      * A method that transform the AccItem type into a Item type from Accengage SDK
      *
-     * @return  an Item (from Accengage SDK) object
+     * @return  Item object (from Accengage SDK)
      */
-    protected Item toItem() {
+    Item toItem() {
         return (new Item(id, name, category, currencyCode, price, quantity));
     }
 }
