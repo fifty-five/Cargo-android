@@ -97,9 +97,9 @@ public class ATInternetHandler extends AbstractTagHandler {
      *
      * @param params    the parameters given at the moment of the dataLayer.push(),
      *                  passed through the GTM container and the execute method.
-     *                  * SCREEN_NAME (String) : the name of the screen that has been seen
-     *                  * CUSTOM_DIM1 (String) : a custom dimension to set some more context
-     *                  * CUSTOM_DIM2 (String) : a second custom dim to set some more context
+     *                  * screenName (String) : the name of the screen that has been seen
+     *                  * customDim1 (String) : a custom dimension to set some more context
+     *                  * customDim2 (String) : a second custom dim to set some more context
      */
     private void tagScreen(Map<String, Object> params){
 
@@ -129,15 +129,15 @@ public class ATInternetHandler extends AbstractTagHandler {
      *
      * @param params    the parameters given at the moment of the dataLayer.push(),
      *                  passed through the GTM container and the execute method.
-     *                  * EVENT_NAME (String) : the name for this event.
-     *                  * EVENT_TYPE (String) : defines the type of event you want to send.
+     *                  * eventName (String) : the name for this event.
+     *                  * eventType (String) : defines the type of event you want to send.
      *                    the different values can be :     - sendTouch
      *                                                      - sendNavigation
      *                                                      - sendDownload
      *                                                      - sendExit
      *                                                      - sendSearch
      *                  * chapter1/2/3 (String) : used to add more context to the event
-     *                  * LEVEL2 (int) : to add a second level to the event
+     *                  * level2 (int) : to add a second level to the event
      */
     private void tagEvent(Map<String, Object> params){
         String eventName = getString(params, Event.EVENT_NAME);
@@ -178,7 +178,7 @@ public class ATInternetHandler extends AbstractTagHandler {
      *
      * @param params    the parameters given at the moment of the dataLayer.push(),
      *                  passed through the GTM container and the execute method.
-     *                  * USER_ID (String) : the identifier.
+     *                  * userId (String) : the identifier.
      */
     private void identify(Map<String, Object> params){
 

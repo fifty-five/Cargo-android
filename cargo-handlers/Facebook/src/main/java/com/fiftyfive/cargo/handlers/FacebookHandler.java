@@ -117,7 +117,7 @@ public class FacebookHandler extends AbstractTagHandler {
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
      *              * applicationId (String) : the app id facebook gives when you register your app
-     *              * ENABLE_DEBUG (bool) : the value of the bool to turn on/off the facebook debug
+     *              * enableDebug (bool) : the value of the bool to turn on/off the facebook debug
      */
     private void init(Map<String, Object> map) {
 
@@ -200,8 +200,9 @@ public class FacebookHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * cartPrice (Double) : represents the amount of money spent on the purchase
-     *              * currencyCode (String) : the code of the currency the purchase was made with
+     *              * transactionTotal (Double) : represents the total amount of the purchase
+     *              * transactionCurrencyCode (String) : the code of the currency the purchase
+     *                                                   was made with
      *
      */
     private void purchase (Map<String, Object> map) {

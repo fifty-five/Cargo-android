@@ -204,8 +204,8 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * EVENT_ID (long) : the id for the event. Its value should be greater than 1000
-     *              * EVENT_NAME (String) : the name for this event.
+     *              * eventId (long) : the id for the event. Its value should be greater than 1000
+     *              * eventName (String) : the name for this event.
      *              * parameters as String... : the other entries of the map are put in a String[]
      *                  as String formatted like "key: value"
      */
@@ -254,7 +254,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * SCREEN_NAME (String) : the name of the screen that has been seen
+     *              * screenName (String) : the name of the screen that has been seen
      */
     private void tagView(Map<String, Object> map) {
         String screenName = getString(map, Screen.SCREEN_NAME);
@@ -296,7 +296,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * TRANSACTION_ID (String) : the id associated to this cart.
+     *              * transactionId (String) : the id associated to this cart.
      *              * item (AccItem) : the item which is added to the cart.
      */
     private void tagAddToCart(Map<String, Object> map) {
@@ -319,11 +319,11 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * TRANSACTION_ID (String) : the id associated to this purchase.
-     *              * TRANSACTION_CURRENCY_CODE (String) : the currency used in the transaction.
+     *              * transactionId (String) : the id associated to this purchase.
+     *              * transactionCurrencyCode (String) : the currency used in the transaction.
      *                  Should be a valid 3 letters ISO4217 currency (EUR,USD,..)
-     *              * TRANSACTION_TOTAL (Double) : the amount of the transaction
-     *              * TRANSACTION_PRODUCTS (List of AccItem) : the list of the products purchased
+     *              * transactionTotal (Double) : the amount of the transaction
+     *              * transactionProducts (List of AccItem) : the list of the products purchased
      */
     private void tagPurchase(Map<String, Object> map) {
         String id = getString(map, Transaction.TRANSACTION_ID);
@@ -418,7 +418,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * intent : the intent given in the onNewIntent()  method of your activity
+     *              * intent (intent) : the intent given in onNewIntent() method of your activity
      */
     private void setIntentA4S(Map<String, Object> map) {
         Intent intent = (Intent)map.get("intent");
