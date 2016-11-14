@@ -33,33 +33,38 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  */
 public class TuneHandler extends AbstractTagHandler {
 
-    protected Tune tune;
-    private boolean init = false;
+/* ************************************ Variables declaration *********************************** */
 
-    public Cargo cargo = Cargo.getInstance();
-
-    final String Tune_init = "Tune_init";
-    final String Tune_identify = "Tune_identify";
-    final String Tune_tagEvent = "Tune_tagEvent";
-    final String Tune_tagScreen = "Tune_tagScreen";
-
+    /** advertiserId and conversionKey are two mandatory parameters to initialize the Tune SDK */
     final String ADVERTISER_ID = "advertiserId";
     final String CONVERSION_KEY = "conversionKey";
 
+    /** The tracker of the Tune SDK which send the events */
+    protected Tune tune;
 
-    // all the parameters that could be set as attributes to a TuneEvent object
-    final String EVENT_RATING = "eventRating";
-    final String EVENT_DATE1 = "eventDate1";
-    final String EVENT_DATE2 = "eventDate2";
-    final String EVENT_REVENUE = "eventRevenue";
-    final String EVENT_ITEMS = "eventItems";
-    final String EVENT_LEVEL = "eventLevel";
-    final String EVENT_RECEIPT_DATA = "eventReceiptData";
-    final String EVENT_RECEIPT_SIGNATURE = "eventReceiptSignature";
-    final String EVENT_QUANTITY = "eventQuantity";
+    /** A boolean which defines if the instance has been correctly initialized */
+    protected boolean init = false;
 
-    // the formatted name "eventRandomAttribute" is important here as the string is used in the
-    // eventBuilder method to call on TuneEvent methods.
+    /** Constants used to define callbacks in the register and in the execute method */
+    private final String TUN_INIT = "Tune_init";
+    private final String TUN_IDENTIFY = "Tune_identify";
+    private final String TUN_TAG_EVENT = "Tune_tagEvent";
+    private final String TUN_TAG_SCREEN = "Tune_tagScreen";
+
+
+    /** All the parameters that could be set as attributes to a TuneEvent object */
+    private final String EVENT_RATING = "eventRating";
+    private final String EVENT_DATE1 = "eventDate1";
+    private final String EVENT_DATE2 = "eventDate2";
+    private final String EVENT_REVENUE = "eventRevenue";
+    private final String EVENT_ITEMS = "eventItems";
+    private final String EVENT_LEVEL = "eventLevel";
+    private final String EVENT_RECEIPT_DATA = "eventReceiptData";
+    private final String EVENT_RECEIPT_SIGNATURE = "eventReceiptSignature";
+    private final String EVENT_QUANTITY = "eventQuantity";
+
+    /** the formatted name "eventRandomAttribute" is important here as the string is used in the
+        eventBuilder method to call on TuneEvent methods. */
     final String[] EVENT_PROPERTIES = {
             "eventCurrencyCode",
             "eventAdvertiserRefId",
@@ -74,61 +79,76 @@ public class TuneHandler extends AbstractTagHandler {
     };
 
 
+
+/* ************************************ Handler core methods ************************************ */
+
     /**
-     * Init properly the SDK, not needed here
+     * Called by the TagHandlerManager, initialize the core of the handler
      */
     @Override
     public void initialize() {
+        super.initialize();
         this.valid = true;
     }
 
     /**
-     * Register the callbacks to GTM. These will be triggered after a dataLayer.push()
+     * Register the callbacks to the container. After a dataLayer.push(),
+     * these will trigger the execute method of this handler.
      *
      * @param container The instance of the GTM container we register the callbacks to
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback(Tune_init, this);
-        container.registerFunctionCallTagCallback(Tune_identify, this);
-        container.registerFunctionCallTagCallback(Tune_tagEvent, this);
-        container.registerFunctionCallTagCallback(Tune_tagScreen, this);
+        container.registerFunctionCallTagCallback(TUN_INIT, this);
+        container.registerFunctionCallTagCallback(TUN_IDENTIFY, this);
+        container.registerFunctionCallTagCallback(TUN_TAG_EVENT, this);
+        container.registerFunctionCallTagCallback(TUN_TAG_SCREEN, this);
 
     }
 
     /**
-     * This one will be called after an event has been pushed to the dataLayer
+     * A callback method for the registered callbacks method name mentioned in the register method.
      *
-     * @param s     The method you aim to call (this should be define in GTM interface)
+     * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
 
-        switch (s) {
-            case Tune_init:
-                init(map);
-                break;
-            case Tune_identify:
-                identify(map);
-                break;
-            case Tune_tagEvent:
-                tagEvent(map);
-                break;
-            case Tune_tagScreen:
-                tagScreen(map);
-                break;
-            default:
-                Log.i("Cargo TuneHandler", "Function "+s+" is not registered");
+        if (s.equals(TUN_INIT))
+            init(map);
+        else if (!init) {
+            Log.w("Cargo TuneHandler", " the handler hasn't be initialized, " +
+                    "please do so before doing anything else.");
+        }
+        else {
+            switch (s) {
+                case TUN_IDENTIFY:
+                    identify(map);
+                    break;
+                case TUN_TAG_EVENT:
+                    tagEvent(map);
+                    break;
+                case TUN_TAG_SCREEN:
+                    tagScreen(map);
+                    break;
+                default:
+                    Log.i("Cargo TuneHandler", "Function " + s + " is not registered");
+            }
         }
     }
 
+
+
+/* ************************************* SDK initialization ************************************* */
+
     /**
-     * The method you need to call first. Register your tune app id to the tune SDK
+     * The method you need to call first.
+     * Register your Tune advertiserId and conversionKey to the Tune SDK
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * advertiserId & conversionKey : ids Tune gives you when you register your app
+     *              * advertiserId & conversionKey (String) : ids you got when you register your app
      */
     private void init(Map<String, Object> map) {
         if (init)
@@ -153,12 +173,32 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
     /**
+     * The getter for the init boolean, returning if the tagHandler has been initialized
+     *
+     * @return the boolean
+     */
+    public boolean isInitialized(){
+        return init;
+    }
+
+
+
+/* ****************************************** Tracking ****************************************** */
+
+    /**
      * In order to identify the user as a unique visitor and to associate to a unique id
      * the related social networks ids, age, mail, username, gender...
      *
      * @param map    the parameters given at the moment of the dataLayer.push(),
      *               passed through the GTM container and the execute method.
-     *               The only parameter requested here is the android_id (User.USER_ID)
+     *               * userId (String) : an identifier attributed to a unique user (mandatory param)
+     *               * userGoogleId (String) : the google id if your user logged in with
+     *               * userFacebookId (String) : the facebook id if your user logged in with
+     *               * userTwitterId (String) : the twitter id if your user logged in with
+     *               * userAge (String) : the age of your user
+     *               * userName (String) : the username/name of your user
+     *               * userEmail (String) : the mail adress of your user
+     *               * userGender (String) : the gender of your user (MALE/FEMALE/UNKNOWN)
      */
     private void identify(Map<String, Object> map) {
 
@@ -193,7 +233,27 @@ public class TuneHandler extends AbstractTagHandler {
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
      *              The only parameter requested here is a name or an id for the event
-     *              (Event.EVENT_NAME or Event.EVENT_ID)
+     *              * eventName (String) : the name of the event (mandatory, unless eventId is set)
+     *              * eventId (int) : id linked to the event (mandatory, unless eventName is set)
+     *              * eventCurrencyCode (String)
+     *              * eventAdvertiserRefId (String)
+     *              * eventContentId (String)
+     *              * eventContentType (String)
+     *              * eventSearchString (String)
+     *              * eventAttribute1 (String)
+     *              * eventAttribute2 (String)
+     *              * eventAttribute3 (String)
+     *              * eventAttribute4 (String)
+     *              * eventAttribute5 (String)
+     *              * eventRating (Double)
+     *              * eventDate1 (Date)
+     *              * eventDate2 (Date) : Date1 needs to be set
+     *              * eventRevenue (Double)
+     *              * eventItems (list)
+     *              * eventLevel (int)
+     *              * eventReceiptData (String) : requires eventReceiptSignature
+     *              * eventReceiptSignature (String) : requires eventReceiptData
+     *              * eventQuantity (int)
      */
     private void tagEvent(Map<String, Object> map) {
 
@@ -232,8 +292,26 @@ public class TuneHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              The only parameter requested here is a name for the screen
-     *              (Screen.SCREEN_NAME)
+     *              * screenName (String) : the name of the screen view.
+     *              * eventCurrencyCode (String)
+     *              * eventAdvertiserRefId (String)
+     *              * eventContentId (String)
+     *              * eventContentType (String)
+     *              * eventSearchString (String)
+     *              * eventAttribute1 (String)
+     *              * eventAttribute2 (String)
+     *              * eventAttribute3 (String)
+     *              * eventAttribute4 (String)
+     *              * eventAttribute5 (String)
+     *              * eventRating (Double)
+     *              * eventDate1 (Date)
+     *              * eventDate2 (Date) : Date1 needs to be set
+     *              * eventRevenue (Double)
+     *              * eventItems (list)
+     *              * eventLevel (int)
+     *              * eventReceiptData (String) : requires eventReceiptSignature
+     *              * eventReceiptSignature (String) : requires eventReceiptData
+     *              * eventQuantity (int)
      */
     private void tagScreen(Map<String, Object> map) {
         TuneEvent tuneEvent;
@@ -353,6 +431,9 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
 
+
+/* ****************************************** Utility ******************************************* */
+
     /**
      * A callback triggered when an activity starts
      * @param activity  the activity which triggered the callback
@@ -385,15 +466,6 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
     /**
-     * The getter for the init boolean, returning if the tagHandler has been initialized
-     *
-     * @return the boolean
-     */
-    public boolean isInitialized(){
-        return init;
-    }
-
-    /**
      * A callback triggered when an activity stops
      * @param activity  the activity which triggered the callback
      */
@@ -402,7 +474,6 @@ public class TuneHandler extends AbstractTagHandler {
 
     }
 
-
-
-
+/* ********************************************************************************************** */
+    
 }

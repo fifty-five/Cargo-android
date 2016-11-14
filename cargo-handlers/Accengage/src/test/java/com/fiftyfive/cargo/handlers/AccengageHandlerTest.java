@@ -42,6 +42,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class AccengageHandlerTest extends TestCase {
 
+/* *********************************** Variables declaration ************************************ */
+
     A4S accMock = Mockito.mock(A4S.class);
     Lead leadMock = Mockito.mock(Lead.class);
     Cart cartMock = Mockito.mock(Cart.class);
@@ -52,6 +54,7 @@ public class AccengageHandlerTest extends TestCase {
     @Mock Application context;
     @Mock Cargo cargo;
 
+/* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
         initMocks(this);
@@ -59,6 +62,12 @@ public class AccengageHandlerTest extends TestCase {
         handler.cargo = cargo;
         handler.tracker = accMock;
     }
+
+    public void tearDown() throws Exception {
+
+    }
+
+/* **************************************** Init Tests ****************************************** */
 
     public void testInitCorrect() {
         HashMap<String, Object> map = new HashMap<>();
@@ -100,6 +109,8 @@ public class AccengageHandlerTest extends TestCase {
         verify(accMock, times(0)).setIntent(myIntent);
     }
 
+/* *************************************** setIntent Tests ************************************** */
+
     public void testSetIntent() {
         HashMap<String, Object> map = new HashMap<>();
         Intent myIntent = new Intent();
@@ -111,6 +122,7 @@ public class AccengageHandlerTest extends TestCase {
         verify(accMock, times(1)).setIntent(myIntent);
     }
 
+/* *************************************** tagEvent Tests *************************************** */
 
     public void testTagEventFailEventId() {
         HashMap<String, Object> map = new HashMap<>();
@@ -178,6 +190,8 @@ public class AccengageHandlerTest extends TestCase {
                 anyString(), anyString(), anyString());
     }
 
+/* **************************************** tagView Tests *************************************** */
+
     public void testCorrectTagView() {
         HashMap<String, Object> map = new HashMap<>();
 
@@ -197,6 +211,8 @@ public class AccengageHandlerTest extends TestCase {
 
         verify(accMock, times(0)).setView(anyString());
     }
+
+/* *************************************** tagLead Tests **************************************** */
 
     public void testFailedTagLead1() {
         HashMap<String, Object> map = new HashMap<>();
@@ -237,6 +253,8 @@ public class AccengageHandlerTest extends TestCase {
 
         verify(accMock, times(0)).trackLead(any(Lead.class));
     }
+
+/* ************************************** tagAddToCart Tests ************************************ */
 
     public void testCorrectAddToCart() {
         try {
@@ -280,6 +298,8 @@ public class AccengageHandlerTest extends TestCase {
 
         verify(accMock, times(0)).trackAddToCart(any(Cart.class));
     }
+
+/* ************************************** tagPurchase Tests ************************************* */
 
     public void testCorrectSimpleTagPurchase() {
         try {
@@ -365,6 +385,8 @@ public class AccengageHandlerTest extends TestCase {
         verify(accMock, times(1)).trackPurchase(any(Purchase.class));
     }
 
+/* *************************************** updateInfo Tests ************************************* */
+
     public void testCorrectUpdateDeviceInfo() {
         HashMap<String, Object> map = new HashMap<>();
 
@@ -401,7 +423,4 @@ public class AccengageHandlerTest extends TestCase {
     }
 
 
-
-    public void tearDown() throws Exception {
-    }
 }

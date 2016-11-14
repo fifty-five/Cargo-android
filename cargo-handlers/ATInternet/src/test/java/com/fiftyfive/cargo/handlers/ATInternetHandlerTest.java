@@ -45,6 +45,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ATInternetHandlerTest extends TestCase {
 
+/* *********************************** Variables declaration ************************************ */
+
     Tracker atTrackerMock = mock(Tracker.class);
     ATInternetHandler handler;
 
@@ -61,6 +63,8 @@ public class ATInternetHandlerTest extends TestCase {
 
 
     String testName = "testScreenOrEvent";
+
+/* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
         initMocks(this);
@@ -86,6 +90,8 @@ public class ATInternetHandlerTest extends TestCase {
     public void tearDown() throws Exception {
 
     }
+
+/* ************************************** identify Tests **************************************** */
 
     public void testIdentify(){
 
@@ -118,6 +124,8 @@ public class ATInternetHandlerTest extends TestCase {
         verify(atTrackerMock, times(0)).setConfig("identifier", null, null);
     }
 
+/* *************************************** tagEvent Tests *************************************** */
+
     public void testTagEventWithoutChapters(){
 
         HashMap<String, Object> map = new HashMap<>();
@@ -141,9 +149,9 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put(Event.EVENT_NAME, testName);
         map.put(Event.EVENT_TYPE, "sendDownload");
-        map.put("Chapter1", "chapter1");
-        map.put("Chapter2", "chapter2");
-        map.put("Chapter3", "chapter3");
+        map.put("chapter1", "chapter1");
+        map.put("chapter2", "chapter2");
+        map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
         handler.execute("AT_tagEvent", map);
@@ -161,9 +169,9 @@ public class ATInternetHandlerTest extends TestCase {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put(Event.EVENT_NAME, testName);
-        map.put("Chapter1", "chapter1");
-        map.put("Chapter2", "chapter2");
-        map.put("Chapter3", "chapter3");
+        map.put("chapter1", "chapter1");
+        map.put("chapter2", "chapter2");
+        map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
         handler.execute("AT_tagEvent", map);
@@ -178,9 +186,9 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put(Event.EVENT_NAME, testName);
         map.put(Event.EVENT_TYPE, "sendNothing");
-        map.put("Chapter1", "chapter1");
-        map.put("Chapter2", "chapter2");
-        map.put("Chapter3", "chapter3");
+        map.put("chapter1", "chapter1");
+        map.put("chapter2", "chapter2");
+        map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
         handler.execute("AT_tagEvent", map);

@@ -31,100 +31,125 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  */
 public class FacebookHandler extends AbstractTagHandler {
 
-    /**
-     * From facebook doc :
-     * The AppEventsLogger class allows the developer to log various types of events back to Facebook.
-     * (https://developers.facebook.com/docs/reference/android/current/class/AppEventsLogger/)
-     */
+/* ************************************ Variables declaration *********************************** */
+
+    /** The AppEventsLogger allows to log various types of events back to Facebook. */
     protected AppEventsLogger facebookLogger;
 
-    final String FB_init = "FB_init";
-    final String FB_tagEvent = "FB_tagEvent";
-    final String FB_purchase = "FB_purchase";
-    final String VALUE_TO_SUM = "valueToSum";
+    /** A boolean which defines if the instance has been correctly initialized */
+    private boolean init = false;
+
+    /** Constants used to define callbacks in the register and in the execute method */
+    private final String FB_INIT = "FB_init";
+    private final String FB_TAG_EVENT = "FB_tagEvent";
+    private final String FB_PURCHASE = "FB_purchase";
+    private final String VALUE_TO_SUM = "valueToSum";
+
+
+/* ************************************ Handler core methods ************************************ */
 
     /**
-     * Init properly facebook SDK
+     * Called by the TagHandlerManager, initialize the core of the handler
      */
     @Override
     public void initialize() {
-        // call on initialize() in AbstractTagHandler class in order to get cargo instance
         super.initialize();
 
         FacebookSdk.sdkInitialize(cargo.getApplication());
         facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
 
-        //todo : check permissions
         this.valid = FacebookSdk.isInitialized();
     }
 
-
     /**
-     * Register the callbacks to GTM. These will be triggered after a tag has been sent
+     * Register the callbacks to the container. After a dataLayer.push(),
+     * these will trigger the execute method of this handler.
      *
      * @param container The instance of the GTM container we register the callbacks to
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback(FB_init, this);
-        container.registerFunctionCallTagCallback(FB_tagEvent, this);
-        container.registerFunctionCallTagCallback(FB_purchase, this);
+        container.registerFunctionCallTagCallback(FB_INIT, this);
+        container.registerFunctionCallTagCallback(FB_TAG_EVENT, this);
+        container.registerFunctionCallTagCallback(FB_PURCHASE, this);
 
     }
 
     /**
-     * This one will be called after a tag has been sent
+     * A callback method for the registered callbacks method name mentioned in the register method.
      *
-     * @param s     The method you aime to call (this should be define in GTM interface)
+     * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
 
-        switch (s) {
-            case FB_init:
-                init(map);
-                break;
-            case FB_tagEvent:
-                tagEvent(map);
-                break;
-            case FB_purchase:
-                purchase(map);
-                break;
-            default:
-                Log.i("Cargo FacebookHandler", " Function "+s+" is not registered");
+        // a check fo the init method
+        if (s.equals(FB_INIT))
+            init(map);
+        // if the SDK hasn't been initialized, logs a warning
+        else if (!init) {
+            Log.w("Cargo FacebookHandler", " the handler hasn't be initialized, " +
+                    "please do so before doing anything else.");
+        }
+        // if the SDK is properly initialized, check for which method is called
+        else {
+            switch (s) {
+                case FB_TAG_EVENT:
+                    tagEvent(map);
+                    break;
+                case FB_PURCHASE:
+                    purchase(map);
+                    break;
+                default:
+                    Log.i("Cargo FacebookHandler", " Function "+s+" is not registered");
+            }
         }
     }
 
+
+
+/* ************************************* SDK initialization ************************************* */
 
     /**
      * The method you need to call first. Register your facebook app id to the facebook SDK
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * application id : the app id facebook gives you when you setup your fb app
-     *              * Tracker.ENABLE_DEBUG : the value of the bool to turn on/off the facebook debug
+     *              * applicationId (String) : the app id facebook gives when you register your app
+     *              * enableDebug (bool) : the value of the bool to turn on/off the facebook debug
      */
     private void init(Map<String, Object> map) {
 
         if(map.containsKey(Tracker.APPLICATION_ID)){
             FacebookSdk.setApplicationId(getString(map, Tracker.APPLICATION_ID));
+            init = true;
         }
         FacebookSdk.setIsDebugEnabled(getBoolean(map, Tracker.ENABLE_DEBUG, false));
-
     }
+
+    /**
+     * The getter for the init boolean, returning if the tagHandler has been initialized
+     *
+     * @return the boolean
+     */
+    public boolean isInitialized() { return init; }
+
+
+
+/* ****************************************** Tracking ****************************************** */
 
     /**
      * The method used to send an event to your facebook app
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * event name : the only parameter requested here
-     *              * valueToSum : When reported, all of the valueToSum properties will be summed
-     *                              together. It is an arbitrary number that can represent any value
-     *                              (e.g., a price or a quantity).
+     *              * eventName (String) :  the only parameter requested here
+     *              * valueToSum (Double) : When reported, all of the valueToSum properties will
+     *                                      be summed together. It is an arbitrary number that can
+     *                                      represent any value (e.g., a price or a quantity).
      *              * parameters : any other key in the map will be taken as a parameter linked
-     *                              to the event. You can set up to 25 parameters for a given event.
+     *                             to the event. You can set up to 25 parameters for a given event.
      *
      */
     private void tagEvent(Map<String, Object> map){
@@ -175,8 +200,9 @@ public class FacebookHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * cartPrice : represents the amount of money spent on the purchase
-     *              * currencyCode : the code of the currency the purchase has been registered with
+     *              * transactionTotal (Double) : represents the total amount of the purchase
+     *              * transactionCurrencyCode (String) : the code of the currency the purchase
+     *                                                   was made with
      *
      */
     private void purchase (Map<String, Object> map) {
@@ -191,15 +217,20 @@ public class FacebookHandler extends AbstractTagHandler {
         facebookLogger.logPurchase(BigDecimal.valueOf(price), Currency.getInstance(currency));
     }
 
+
+
+/* ****************************************** Utility ******************************************* */
+
     /**
      * A simple method to put the parameters given in a bundle and to return it
+     * This method is just called from tagEvent method
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
      * @return      the bundle containing all the parameters initially given for an event
      *
      */
-    protected Bundle eventParamBuilder(Map<String, Object> map) {
+    private Bundle eventParamBuilder(Map<String, Object> map) {
 
         Bundle bundle = new Bundle();
         String eventName = getString(map, Event.EVENT_NAME);
@@ -266,7 +297,16 @@ public class FacebookHandler extends AbstractTagHandler {
 
     }
 
+    /**
+     * This setter is made for testing purpose and shouldn't be used outside of the test class.
+     *
+     * @param value the boolean value you want the "init" attribute to be set with.
+     */
+    protected void setInitialize(boolean value) {
+        this.init = value;
+    }
 
 
+/* ********************************************************************************************** */
 
 }

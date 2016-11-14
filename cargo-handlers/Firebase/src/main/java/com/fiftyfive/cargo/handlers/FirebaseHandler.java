@@ -26,62 +26,70 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  */
 public class FirebaseHandler extends AbstractTagHandler {
 
-    private final String Firebase_init = "Firebase_init";
-    private final String Firebase_tagEvent = "Firebase_tagEvent";
-    private final String Firebase_identify = "Firebase_identify";
-    private final String ENABLE_COLLECTION = "enableCollection";
+/* ************************************ Variables declaration *********************************** */
 
+    /** The tracker of the Firebase SDK which send the events */
     protected FirebaseAnalytics mFirebaseAnalytics;
 
+    /** Constants used to define callbacks in the register and in the execute method */
+    private final String FIREBASE_INIT = "Firebase_init";
+    private final String FIREBASE_IDENTIFY = "Firebase_identify";
+    private final String FIREBASE_TAG_EVENT = "Firebase_tagEvent";
+
+
+
+/* ************************************ Handler core methods ************************************ */
 
     /**
-     * Init properly the SDK, getting the instance of Firebase.
+     * Called by the TagHandlerManager, initialize the core of the handler
      */
     @Override
     public void initialize() {
-        // call on initialize() in AbstractTagHandler class in order to get cargo instance
         super.initialize();
-
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(cargo.getApplication());
-
         this.valid = true;
     }
 
     /**
-     * Register the callbacks to GTM. These will be triggered after a dataLayer.push()
+     * Register the callbacks to the container. After a dataLayer.push(),
+     * these will trigger the execute method of this handler.
      *
      * @param container The instance of the GTM container we register the callbacks to
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback(Firebase_init, this);
-        container.registerFunctionCallTagCallback(Firebase_identify, this);
-        container.registerFunctionCallTagCallback(Firebase_tagEvent, this);
+        container.registerFunctionCallTagCallback(FIREBASE_INIT, this);
+        container.registerFunctionCallTagCallback(FIREBASE_IDENTIFY, this);
+        container.registerFunctionCallTagCallback(FIREBASE_TAG_EVENT, this);
     }
 
     /**
-     * This one will be called after an event has been pushed to the dataLayer
+     * A callback method for the registered callbacks method name mentioned in the register method.
      *
-     * @param s     The method you aime to call (this should be define in GTM interface)
+     * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
 
         switch (s) {
-            case Firebase_init:
+            case FIREBASE_INIT:
                 init(map);
                 break;
-            case Firebase_identify:
+            case FIREBASE_IDENTIFY:
                 identify(map);
                 break;
-            case Firebase_tagEvent:
+            case FIREBASE_TAG_EVENT:
                 tagEvent(map);
                 break;
             default:
-                Log.i("Cargo TuneHandler", "Function "+s+" is not registered");
+                Log.i("55", "Function " + s + " is not registered");
         }
     }
+
+
+
+/* ************************************* SDK initialization ************************************* */
 
     /**
      * The method you may call first if you want to disable the Firebase analytics collection
@@ -89,15 +97,20 @@ public class FirebaseHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * ANALYTICS_COLLECTION : a boolean true/false for collection enabled/disabled
+     *              * enableCollection (boolean) : true/false boolean to enable/disable collection
      */
     private void init(Map<String, Object> map) {
+        final String ENABLE_COLLECTION = "enableCollection";
 
         if (map.containsKey(ENABLE_COLLECTION)) {
             boolean enabled = getBoolean(map, ENABLE_COLLECTION, true);
             mFirebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
         }
     }
+
+
+
+/* ****************************************** Tracking ****************************************** */
 
     /**
      * In order to identify the user as a unique visitor, with a custom ID
@@ -110,7 +123,7 @@ public class FirebaseHandler extends AbstractTagHandler {
      *
      * @param map    the parameters given at the moment of the dataLayer.push(),
      *               passed through the GTM container and the execute method.
-     *               * USER_ID is the only parameter requested here
+     *               * userId (String) : the identifier for a unique user (mandatory)
      *               * some user properties you may want to set
      */
     private void identify(Map<String, Object> map) {
@@ -118,6 +131,7 @@ public class FirebaseHandler extends AbstractTagHandler {
             mFirebaseAnalytics.setUserId(getString(map, User.USER_ID));
             map.remove(User.USER_ID);
         }
+        // all the other parameters in the map are considered as extra user properties
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             mFirebaseAnalytics.setUserProperty(entry.getKey(), getString(map, entry.getKey()));
         }
@@ -136,7 +150,7 @@ public class FirebaseHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * EVENT_NAME : the only parameter requested here
+     *              * eventName (String) : the only parameter requested here
      */
     private void tagEvent(Map<String, Object> map) {
 
@@ -170,6 +184,10 @@ public class FirebaseHandler extends AbstractTagHandler {
             Log.w("Cargo FirebaseHandler", " in order to create an event, " +
                     "an eventName is required. The event hasn't been created.");
     }
+
+
+
+/* ****************************************** Utility ******************************************* */
 
     /**
      * A callback triggered when an activity starts
