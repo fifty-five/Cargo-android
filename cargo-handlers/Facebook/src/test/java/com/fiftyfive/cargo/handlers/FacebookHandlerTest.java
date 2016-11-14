@@ -40,10 +40,14 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 public class FacebookHandlerTest extends TestCase {
 
+/* *********************************** Variables declaration ************************************ */
+
     AppEventsLogger facebookLoggerMock = mock(AppEventsLogger.class);
     FacebookHandler handler;
     @Mock Application context;
     @Mock Cargo cargoMock;
+
+/* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
         initMocks(this);
@@ -54,6 +58,11 @@ public class FacebookHandlerTest extends TestCase {
         handler.facebookLogger = facebookLoggerMock;
     }
 
+    public void tearDown() throws Exception {
+
+    }
+
+/* **************************************** Init Tests ****************************************** */
 
     public void testInitialize(){
         PowerMockito.when(Cargo.getInstance()).thenReturn(cargoMock);
@@ -90,6 +99,8 @@ public class FacebookHandlerTest extends TestCase {
 
         verify(facebookLoggerMock, times(0)).logEvent("hello");
     }
+
+/* *************************************** tagEvent Tests *************************************** */
 
     public void testSimpleTagEvent(){
         HashMap<String, Object> map= new HashMap<>();
@@ -137,6 +148,8 @@ public class FacebookHandlerTest extends TestCase {
         verify(facebookLoggerMock, times(1)).logEvent(anyString(), any(Bundle.class));
     }
 
+/* ************************************** tagPurchase Tests ************************************* */
+
     public void testTagPurchase(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(Transaction.TRANSACTION_TOTAL, 42.5);
@@ -166,8 +179,4 @@ public class FacebookHandlerTest extends TestCase {
         FacebookSdk.setIsDebugEnabled(true);
     }
 
-
-    public void tearDown() throws Exception {
-
-    }
 }

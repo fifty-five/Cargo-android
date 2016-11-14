@@ -42,11 +42,14 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 public class FirebaseHandlerTest extends TestCase {
 
+/* *********************************** Variables declaration ************************************ */
+
     FirebaseAnalytics fireMock = PowerMockito.mock(FirebaseAnalytics.class);
     FirebaseHandler handler;
     @Mock Application context;
     @Mock Cargo cargo;
 
+/* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
         initMocks(this);
@@ -54,6 +57,12 @@ public class FirebaseHandlerTest extends TestCase {
         handler.mFirebaseAnalytics = fireMock;
         handler.cargo = cargo;
     }
+
+    public void tearDown() throws Exception {
+
+    }
+
+/* **************************************** Init Tests ****************************************** */
 
     public void testInit() {
 
@@ -64,6 +73,8 @@ public class FirebaseHandlerTest extends TestCase {
 
         verify(fireMock, times(1)).setAnalyticsCollectionEnabled(false);
     }
+
+/* ************************************** identify Tests **************************************** */
 
     public void testSimpleIdentify() {
 
@@ -88,6 +99,8 @@ public class FirebaseHandlerTest extends TestCase {
         verify(fireMock, times(1)).setUserProperty("gender", "male");
         verify(fireMock, times(1)).setUserProperty("children", "4");
     }
+
+/* *************************************** tagEvent Tests *************************************** */
 
     public void testSimpleTagEvent() {
         HashMap<String, Object> map= new HashMap<>();
@@ -121,6 +134,4 @@ public class FirebaseHandlerTest extends TestCase {
         verify(fireMock, times(0)).logEvent(anyString(), any(Bundle.class));
     }
 
-    public void tearDown() throws Exception {
-    }
 }

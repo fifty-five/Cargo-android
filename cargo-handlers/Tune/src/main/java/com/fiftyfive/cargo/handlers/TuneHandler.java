@@ -43,7 +43,7 @@ public class TuneHandler extends AbstractTagHandler {
     protected Tune tune;
 
     /** A boolean which defines if the instance has been correctly initialized */
-    private boolean init = false;
+    protected boolean init = false;
 
     /** Constants used to define callbacks in the register and in the execute method */
     private final String TUN_INIT = "Tune_init";

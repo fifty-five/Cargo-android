@@ -43,12 +43,15 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 public class TuneHandlerTest extends TestCase {
 
+/* *********************************** Variables declaration ************************************ */
+
     Tune tuneMock = PowerMockito.mock(Tune.class);
     TuneEvent tuneEventMock = PowerMockito.mock(TuneEvent.class);
     TuneHandler handler;
     @Mock Application context;
     @Mock Cargo cargo;
 
+/* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
         initMocks(this);
@@ -59,6 +62,11 @@ public class TuneHandlerTest extends TestCase {
         PowerMockito.whenNew(TuneEvent.class).withArguments(anyInt()).thenReturn(tuneEventMock);
     }
 
+    public void tearDown() throws Exception {
+
+    }
+
+/* **************************************** Init Tests ****************************************** */
 
     public void testInitWithAllParameters(){
         when(cargo.getApplication()).thenReturn(context);
@@ -74,6 +82,26 @@ public class TuneHandlerTest extends TestCase {
         assertTrue(handler.isInitialized());
     }
 
+    public void testInitWithWrongParameters(){
+        when(cargo.getApplication()).thenReturn(context);
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("conversionKey", 432);
+
+        handler.execute("Tune_init", map);
+
+        assertFalse(handler.isInitialized());
+    }
+
+    public void testFrameworkNotInit(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_ID, "123456-543210-55-42");
+
+        handler.execute("Tune_identify", map);
+        verify(tuneMock, times(0)).setUserId(anyString());
+    }
+
+/* *************************************** tagEvent Tests *************************************** */
+
     public void testSimpleTagEventWithAndStringParams() throws Exception {
         HashMap<String, Object> map= new HashMap<>();
         map.put(Event.EVENT_NAME, "eventName");
@@ -88,7 +116,7 @@ public class TuneHandlerTest extends TestCase {
         map.put("eventAttribute4", "eventAttribute4");
         map.put("eventAttribute5", "eventAttribute5");
 
-
+        handler.init = true;
         handler.execute("Tune_tagEvent", map);
         PowerMockito.verifyNew(TuneEvent.class).withArguments("eventName");
 
@@ -124,6 +152,7 @@ public class TuneHandlerTest extends TestCase {
         Date date2 = new Date();
         map.put("eventDate2", date2);
 
+        handler.init = true;
         handler.execute("Tune_tagEvent", map);
         PowerMockito.verifyNew(TuneEvent.class).withArguments(5542);
 
@@ -138,28 +167,24 @@ public class TuneHandlerTest extends TestCase {
         verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
     }
 
+/* *************************************** tagScreen Tests ************************************** */
+
     public void testSimpleTagScreen() {
         HashMap<String, Object> map= new HashMap<>();
         map.put(Screen.SCREEN_NAME, "screenName");
 
+        handler.init = true;
         handler.execute("Tune_tagScreen", map);
         verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
     }
 
-    public void testInitWithWrongParameters(){
-        when(cargo.getApplication()).thenReturn(context);
-        HashMap<String, Object> map= new HashMap<>();
-        map.put("conversionKey", 432);
-
-        handler.execute("Tune_init", map);
-
-        assertFalse(handler.isInitialized());
-    }
+/* **************************************** identify Tests ************************************** */
 
     public void testUserIdWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setUserId("123456-543210-55-42");
     }
@@ -169,6 +194,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_GOOGLE_ID, 123);
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGoogleUserId("123");
     }
@@ -178,6 +204,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_GOOGLE_ID, "234");
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGoogleUserId("234");
     }
@@ -187,6 +214,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_FACEBOOK_ID, "345");
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setFacebookUserId("345");
     }
@@ -196,6 +224,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_TWITTER_ID, "012");
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setTwitterUserId("012");
     }
@@ -205,6 +234,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_AGE, "55");
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setAge(55);
     }
@@ -214,6 +244,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_AGE, 42);
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setAge(42);
     }
@@ -223,6 +254,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_GENDER, "male");
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.MALE);
     }
@@ -232,6 +264,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_GENDER, "female");
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.FEMALE);
     }
@@ -241,6 +274,7 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_GENDER, "unknown");
         map.put(User.USER_ID, "123456-543210-55-42");
 
+        handler.init = true;
         handler.execute("Tune_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.UNKNOWN);
     }
@@ -254,7 +288,4 @@ public class TuneHandlerTest extends TestCase {
         assertTrue(true);
     }
 
-    public void tearDown() throws Exception {
-        
-    }
 }

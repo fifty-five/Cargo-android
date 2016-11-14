@@ -94,12 +94,9 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
         boolean dryRun = getBoolean(parameters, Tracker.DISABLE_TRACKING, false);
         int localDispatch = getInt(parameters, Tracker.DISPATCH_PERIOD, 30);
 
-        if (parameters.containsKey(Tracker.ENABLE_OPT_OUT))
-            analytics.setAppOptOut(enable);
-        if (parameters.containsKey(Tracker.DISABLE_TRACKING))
-            analytics.setDryRun(dryRun);
-        if (parameters.containsKey(Tracker.DISPATCH_PERIOD))
-            analytics.setLocalDispatchPeriod(localDispatch);
+        analytics.setAppOptOut(enable);
+        analytics.setDryRun(dryRun);
+        analytics.setLocalDispatchPeriod(localDispatch);
     }
 
 

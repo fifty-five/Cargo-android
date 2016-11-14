@@ -45,6 +45,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ATInternetHandlerTest extends TestCase {
 
+/* *********************************** Variables declaration ************************************ */
+
     Tracker atTrackerMock = mock(Tracker.class);
     ATInternetHandler handler;
 
@@ -61,6 +63,8 @@ public class ATInternetHandlerTest extends TestCase {
 
 
     String testName = "testScreenOrEvent";
+
+/* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
         initMocks(this);
@@ -86,6 +90,8 @@ public class ATInternetHandlerTest extends TestCase {
     public void tearDown() throws Exception {
 
     }
+
+/* ************************************** identify Tests **************************************** */
 
     public void testIdentify(){
 
@@ -117,6 +123,8 @@ public class ATInternetHandlerTest extends TestCase {
 
         verify(atTrackerMock, times(0)).setConfig("identifier", null, null);
     }
+
+/* *************************************** tagEvent Tests *************************************** */
 
     public void testTagEventWithoutChapters(){
 

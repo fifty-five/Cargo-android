@@ -29,13 +29,16 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @PrepareForTest(GoogleAnalytics.class)
 public class GoogleAnalyticsHandlerTest extends TestCase {
 
-    //@Mock Application context;
+/* *********************************** Variables declaration ************************************ */
+
     GoogleAnalytics googleAnalyticsMock = mock(GoogleAnalytics.class);
     GoogleAnalyticsHandler handler;
     @Mock
     Application context;
     @Mock
     Cargo cargo;
+
+/* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
         initMocks(this);
@@ -50,6 +53,8 @@ public class GoogleAnalyticsHandlerTest extends TestCase {
     public void tearDown() throws Exception {
 
     }
+
+/* **************************************** Init Tests ****************************************** */
 
     public void testInitWithBoolean(){
         HashMap<String, Object> map= new HashMap<>();
@@ -68,7 +73,6 @@ public class GoogleAnalyticsHandlerTest extends TestCase {
         verify(googleAnalyticsMock, times(1)).setAppOptOut(true);
 
     }
-
 
     public void testInitWithMap(){
         HashMap<String, Object> map= new HashMap<>();
@@ -93,6 +97,8 @@ public class GoogleAnalyticsHandlerTest extends TestCase {
         map.put("dispatchPeriod", "100");
         handler.execute("GA_init", map);
 
+        verify(googleAnalyticsMock, times(1)).setAppOptOut(false);
+        verify(googleAnalyticsMock, times(1)).setDryRun(false);
         verify(googleAnalyticsMock, times(1)).setLocalDispatchPeriod(100);
     }
 
@@ -101,6 +107,9 @@ public class GoogleAnalyticsHandlerTest extends TestCase {
         map.put("disableTracking", "true");
         handler.execute("GA_init", map);
 
+        verify(googleAnalyticsMock, times(1)).setAppOptOut(false);
         verify(googleAnalyticsMock, times(1)).setDryRun(true);
+        verify(googleAnalyticsMock, times(1)).setLocalDispatchPeriod(30);
     }
+
 }
