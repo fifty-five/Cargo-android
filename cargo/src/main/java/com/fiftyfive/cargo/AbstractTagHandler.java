@@ -1,8 +1,10 @@
+
 package com.fiftyfive.cargo;
 
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.tagmanager.Container;
 
@@ -22,8 +24,14 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     /** A boolean which validates or not if the handler has been initialized */
     public boolean valid;
 
+    /** A boolean which validates or not if the third part SDK has been initialized */
+    public boolean initialized;
+
     /** A reference to the Cargo instance, to retrieve easily the context, among other things */
     public Cargo cargo;
+
+    /** The name of the handler for the logs */
+    protected String name;
 
 
 
@@ -36,6 +44,8 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      */
     public void initialize(){
         cargo = Cargo.getInstance();
+        this.valid = true;
+        this.initialized = false;
     }
 
     /**
@@ -56,6 +66,28 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     @Override
     public abstract void execute(String s, Map<String, Object> map);
 
+
+
+/* ************************************ Variables declaration *********************************** */
+
+    protected void logMissingParam(String[] parameter, String methodName){
+        Log.w(this.name, "Parameter '"+ parameter.toString() +"' is required " +
+                "in method '"+ methodName +"'");
+    }
+
+    protected void logUninitializedFramework() {
+        Log.i(this.name, "You must initialize the framework before using it");
+    }
+
+    protected void logParamWithSuccess(String parameter, Object value) {
+        Log.v(this.name, "Parameter '"+parameter+"' has been set to '"+
+                value.toString()+"' with success");
+    }
+
+    protected void logNotFoundValue(String key, String value, Object[] values) {
+        Log.w(this.name, "Value '"+value+"' for key '"+key+"' is not found " +
+                "among possible values " + values.toString());
+    }
 
 
 /* ***************************** ActivityLifeCycle callback methods ***************************** */
