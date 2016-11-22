@@ -158,8 +158,10 @@ public class ATInternetHandler extends AbstractTagHandler {
      *      - Dictionary (Map of objects) : your setup for the tracker http://tinyurl.com/j3avazw
      */
     private void setConfig(Map<String, Object> params){
-        Boolean override = getBoolean(params, "override", false);
-        logParamWithSuccess("override", override);
+        final String OVERRIDE = "override";
+        Boolean override = getBoolean(params, OVERRIDE, false);
+        params.remove(OVERRIDE);
+        logParamWithSuccess(OVERRIDE, override);
 
         HashMap<String, Object> map = new HashMap<>(params);
         atTracker.setConfig(map, override, new SetConfigCallback() {
