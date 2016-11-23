@@ -2,12 +2,11 @@
 package com.fiftyfive.cargo;
 
 import android.app.Activity;
-import android.app.Application;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.tagmanager.Container;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -21,11 +20,11 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
 
 /* ************************************ Variables declaration *********************************** */
 
-    /** A boolean which validates or not if the handler has been initialized */
-    public boolean valid;
+    /** A boolean which validates or not if the handler has been instantiated */
+    public boolean valid = false;
 
     /** A boolean which validates or not if the third part SDK has been initialized */
-    public boolean initialized;
+    protected boolean initialized = false;
 
     /** A reference to the Cargo instance, to retrieve easily the context, among other things */
     public Cargo cargo;
@@ -45,7 +44,6 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     public void initialize(){
         cargo = Cargo.getInstance();
         this.valid = true;
-        this.initialized = false;
     }
 
     /**
@@ -66,29 +64,85 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     @Override
     public abstract void execute(String s, Map<String, Object> map);
 
+    /**
+     * This setter is made for testing purpose and shouldn't be used outside of the test class.
+     *
+     * @param value the boolean value you want the "init" attribute to be set with.
+     */
+    public void setInitialized(boolean value) {
+        initialized = value;
+    }
 
+
+    /**
+     * The getter for the initialized boolean, returning whether the third part SDK has been
+     * initialized or not.
+     *
+     * @return the boolean
+     */
+    public boolean isInitialized() { return initialized; }
 
 /* ************************************ Variables declaration *********************************** */
 
+    /**
+     * Logs a warning about a mandatory parameter missing in a method call.
+     * Prints the name of the handler it happens in.
+     *
+     * @param parameter the missing parameter.
+     * @param methodName the tag of the method the parameter is missing in.
+     */
     protected void logMissingParam(String[] parameter, String methodName){
         Log.w(this.name, "Parameter '"+ parameter.toString() +"' is required " +
                 "in method '"+ methodName +"'");
     }
 
+    /**
+     * Logs an info about the need to initialize the third part SDK before using it.
+     * Prints the name of the handler it happens in.
+     */
     protected void logUninitializedFramework() {
         Log.i(this.name, "You must initialize the framework before using it");
     }
 
+    /**
+     * Verbose log when a parameter is successfully set to a value.
+     * Prints the name of the handler it happens in.
+     *
+     * @param parameter the name of the parameter which has been set.
+     * @param value the value the parameter has been set to.
+     */
     protected void logParamWithSuccess(String parameter, Object value) {
         Log.v(this.name, "Parameter '"+parameter+"' has been set to '"+
                 value.toString()+"' with success");
     }
 
+    /**
+     * Logs a warning about a parameter which seems to have a wrong value compared to the
+     * possible value set. Prints the name of the handler it happens in.
+     *
+     * @param key the key of the parameter the value doesn't match.
+     * @param value the value missing in the preset.
+     * @param values the set of the possible values.
+     */
     protected void logNotFoundValue(String key, String value, Object[] values) {
         Log.w(this.name, "Value '"+value+"' for key '"+key+"' is not found " +
                 "among possible values " + values.toString());
     }
 
+    /**
+     * Debug log which shows if a function tag doesnt match any implemented method in the handler.
+     * Prints the name of the handler it happens in.
+     *
+     * @param functionTag the function tag which doesn't match any method.
+     */
+    protected void logUnknownFunction(String functionTag) {
+        Log.d(this.name, "Unable to find a method matching the function tag ["+functionTag+"].");
+    }
+
+    protected void logReceivedFunction(String functionTag, Map<String, Object> map) {
+        Log.i(this.name, "Received function "+ functionTag
+                +" with parameters "+ Arrays.toString(map.entrySet().toArray())+".");
+    }
 
 /* ***************************** ActivityLifeCycle callback methods ***************************** */
 

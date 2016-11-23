@@ -116,7 +116,7 @@ public class AccengageHandlerTest extends TestCase {
         Intent myIntent = new Intent();
         map.put("intent", myIntent);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_intent", map);
 
         verify(accMock, times(1)).setIntent(myIntent);
@@ -129,7 +129,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("eventId", 10);
         map.put("eventName", "myEvent");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagEvent", map);
 
         verify(accMock, times(0)).trackEvent(anyLong(), anyString());
@@ -139,7 +139,7 @@ public class AccengageHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put("eventId", 1005);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagEvent", map);
 
         verify(accMock, times(0)).trackEvent(anyLong(), anyString());
@@ -150,7 +150,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("eventId", 1005);
         map.put("eventName", "myEvent");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagEvent", map);
 
         verify(accMock, times(1)).trackEvent(anyLong(), anyString());
@@ -164,7 +164,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("param2", "value2");
         map.put("param3", "value3");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagEvent", map);
 
         verify(accMock, times(1)).trackEvent(anyLong(), anyString(),
@@ -183,7 +183,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("param2", 220f);
         map.put("param3", parameters);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagEvent", map);
 
         verify(accMock, times(1)).trackEvent(anyLong(), anyString(),
@@ -197,7 +197,7 @@ public class AccengageHandlerTest extends TestCase {
 
         map.put("screenName", "myScreen");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagView", map);
 
         verify(accMock, times(1)).setView("myScreen");
@@ -206,7 +206,7 @@ public class AccengageHandlerTest extends TestCase {
     public void testFailedTagView() {
         HashMap<String, Object> map = new HashMap<>();
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagView", map);
 
         verify(accMock, times(0)).setView(anyString());
@@ -219,7 +219,7 @@ public class AccengageHandlerTest extends TestCase {
 
         map.put("leadValue", "value");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagLead", map);
 
         verify(accMock, times(0)).trackLead(any(Lead.class));
@@ -237,7 +237,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("leadLabel", "label");
         map.put("leadValue", "value");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagLead", map);
 
         verify(accMock, times(1)).trackLead(any(Lead.class));
@@ -248,7 +248,7 @@ public class AccengageHandlerTest extends TestCase {
 
         map.put("leadLabel", "label");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagLead", map);
 
         verify(accMock, times(0)).trackLead(any(Lead.class));
@@ -270,7 +270,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("transactionId", "500one+165");
         map.put("item", item);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagAddToCart", map);
 
         verify(accMock, times(1)).trackAddToCart(any(Cart.class));
@@ -282,7 +282,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("transactionId", "500one+165");
         map.put("item", null);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagAddToCart", map);
 
         verify(accMock, times(0)).trackAddToCart(any(Cart.class));
@@ -293,7 +293,7 @@ public class AccengageHandlerTest extends TestCase {
 
         map.put("transactionId", "testID");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagAddToCart", map);
 
         verify(accMock, times(0)).trackAddToCart(any(Cart.class));
@@ -314,7 +314,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("transactionCurrencyCode", "USD");
         map.put("transactionTotal", 15.0);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagPurchase", map);
 
         verify(accMock, times(1)).trackPurchase(any(Purchase.class));
@@ -327,7 +327,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("transactionCurrencyCode", "USD");
         map.put("transactionTotal", -0.2);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagPurchase", map);
 
         verify(accMock, times(0)).trackPurchase(any(Purchase.class));
@@ -339,7 +339,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("transactionId", "testID");
         map.put("transactionTotal", 99.99);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagPurchase", map);
 
         verify(accMock, times(0)).trackPurchase(any(Purchase.class));
@@ -359,7 +359,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("transactionTotal", 15.0);
         map.put("transactionProducts", list);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagPurchase", map);
 
         verify(accMock, times(1)).trackPurchase(any(Purchase.class));
@@ -379,7 +379,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("transactionTotal", 15.0);
         map.put("transactionProducts", list);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_tagPurchase", map);
 
         verify(accMock, times(1)).trackPurchase(any(Purchase.class));
@@ -393,7 +393,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("deviceInfoKey", "testKey");
         map.put("deviceInfoValue", "value");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_updateDeviceInfo", map);
 
         verify(accMock, times(1)).updateDeviceInfo(any(Bundle.class));
@@ -405,7 +405,7 @@ public class AccengageHandlerTest extends TestCase {
         map.put("deviceInfoKey", "testKey");
         map.put("deviceInfoDate", new Date());
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_updateDeviceInfo", map);
 
         verify(accMock, times(1)).updateDeviceInfo(any(Bundle.class));
@@ -416,7 +416,7 @@ public class AccengageHandlerTest extends TestCase {
 
         map.put("deviceInfoKey", "testKey");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("ACC_updateDeviceInfo", map);
 
         verify(accMock, times(0)).updateDeviceInfo(any(Bundle.class));

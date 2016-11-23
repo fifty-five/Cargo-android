@@ -16,7 +16,9 @@ import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.Transaction;
 import com.google.android.gms.tagmanager.Container;
 
+import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +49,6 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     /** The tracker of the Accengage SDK which send the events */
     protected A4S tracker;
 
-    /** A boolean which defines if the instance has been correctly initialized */
-    private boolean init = false;
-
     /** Constants used to define callbacks in the register and in the execute method */
     private final String ACC_INIT = "ACC_init";
     private final String ACC_INTENT = "ACC_intent";
@@ -59,6 +58,10 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     private final String ACC_TAG_PURCHASE = "ACC_tagPurchase";
     private final String ACC_UPDATE_DEVICE_INFO = "ACC_updateDeviceInfo";
     private final String ACC_TAG_VIEW = "ACC_tagView";
+
+    /** Constants used as parameters for the Accengage SDK */
+    private final String PRIVATE_KEY = "privateKey";
+    private final String PARTNER_ID = "partnerId";
 
 
 
@@ -71,7 +74,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     public void initialize() {
         super.initialize();
         tracker = A4S.get(cargo.getApplication());
-        this.valid = true;
+        this.name = "Accengage";
     }
 
     /**
@@ -100,14 +103,14 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
+        logReceivedFunction(s, map);
 
         // a check for the init method
-        if (s.equals(ACC_INIT))
+        if (ACC_INIT.equals(s))
             init(map);
         // if the SDK hasn't been initialized, logs a warning
-        else if (!init) {
-            Log.w("Cargo AccengageHandler", " the handler hasn't be initialized, " +
-                    "please do so before doing anything else.");
+        else if (!initialized) {
+            logUninitializedFramework();
         }
         // if the SDK is properly initialized, check for which method is called
         else {
@@ -134,7 +137,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
                     tagView(map);
                     break;
                 default:
-                    Log.i("55", "Function " + s + " is not registered");
+                    logUnknownFunction(s);
             }
         }
     }
@@ -152,15 +155,14 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      *              * privateKey & partnerId (String): ID Accengage gives when you register your app
      */
     private void init(Map<String, Object> map) {
-        privateKey = getString(map, "privateKey");
-        partnerId = getString(map, "partnerId");
+        privateKey = getString(map, PRIVATE_KEY);
+        partnerId = getString(map, PARTNER_ID);
 
-        if (privateKey == null || partnerId == null) {
-            Log.w("Cargo AccengageHandler", " partnerId and/or privateKey is missing for " +
-                    "the Accengage SDK initialization");
+        if (privateKey != null && partnerId != null) {
+            initialized = true;
         }
         else {
-            init = true;
+            logMissingParam(new String[]{PRIVATE_KEY, PARTNER_ID}, ACC_INIT);
         }
     }
 
@@ -172,6 +174,9 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     @Override
     public String getPartnerId(Context context) {
+        if (partnerId != null) {
+            logParamWithSuccess(PARTNER_ID, partnerId);
+        }
         return partnerId;
     }
 
@@ -183,15 +188,11 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     @Override
     public String getPrivateKey(Context context) {
+        if (privateKey != null) {
+            logParamWithSuccess(PRIVATE_KEY, privateKey);
+        }
         return privateKey;
     }
-
-    /**
-     * The getter for the init boolean, returning if the tagHandler has been initialized
-     *
-     * @return the boolean
-     */
-    public boolean isInitialized() { return init; }
 
 
 
@@ -216,13 +217,11 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
         // a check in order to log if the event ID is not present or badly formatted
         if (eventId < 1000) {
-            Log.w("Cargo AccengageHandler", " eventId is missing or uses a wrong format for " +
-                    "the Accengage tagEvent method");
+            logMissingParam(new String[]{Event.EVENT_ID}, ACC_TAG_EVENT);
         }
         // a check to log if the eventName is not present
         else if (eventName == null) {
-            Log.w("Cargo AccengageHandler", " eventName is missing for " +
-                    "the Accengage tagEvent method");
+            logMissingParam(new String[]{Event.EVENT_NAME}, ACC_TAG_EVENT);
         }
         // the core of the method, which fires the event
         else {
@@ -233,17 +232,21 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
             if (arraySize > 0) {
                 String[] parameters = new String[arraySize];
                 arraySize = 0;
-
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
                     eventParam = entry.getKey()+": "+getString(map, entry.getKey());
                     parameters[arraySize++] = eventParam;
                 }
                 // fire the event with the array of parameters
                 tracker.trackEvent(eventId, eventName, parameters);
+                logParamWithSuccess(Event.EVENT_ID, eventId);
+                logParamWithSuccess(Event.EVENT_NAME, eventName);
+                logParamWithSuccess("parameters", parameters);
             }
             else {
                 // fire the event without an array of parameters
                 tracker.trackEvent(eventId, eventName);
+                logParamWithSuccess(Event.EVENT_ID, eventId);
+                logParamWithSuccess(Event.EVENT_NAME, eventName);
             }
         }
     }
@@ -261,10 +264,10 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
         if (screenName != null) {
             tracker.setView(screenName);
+            logParamWithSuccess(Screen.SCREEN_NAME, screenName);
         }
         else {
-            Log.w("Cargo AccengageHandler", " "+Screen.SCREEN_NAME+" is missing for " +
-                    "the Accengage tagView method");
+            logMissingParam(new String[]{Screen.SCREEN_NAME}, ACC_TAG_VIEW);
         }
     }
 
@@ -283,10 +286,11 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
         if (leadLabel != null && leadValue != null) {
             tracker.trackLead(new Lead(leadLabel, leadValue));
+            logParamWithSuccess("leadLabel", leadLabel);
+            logParamWithSuccess("leadValue", leadValue);
         }
         else {
-            Log.w("Cargo AccengageHandler", " leadLabel and/or leadValue is missing for " +
-                    "the Accengage tagLead method");
+            logMissingParam(new String[]{"leadLabel", "leadValue"}, ACC_TAG_LEAD);
         }
     }
 
@@ -305,10 +309,11 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
         if (accItem != null && cartId != null) {
             tracker.trackAddToCart(new Cart(cartId, accItem.toItem()));
+            logParamWithSuccess(Transaction.TRANSACTION_ID, cartId);
+            logParamWithSuccess("item", accItem.toString());
         }
         else {
-            Log.w("Cargo AccengageHandler", " item and/or "+Transaction.TRANSACTION_ID+
-                    " is missing for the Accengage tagAddToCart method");
+            logMissingParam(new String[]{Transaction.TRANSACTION_ID, "item"}, ACC_TAG_ADD_TO_CART);
         }
     }
 
@@ -337,25 +342,37 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
             if (items != null && items.get(0) instanceof AccItem) {
                 int size = items.size();
                 Item[] purchaseItems = new Item[size];
+                List<String> stringsList = new ArrayList<String>(items.size());
 
                 size = 0;
                 // for each item in the list, change it to the right type and add it in an array
                 for (AccItem item : items) {
                     purchaseItems[size++] = item.toItem();
+                    stringsList.add(item.toString());
                 }
                 // fires the purchase event with all the parameters
                 tracker.trackPurchase(new Purchase(id, currencyCode, totalPrice, purchaseItems));
+                logParamWithSuccess(Transaction.TRANSACTION_ID, id);
+                logParamWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currencyCode);
+                logParamWithSuccess(Transaction.TRANSACTION_TOTAL, totalPrice);
+                logParamWithSuccess(Transaction.TRANSACTION_PRODUCTS, stringsList);
             }
             else {
                 // fires the purchase event without the optional parameter
                 tracker.trackPurchase(new Purchase(id, currencyCode, totalPrice));
+                logParamWithSuccess(Transaction.TRANSACTION_ID, id);
+                logParamWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currencyCode);
+                logParamWithSuccess(Transaction.TRANSACTION_TOTAL, totalPrice);
             }
         }
         // logs a warning for the missing mandatory parameters
         else {
-            Log.w("Cargo AccengageHandler", Transaction.TRANSACTION_ID + " and/or " +
-                    Transaction.TRANSACTION_CURRENCY_CODE + " and/or " +
-                    Transaction.TRANSACTION_TOTAL + " is missing for the Accengage tagPurchase method");
+            logMissingParam(
+                    new String[]{
+                            Transaction.TRANSACTION_ID,
+                            Transaction.TRANSACTION_CURRENCY_CODE,
+                            Transaction.TRANSACTION_TOTAL
+                    }, ACC_TAG_PURCHASE);
         }
     }
 
@@ -384,27 +401,32 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
             Bundle bundle = new Bundle();
 
             // if the value parameter is set, build the bundle
-            if (value != null)
+            if (value != null) {
                 bundle.putString(key, value);
+                logParamWithSuccess("deviceInfoKey", key);
+                logParamWithSuccess("deviceInfoValue", value);
+            }
             // else if the date parameter is set, build the bundle with it
             else if (date != null) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz");
                 bundle.putString(key, dateFormat.format(date));
+                logParamWithSuccess("deviceInfoKey", key);
+                logParamWithSuccess("deviceInfoDate", dateFormat.format(date));
             }
             // logs a warning if the value or the date is missing
             else {
-                Log.w("Cargo AccengageHandler", " deviceInfoValue or deviceInfoDate" +
-                        " is missing for the Accengage updateDeviceInfo method");
+                logMissingParam(new String[]{
+                        "deviceInfoValue",
+                        "deviceInfoDate"
+                }, ACC_UPDATE_DEVICE_INFO);
                 return ;
             }
-
             // send the update device event to the server
             tracker.updateDeviceInfo(bundle);
         }
         // if the first required parameter isn't set, logs a warning
         else {
-            Log.w("Cargo AccengageHandler", " deviceInfoKey" +
-                    " is missing for the Accengage updateDeviceInfo method");
+            logMissingParam(new String[]{"deviceInfoKey"}, ACC_UPDATE_DEVICE_INFO);
         }
     }
 
@@ -422,12 +444,12 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     private void setIntentA4S(Map<String, Object> map) {
         Intent intent = (Intent)map.get("intent");
-        if (intent == null) {
-            Log.w("Cargo AccengageHandler", " intent is missing for " +
-                    "the Accengage setIntentA4S method");
+        if (intent != null) {
+            tracker.setIntent(intent);
+//            logParamWithSuccess("intent", intent.toString());
         }
         else {
-            tracker.setIntent(intent);
+            logMissingParam(new String[]{"intent"}, ACC_TAG_EVENT);
         }
     }
 
@@ -487,14 +509,6 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         return null;
     }
 
-    /**
-     * This setter is made for testing purpose and shouldn't be used outside of the test class.
-     *
-     * @param value the boolean value you want the "init" attribute to be set with.
-     */
-    protected void setInitialize(boolean value) {
-        this.init = value;
-    }
 
 
 /* ********************************************************************************************** */
@@ -542,5 +556,22 @@ class AccItem {
      */
     Item toItem() {
         return (new Item(id, name, category, currencyCode, price, quantity));
+    }
+
+    /**
+     * Transform all the Item object attributes into a string
+     *
+     * @return a string describing the object
+     */
+    @Override
+    public String toString() {
+        return new StringBuilder().append("{Item:")
+                .append("id:").append(id)
+                .append("name").append(name)
+                .append("category").append(category)
+                .append("currencyCode").append(currencyCode)
+                .append("price").append(price)
+                .append("quantity").append(quantity)
+                .append("}").toString();
     }
 }

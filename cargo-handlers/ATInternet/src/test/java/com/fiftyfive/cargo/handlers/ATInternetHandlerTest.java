@@ -106,7 +106,7 @@ public class ATInternetHandlerTest extends TestCase {
 
         verify(atTrackerMock, times(1)).setConfig(any(HashMap.class), anyBoolean(),
                 any(SetConfigCallback.class));
-        assertEquals(true, handler.initialized);
+        assertEquals(true, handler.isInitialized());
     }
 
 /* ************************************** identify Tests **************************************** */
@@ -127,7 +127,7 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put(User.USER_ID, "Nestor");
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_identify", map);
 
         verify(atTrackerMock, times(1)).setConfig(anyString(), anyString(),
@@ -139,7 +139,7 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put(User.USER_ID, null);
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_identify", map);
 
         verify(atTrackerMock, times(0)).setConfig("identifier", null, null);
@@ -150,7 +150,7 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put("RandomKey", "Nestor");
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_identify", map);
 
         verify(atTrackerMock, times(0)).setConfig("identifier", null, null);
@@ -165,7 +165,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put(Event.EVENT_TYPE, "sendTouch");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName);
@@ -187,7 +187,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName, "chapter1", "chapter2", "chapter3");
@@ -208,7 +208,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(0)).add(testName, "chapter1", "chapter2", "chapter3");
@@ -226,7 +226,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName, "chapter1", "chapter2", "chapter3");
@@ -245,7 +245,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put(Event.EVENT_TYPE, "sendNavigation");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName);
@@ -264,7 +264,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put(Event.EVENT_TYPE, "sendExit");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName);
@@ -283,7 +283,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put(Event.EVENT_TYPE, "sendSearch");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
-        handler.initialized = true;
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName);
