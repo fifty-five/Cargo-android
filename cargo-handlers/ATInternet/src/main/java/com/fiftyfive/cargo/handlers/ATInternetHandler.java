@@ -80,8 +80,9 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
+        logReceivedFunction(s, map);
 
-        if (s.equals(AT_INIT))
+        if (AT_INIT.equals(s))
             init(map);
         else if (this.initialized) {
             switch (s) {
@@ -98,7 +99,7 @@ public class ATInternetHandler extends AbstractTagHandler {
                     identify(map);
                     break;
                 default:
-                    Log.i("55", "Function " + s + " is not registered");
+                    logUnknownFunction(s);
             }
         }
         else
@@ -140,7 +141,6 @@ public class ATInternetHandler extends AbstractTagHandler {
                     logParamWithSuccess(SITE, siteId);
                     logParamWithSuccess(LOG, log);
                     logParamWithSuccess(LOG_SSL, logSSL);
-                    Log.d(AT_INIT, "AT Internet tracker has been set properly");
                 }
             });
             this.initialized = true;
@@ -167,7 +167,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         atTracker.setConfig(map, override, new SetConfigCallback() {
             @Override
             public void setConfigEnd() {
-                Log.d(AT_SET_CONFIG, "New configuration has been set");
+                Log.v(name, "New configuration has been set");
             }
         });
     }
