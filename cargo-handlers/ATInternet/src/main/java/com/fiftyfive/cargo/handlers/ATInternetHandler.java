@@ -19,9 +19,6 @@ import java.util.Map;
 import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
 import static com.fiftyfive.cargo.ModelsUtils.getInt;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
-import static com.fiftyfive.cargo.models.Tracker.CHAPTER1;
-import static com.fiftyfive.cargo.models.Tracker.CHAPTER2;
-import static com.fiftyfive.cargo.models.Tracker.CHAPTER3;
 import static com.fiftyfive.cargo.models.Tracker.LEVEL2;
 
 /**
@@ -43,6 +40,10 @@ public class ATInternetHandler extends AbstractTagHandler {
     private final String AT_TAG_EVENT = "AT_tagEvent";
     private final String AT_IDENTIFY = "AT_identify";
 
+    /** Constants used as parameters for the AT Internet SDK */
+    private static final String CHAPTER1 = "chapter1";
+    private static final String CHAPTER2 = "chapter2";
+    private static final String CHAPTER3 = "chapter3";
 
 
 /* ************************************ Handler core methods ************************************ */
