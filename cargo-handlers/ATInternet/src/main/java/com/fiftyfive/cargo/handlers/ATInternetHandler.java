@@ -160,7 +160,7 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     private void setConfig(Map<String, Object> params){
         final String OVERRIDE = "override";
-        Boolean override = getBoolean(params, OVERRIDE, false);
+        final Boolean override = getBoolean(params, OVERRIDE, false);
         params.remove(OVERRIDE);
         logParamWithSuccess(OVERRIDE, override);
 
@@ -168,7 +168,8 @@ public class ATInternetHandler extends AbstractTagHandler {
         atTracker.setConfig(map, override, new SetConfigCallback() {
             @Override
             public void setConfigEnd() {
-                Log.v(name, "New configuration has been set");
+                Log.v(name, "New configuration has been set with override set to "
+                        + override.toString());
             }
         });
     }
