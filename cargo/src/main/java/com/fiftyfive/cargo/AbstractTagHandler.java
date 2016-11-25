@@ -163,6 +163,10 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
                 +" with parameters "+ Arrays.toString(map.entrySet().toArray())+".");
     }
 
+    protected void logUncastableParam(String parameter, String type) {
+        Log.e(this.key+"_handler", "Parameter "+ parameter +" cannot be casted to "+ type +".");
+    }
+
 /* ***************************** ActivityLifeCycle callback methods ***************************** */
 
     /**
