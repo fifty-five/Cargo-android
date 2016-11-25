@@ -42,9 +42,6 @@ public class TuneHandler extends AbstractTagHandler {
     /** The tracker of the Tune SDK which send the events */
     protected Tune tune;
 
-    /** A boolean which defines if the instance has been correctly initialized */
-    protected boolean init = false;
-
     /** Constants used to define callbacks in the register and in the execute method */
     private final String TUN_INIT = "Tune_init";
     private final String TUN_IDENTIFY = "Tune_identify";
@@ -87,8 +84,8 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void initialize() {
-        super.initialize();
-        this.valid = true;
+        super.initialize("TUN", "Tune");
+        validate(true);
     }
 
     /**
@@ -117,7 +114,7 @@ public class TuneHandler extends AbstractTagHandler {
 
         if (s.equals(TUN_INIT))
             init(map);
-        else if (!init) {
+        else if (!initialized) {
             Log.w("Cargo TuneHandler", " the handler hasn't be initialized, " +
                     "please do so before doing anything else.");
         }
@@ -151,7 +148,7 @@ public class TuneHandler extends AbstractTagHandler {
      *              * advertiserId & conversionKey (String) : ids you got when you register your app
      */
     private void init(Map<String, Object> map) {
-        if (init)
+        if (initialized)
             Log.i("Cargo TuneHandler", "Tune has already been initialized");
         else if (map.containsKey(ADVERTISER_ID) && map.containsKey(CONVERSION_KEY)) {
             if (getString(map, ADVERTISER_ID) != null && getString(map, CONVERSION_KEY) != null) {
@@ -162,7 +159,7 @@ public class TuneHandler extends AbstractTagHandler {
 
                 // retrieve the Tune instance
                 tune = Tune.getInstance();
-                init = true;
+                initialized = true;
             }
             else
                 Log.w("Cargo TuneHandler", "At least one required parameter is set to null" +
@@ -170,15 +167,6 @@ public class TuneHandler extends AbstractTagHandler {
         }
         else
             Log.w("Cargo TuneHandler", "Missing a required parameter to init Tune");
-    }
-
-    /**
-     * The getter for the init boolean, returning if the tagHandler has been initialized
-     *
-     * @return the boolean
-     */
-    public boolean isInitialized(){
-        return init;
     }
 
 
@@ -450,7 +438,7 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-        if (init) {
+        if (initialized) {
             tune.setReferralSources(activity);
             tune.measureSession();
         }

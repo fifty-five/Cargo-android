@@ -36,9 +36,6 @@ public class FacebookHandler extends AbstractTagHandler {
     /** The AppEventsLogger allows to log various types of events back to Facebook. */
     protected AppEventsLogger facebookLogger;
 
-    /** A boolean which defines if the instance has been correctly initialized */
-    private boolean init = false;
-
     /** Constants used to define callbacks in the register and in the execute method */
     private final String FB_INIT = "FB_init";
     private final String FB_TAG_EVENT = "FB_tagEvent";
@@ -53,12 +50,12 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void initialize() {
-        super.initialize();
+        super.initialize("FB", "Facebook");
 
         FacebookSdk.sdkInitialize(cargo.getApplication());
         facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
 
-        this.valid = FacebookSdk.isInitialized();
+        validate(FacebookSdk.isInitialized());
     }
 
     /**
@@ -88,7 +85,7 @@ public class FacebookHandler extends AbstractTagHandler {
         if (s.equals(FB_INIT))
             init(map);
         // if the SDK hasn't been initialized, logs a warning
-        else if (!init) {
+        else if (!initialized) {
             Log.w("Cargo FacebookHandler", " the handler hasn't be initialized, " +
                     "please do so before doing anything else.");
         }
@@ -123,17 +120,10 @@ public class FacebookHandler extends AbstractTagHandler {
 
         if(map.containsKey(Tracker.APPLICATION_ID)){
             FacebookSdk.setApplicationId(getString(map, Tracker.APPLICATION_ID));
-            init = true;
+            initialized = true;
         }
         FacebookSdk.setIsDebugEnabled(getBoolean(map, Tracker.ENABLE_DEBUG, false));
     }
-
-    /**
-     * The getter for the init boolean, returning if the tagHandler has been initialized
-     *
-     * @return the boolean
-     */
-    public boolean isInitialized() { return init; }
 
 
 
@@ -295,15 +285,6 @@ public class FacebookHandler extends AbstractTagHandler {
     @Override
     public void onActivityStopped(Activity activity) {
 
-    }
-
-    /**
-     * This setter is made for testing purpose and shouldn't be used outside of the test class.
-     *
-     * @param value the boolean value you want the "init" attribute to be set with.
-     */
-    protected void setInitialize(boolean value) {
-        this.init = value;
     }
 
 

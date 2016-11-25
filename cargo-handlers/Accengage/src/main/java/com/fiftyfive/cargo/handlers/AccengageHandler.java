@@ -72,9 +72,10 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
      */
     @Override
     public void initialize() {
-        super.initialize();
+        super.initialize("ACC", "Accengage");
         tracker = A4S.get(cargo.getApplication());
-        this.name = "Accengage";
+
+        validate(tracker != null);
     }
 
     /**
