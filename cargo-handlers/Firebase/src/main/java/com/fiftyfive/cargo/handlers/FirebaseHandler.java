@@ -32,9 +32,9 @@ public class FirebaseHandler extends AbstractTagHandler {
     protected FirebaseAnalytics mFirebaseAnalytics;
 
     /** Constants used to define callbacks in the register and in the execute method */
-    private final String FIREBASE_INIT = "Firebase_init";
-    private final String FIREBASE_IDENTIFY = "Firebase_identify";
-    private final String FIREBASE_TAG_EVENT = "Firebase_tagEvent";
+    private final String FIR_INIT = "FIR_init";
+    private final String FIR_IDENTIFY = "FIR_identify";
+    private final String FIR_TAG_EVENT = "FIR_tagEvent";
 
 
 
@@ -59,9 +59,9 @@ public class FirebaseHandler extends AbstractTagHandler {
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback(FIREBASE_INIT, this);
-        container.registerFunctionCallTagCallback(FIREBASE_IDENTIFY, this);
-        container.registerFunctionCallTagCallback(FIREBASE_TAG_EVENT, this);
+        container.registerFunctionCallTagCallback(FIR_INIT, this);
+        container.registerFunctionCallTagCallback(FIR_IDENTIFY, this);
+        container.registerFunctionCallTagCallback(FIR_TAG_EVENT, this);
     }
 
     /**
@@ -74,17 +74,17 @@ public class FirebaseHandler extends AbstractTagHandler {
     public void execute(String s, Map<String, Object> map) {
 
         switch (s) {
-            case FIREBASE_INIT:
+            case FIR_INIT:
                 init(map);
                 break;
-            case FIREBASE_IDENTIFY:
+            case FIR_IDENTIFY:
                 identify(map);
                 break;
-            case FIREBASE_TAG_EVENT:
+            case FIR_TAG_EVENT:
                 tagEvent(map);
                 break;
             default:
-                Log.i("55", "Function " + s + " is not registered");
+                logUnknownFunction(s);
         }
     }
 
@@ -98,7 +98,7 @@ public class FirebaseHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * enableCollection (boolean) : true/false boolean to enable/disable collection
+     *              * enableCollection (boolean) : true(default)/false to enable/disable collection
      */
     private void init(Map<String, Object> map) {
         final String ENABLE_COLLECTION = "enableCollection";
@@ -106,6 +106,16 @@ public class FirebaseHandler extends AbstractTagHandler {
         if (map.containsKey(ENABLE_COLLECTION)) {
             boolean enabled = getBoolean(map, ENABLE_COLLECTION, true);
             mFirebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+            logParamWithSuccess(ENABLE_COLLECTION, enabled);
+            if (!enabled) {
+                Log.w(this.key + "_handler", "The analytics collection has been disabled, " +
+                        "you won't be able to send anything to the Firebase console. " +
+                        "Call on the " + FIR_INIT + " method with the " + ENABLE_COLLECTION +
+                        " parameter set to true to enable the collection again.");
+            }
+        }
+        else {
+            logMissingParam(new String[]{ENABLE_COLLECTION}, FIR_INIT);
         }
     }
 
@@ -114,7 +124,7 @@ public class FirebaseHandler extends AbstractTagHandler {
 /* ****************************************** Tracking ****************************************** */
 
     /**
-     * In order to identify the user as a unique visitor, with a custom ID
+     * In order to identify users as unique visitor. Setting the userId to null removes the user ID.
      * You may supply up to 25 unique UserProperties per app, and you can use the name
      * and value of your choosing for each one. UserProperty names can be up to 24 characters
      * long, may only contain alphanumeric characters and underscores ("_"), and must start
@@ -128,13 +138,26 @@ public class FirebaseHandler extends AbstractTagHandler {
      *               * some user properties you may want to set
      */
     private void identify(Map<String, Object> map) {
+        String userId = getString(map, User.USER_ID);
+        String tempValue;
+
         if (map.containsKey(User.USER_ID)) {
-            mFirebaseAnalytics.setUserId(getString(map, User.USER_ID));
+            mFirebaseAnalytics.setUserId(userId);
+            logParamWithSuccess(User.USER_ID, (userId == null ? "null" : userId));
             map.remove(User.USER_ID);
         }
         // all the other parameters in the map are considered as extra user properties
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            mFirebaseAnalytics.setUserProperty(entry.getKey(), getString(map, entry.getKey()));
+        if (!map.isEmpty()) {
+            Set<String> keys = map.keySet();
+            for (String key : keys) {
+                tempValue = getString(map, key);
+                if (tempValue != null) {
+                    mFirebaseAnalytics.setUserProperty(key, tempValue);
+                    logParamWithSuccess(key, tempValue);
+                }
+                else
+                    logUncastableParam(key, "String");
+            }
         }
     }
 
@@ -154,36 +177,39 @@ public class FirebaseHandler extends AbstractTagHandler {
      *              * eventName (String) : the only parameter requested here
      */
     private void tagEvent(Map<String, Object> map) {
+        String eventName = getString(map, Event.EVENT_NAME);
 
         // check for the eventName parameter. If it doesn't exist, the tag is aborted
-        if (map.containsKey(Event.EVENT_NAME)) {
-            String eventName = map.remove(Event.EVENT_NAME).toString();
-
+        if (eventName != null) {
+            map.remove(Event.EVENT_NAME);
+            logParamWithSuccess(Event.EVENT_NAME, eventName);
             // if the map contains other parameters than the event name, loop on the parameters and
             // put them in a bundle in order to send them as event parameters
-            if (map.size() > 0) {
-
+            if (!map.isEmpty()) {
                 Bundle params = new Bundle();
                 Set<String> keys = map.keySet();
 
                 for (String key : keys) {
-                    if (map.get(key) instanceof String)
+                    if (map.get(key) instanceof String) {
                         params.putString(key, getString(map, key));
-                    else if (map.get(key) instanceof Long)
+                        logParamWithSuccess(key, getString(map, key));
+                    }
+                    else if (map.get(key) instanceof Long) {
                         params.putLong(key, getLong(map, key, 0));
+                        logParamWithSuccess(key, getLong(map, key, 0));
+                    }
                     else
-                        Log.i("Cargo FirebaseHandler", " parameter with key " + key + " isn't " +
-                                "recognize as String or long and will be ignored for event " + eventName);
+                        logUncastableParam(key, "String or Long");
                 }
                 mFirebaseAnalytics.logEvent(eventName, params);
                 return;
             }
             // use null which means that there is no parameters
             mFirebaseAnalytics.logEvent(eventName, null);
+            logParamWithSuccess("params", "null");
         }
         else
-            Log.w("Cargo FirebaseHandler", " in order to create an event, " +
-                    "an eventName is required. The event hasn't been created.");
+            logMissingParam(new String[]{Event.EVENT_NAME}, FIR_TAG_EVENT);
     }
 
 
