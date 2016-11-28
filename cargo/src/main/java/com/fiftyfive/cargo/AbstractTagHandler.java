@@ -32,18 +32,29 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     /** The name of the handler for the logs */
     protected String name;
 
+    /** The key of the handler for the logs */
+    protected String key;
+
 
 
 /* ************************************ Handlers core methods *********************************** */
 
     /**
-     * The only implemented method in this class, stores the Cargo instance as a variable to
+     * Default method.
+     */
+    public void initialize(){
+
+    }
+
+    /**
+     * Stores name and key of the handler, plus the Cargo instance as a variable to
      * allow the handler to access to variables of the cargo instance
      * as they are often needed to setup SDK
      */
-    public void initialize(){
-        cargo = Cargo.getInstance();
-        this.valid = true;
+    public void initialize(String hKey, String hName){
+        this.cargo = Cargo.getInstance();
+        this.key = hKey;
+        this.name = hName;
     }
 
     /**
@@ -64,6 +75,14 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     @Override
     public abstract void execute(String s, Map<String, Object> map);
 
+    public void validate(boolean isValid) {
+        this.valid = isValid;
+        if (isValid)
+            Log.v(this.key+"_handler", this.name+" SDK has started without error");
+        else
+            Log.e(this.key+"_handler", "Failed to start the "+this.name+" SDK.");
+    }
+
     /**
      * This setter is made for testing purpose and shouldn't be used outside of the test class.
      *
@@ -72,7 +91,6 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     public void setInitialized(boolean value) {
         initialized = value;
     }
-
 
     /**
      * The getter for the initialized boolean, returning whether the third part SDK has been
@@ -92,7 +110,7 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      * @param methodName the tag of the method the parameter is missing in.
      */
     protected void logMissingParam(String[] parameter, String methodName){
-        Log.w(this.name, "Parameter '"+ parameter.toString() +"' is required " +
+        Log.w(this.key+"_handler", "Parameter '"+ parameter.toString() +"' is required " +
                 "in method '"+ methodName +"'");
     }
 
@@ -101,7 +119,8 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      * Prints the name of the handler it happens in.
      */
     protected void logUninitializedFramework() {
-        Log.i(this.name, "You must initialize the framework before using it");
+        Log.i(this.key+"_handler", "You must initialize the " +
+                this.name + " framework before using it");
     }
 
     /**
@@ -112,7 +131,7 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      * @param value the value the parameter has been set to.
      */
     protected void logParamWithSuccess(String parameter, Object value) {
-        Log.v(this.name, "Parameter '"+parameter+"' has been set to '"+
+        Log.v(this.key+"_handler", "Parameter '"+parameter+"' has been set to '"+
                 value.toString()+"' with success");
     }
 
@@ -125,7 +144,7 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      * @param values the set of the possible values.
      */
     protected void logNotFoundValue(String key, String value, Object[] values) {
-        Log.w(this.name, "Value '"+value+"' for key '"+key+"' is not found " +
+        Log.w(this.key+"_handler", "Value '"+value+"' for key '"+key+"' is not found " +
                 "among possible values " + values.toString());
     }
 
@@ -136,12 +155,16 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      * @param functionTag the function tag which doesn't match any method.
      */
     protected void logUnknownFunction(String functionTag) {
-        Log.d(this.name, "Unable to find a method matching the function tag ["+functionTag+"].");
+        Log.d(this.key+"_handler", "Unable to find a method matching the function tag ["+functionTag+"].");
     }
 
     protected void logReceivedFunction(String functionTag, Map<String, Object> map) {
-        Log.i(this.name, "Received function "+ functionTag
+        Log.i(this.key+"_handler", "Received function "+ functionTag
                 +" with parameters "+ Arrays.toString(map.entrySet().toArray())+".");
+    }
+
+    protected void logUncastableParam(String parameter, String type) {
+        Log.e(this.key+"_handler", "Parameter "+ parameter +" cannot be casted to "+ type +".");
     }
 
 /* ***************************** ActivityLifeCycle callback methods ***************************** */
