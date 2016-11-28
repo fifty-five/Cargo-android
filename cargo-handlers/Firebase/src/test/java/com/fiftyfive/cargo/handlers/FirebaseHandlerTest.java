@@ -69,7 +69,7 @@ public class FirebaseHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("enableCollection", false);
 
-        handler.execute("Firebase_init", map);
+        handler.execute("FIR_init", map);
 
         verify(fireMock, times(1)).setAnalyticsCollectionEnabled(false);
     }
@@ -81,7 +81,7 @@ public class FirebaseHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_ID, "randomUserId");
 
-        handler.execute("Firebase_identify", map);
+        handler.execute("FIR_identify", map);
 
         verify(fireMock, times(1)).setUserId("randomUserId");
     }
@@ -93,7 +93,7 @@ public class FirebaseHandlerTest extends TestCase {
         map.put("gender", "male");
         map.put("children", 4);
 
-        handler.execute("Firebase_identify", map);
+        handler.execute("FIR_identify", map);
 
         verify(fireMock, times(1)).setUserProperty("age", "55");
         verify(fireMock, times(1)).setUserProperty("gender", "male");
@@ -106,7 +106,7 @@ public class FirebaseHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put(Event.EVENT_NAME, "randomClick");
 
-        handler.execute("Firebase_tagEvent", map);
+        handler.execute("FIR_tagEvent", map);
 
         verify(fireMock, times(1)).logEvent("randomClick", null);
     }
@@ -119,7 +119,7 @@ public class FirebaseHandlerTest extends TestCase {
         map.put(FirebaseAnalytics.Param.QUANTITY, 5);
         map.put(FirebaseAnalytics.Param.CURRENCY, "USD");
 
-        handler.execute("Firebase_tagEvent", map);
+        handler.execute("FIR_tagEvent", map);
 
         verify(fireMock, times(1)).logEvent(anyString(), any(Bundle.class));
     }
@@ -129,7 +129,7 @@ public class FirebaseHandlerTest extends TestCase {
         map.put(Event.EVENT_ID, 5542);
         map.put(Event.EVENT_TYPE, "click");
 
-        handler.execute("Firebase_tagEvent", map);
+        handler.execute("FIR_tagEvent", map);
 
         verify(fireMock, times(0)).logEvent(anyString(), any(Bundle.class));
     }
