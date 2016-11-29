@@ -1,12 +1,10 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 
 
 import com.fiftyfive.cargo.AbstractTagHandler;
-import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.models.Tracker;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.tagmanager.Container;
@@ -15,6 +13,7 @@ import java.util.Map;
 
 import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
 import static com.fiftyfive.cargo.ModelsUtils.getInt;
+import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 /**
  * Created by dali on 25/11/15.
@@ -27,9 +26,14 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
 
     /** The tracker of the Google Analytics SDK which send the events */
     protected GoogleAnalytics analytics;
+    protected com.google.android.gms.analytics.Tracker tracker;
 
     /** Constants used to define callbacks in the register and in the execute method */
     private final String GA_INIT = "GA_init";
+    private final String GA_SET = "GA_set";
+    private final String GA_IDENTIFY = "GA_identify";
+    private final String GA_TAG_SCREEN = "GA_tagScreen";
+    private final String GA_TAG_EVENT = "GA_tagEvent";
 
 
 
@@ -55,6 +59,10 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
     @Override
     public void register(Container container) {
         container.registerFunctionCallTagCallback(GA_INIT, this);
+        container.registerFunctionCallTagCallback(GA_SET, this);
+        container.registerFunctionCallTagCallback(GA_IDENTIFY, this);
+        container.registerFunctionCallTagCallback(GA_TAG_SCREEN, this);
+        container.registerFunctionCallTagCallback(GA_TAG_EVENT, this);
     }
 
     /**
@@ -70,13 +78,30 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
                 init(map);
                 break;
             default:
-                Log.i("55", "Function " + s + " is not registered");
+                logUnknownFunction(s);
         }
     }
 
 
 
 /* ************************************* SDK initialization ************************************* */
+
+    private void init(Map<String, Object> parameters) {
+        String UAID = getString(parameters, Tracker.APPLICATION_ID);
+
+        if (UAID != null) {
+            if (UAID.startsWith("UA-")) {
+                tracker = analytics.newTracker(UAID);
+                this.initialized = true;
+                logParamSetWithSuccess(Tracker.APPLICATION_ID, UAID);
+            }
+            else
+                Log.w(this.key+"_handler", "The Universal Analytics Id doesn't seem " +
+                        "to correspond to the 'UA-XXXXX-Y' format");
+        }
+        else
+            logMissingParam(new String[]{Tracker.APPLICATION_ID}, GA_INIT);
+    }
 
     /**
      * This method is used to override SDK settings.
@@ -88,7 +113,7 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
      *                      * dispatchPeriod (int) : a period in seconds after which the events
      *                                               will be sent to GA interface
      */
-    private void init(Map<String, Object> parameters){
+    private void set(Map<String, Object> parameters){
 
         boolean enable = getBoolean(parameters, Tracker.ENABLE_OPT_OUT, false);
         boolean dryRun = getBoolean(parameters, Tracker.DISABLE_TRACKING, false);
