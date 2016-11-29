@@ -111,7 +111,7 @@ public class FirebaseHandler extends AbstractTagHandler {
         if (map.containsKey(ENABLE_COLLECTION)) {
             boolean enabled = getBoolean(map, ENABLE_COLLECTION, true);
             mFirebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
-            logParamWithSuccess(ENABLE_COLLECTION, enabled);
+            logParamSetWithSuccess(ENABLE_COLLECTION, enabled);
             if (!enabled) {
                 Log.w(this.key + "_handler", "The analytics collection has been disabled, " +
                         "you won't be able to send anything to the Firebase console. " +
@@ -148,7 +148,7 @@ public class FirebaseHandler extends AbstractTagHandler {
 
         if (map.containsKey(User.USER_ID)) {
             mFirebaseAnalytics.setUserId(userId);
-            logParamWithSuccess(User.USER_ID, (userId == null ? "null" : userId));
+            logParamSetWithSuccess(User.USER_ID, (userId == null ? "null" : userId));
             map.remove(User.USER_ID);
         }
         // all the other parameters in the map are considered as extra user properties
@@ -158,7 +158,7 @@ public class FirebaseHandler extends AbstractTagHandler {
                 tempValue = getString(map, key);
                 if (tempValue != null) {
                     mFirebaseAnalytics.setUserProperty(key, tempValue);
-                    logParamWithSuccess(key, tempValue);
+                    logParamSetWithSuccess(key, tempValue);
                 }
                 else
                     logUncastableParam(key, "String");
@@ -187,7 +187,7 @@ public class FirebaseHandler extends AbstractTagHandler {
         // check for the eventName parameter. If it doesn't exist, the tag is aborted
         if (eventName != null) {
             map.remove(Event.EVENT_NAME);
-            logParamWithSuccess(Event.EVENT_NAME, eventName);
+            logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             // if the map contains other parameters than the event name, loop on the parameters and
             // put them in a bundle in order to send them as event parameters
             if (!map.isEmpty()) {
@@ -197,11 +197,11 @@ public class FirebaseHandler extends AbstractTagHandler {
                 for (String key : keys) {
                     if (map.get(key) instanceof String) {
                         params.putString(key, getString(map, key));
-                        logParamWithSuccess(key, getString(map, key));
+                        logParamSetWithSuccess(key, getString(map, key));
                     }
                     else if (map.get(key) instanceof Long) {
                         params.putLong(key, getLong(map, key, 0));
-                        logParamWithSuccess(key, getLong(map, key, 0));
+                        logParamSetWithSuccess(key, getLong(map, key, 0));
                     }
                     else
                         logUncastableParam(key, "String or Long");
@@ -211,7 +211,7 @@ public class FirebaseHandler extends AbstractTagHandler {
             }
             // use null which means that there is no parameters
             mFirebaseAnalytics.logEvent(eventName, null);
-            logParamWithSuccess("params", "null");
+            logParamSetWithSuccess("params", "null");
         }
         else
             logMissingParam(new String[]{Event.EVENT_NAME}, FIR_TAG_EVENT);

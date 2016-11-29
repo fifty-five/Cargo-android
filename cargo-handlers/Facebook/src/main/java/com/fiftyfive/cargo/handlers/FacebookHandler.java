@@ -2,7 +2,6 @@ package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.fiftyfive.cargo.AbstractTagHandler;
@@ -119,7 +118,7 @@ public class FacebookHandler extends AbstractTagHandler {
 
         if(applicationId != null) {
             FacebookSdk.setApplicationId(getString(map, Tracker.APPLICATION_ID));
-            logParamWithSuccess(Tracker.APPLICATION_ID, applicationId);
+            logParamSetWithSuccess(Tracker.APPLICATION_ID, applicationId);
             initialized = true;
         }
         else {
@@ -163,15 +162,15 @@ public class FacebookHandler extends AbstractTagHandler {
                     parameters = eventParamBuilder(map);
                     // fire the tag with the given parameters & valueToSum
                     facebookLogger.logEvent(eventName, valueToSum, parameters);
-                    logParamWithSuccess(Event.EVENT_NAME, eventName);
-                    logParamWithSuccess(VALUE_TO_SUM, valueToSum);
-                    logParamWithSuccess("parameters", parameters);
+                    logParamSetWithSuccess(Event.EVENT_NAME, eventName);
+                    logParamSetWithSuccess(VALUE_TO_SUM, valueToSum);
+                    logParamSetWithSuccess("parameters", parameters);
                 }
                 else {
                     // fire the tag with the given valueToSum
                     facebookLogger.logEvent(eventName, valueToSum);
-                    logParamWithSuccess(Event.EVENT_NAME, eventName);
-                    logParamWithSuccess(VALUE_TO_SUM, valueToSum);
+                    logParamSetWithSuccess(Event.EVENT_NAME, eventName);
+                    logParamSetWithSuccess(VALUE_TO_SUM, valueToSum);
                 }
             }
             // attach parameters to the event if they exist
@@ -179,13 +178,13 @@ public class FacebookHandler extends AbstractTagHandler {
                 parameters = eventParamBuilder(map);
                 // fire the tag with the given parameters
                 facebookLogger.logEvent(eventName, parameters);
-                logParamWithSuccess(Event.EVENT_NAME, eventName);
-                logParamWithSuccess("parameters", parameters);
+                logParamSetWithSuccess(Event.EVENT_NAME, eventName);
+                logParamSetWithSuccess("parameters", parameters);
             }
             else {
                 // fire the tag
                 facebookLogger.logEvent(eventName);
-                logParamWithSuccess(Event.EVENT_NAME, eventName);
+                logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             }
         }
         else {
@@ -210,8 +209,8 @@ public class FacebookHandler extends AbstractTagHandler {
 
         if (total >= 0 && currency != null){
             facebookLogger.logPurchase(BigDecimal.valueOf(total), Currency.getInstance(currency));
-            logParamWithSuccess(Transaction.TRANSACTION_TOTAL, total);
-            logParamWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currency);
+            logParamSetWithSuccess(Transaction.TRANSACTION_TOTAL, total);
+            logParamSetWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currency);
         }
         else {
             logMissingParam(new String[]{

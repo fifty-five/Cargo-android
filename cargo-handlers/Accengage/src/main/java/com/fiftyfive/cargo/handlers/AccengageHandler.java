@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.ad4screen.sdk.A4S;
 import com.ad4screen.sdk.analytics.Cart;
@@ -16,7 +15,6 @@ import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.Transaction;
 import com.google.android.gms.tagmanager.Container;
 
-import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -176,7 +174,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     @Override
     public String getPartnerId(Context context) {
         if (partnerId != null) {
-            logParamWithSuccess(PARTNER_ID, partnerId);
+            logParamSetWithSuccess(PARTNER_ID, partnerId);
         }
         return partnerId;
     }
@@ -190,7 +188,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
     @Override
     public String getPrivateKey(Context context) {
         if (privateKey != null) {
-            logParamWithSuccess(PRIVATE_KEY, privateKey);
+            logParamSetWithSuccess(PRIVATE_KEY, privateKey);
         }
         return privateKey;
     }
@@ -239,15 +237,15 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
                 }
                 // fire the event with the array of parameters
                 tracker.trackEvent(eventId, eventName, parameters);
-                logParamWithSuccess(Event.EVENT_ID, eventId);
-                logParamWithSuccess(Event.EVENT_NAME, eventName);
-                logParamWithSuccess("parameters", parameters);
+                logParamSetWithSuccess(Event.EVENT_ID, eventId);
+                logParamSetWithSuccess(Event.EVENT_NAME, eventName);
+                logParamSetWithSuccess("parameters", parameters);
             }
             else {
                 // fire the event without an array of parameters
                 tracker.trackEvent(eventId, eventName);
-                logParamWithSuccess(Event.EVENT_ID, eventId);
-                logParamWithSuccess(Event.EVENT_NAME, eventName);
+                logParamSetWithSuccess(Event.EVENT_ID, eventId);
+                logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             }
         }
     }
@@ -265,7 +263,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
         if (screenName != null) {
             tracker.setView(screenName);
-            logParamWithSuccess(Screen.SCREEN_NAME, screenName);
+            logParamSetWithSuccess(Screen.SCREEN_NAME, screenName);
         }
         else {
             logMissingParam(new String[]{Screen.SCREEN_NAME}, ACC_TAG_VIEW);
@@ -287,8 +285,8 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
         if (leadLabel != null && leadValue != null) {
             tracker.trackLead(new Lead(leadLabel, leadValue));
-            logParamWithSuccess("leadLabel", leadLabel);
-            logParamWithSuccess("leadValue", leadValue);
+            logParamSetWithSuccess("leadLabel", leadLabel);
+            logParamSetWithSuccess("leadValue", leadValue);
         }
         else {
             logMissingParam(new String[]{"leadLabel", "leadValue"}, ACC_TAG_LEAD);
@@ -310,8 +308,8 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
 
         if (accItem != null && cartId != null) {
             tracker.trackAddToCart(new Cart(cartId, accItem.toItem()));
-            logParamWithSuccess(Transaction.TRANSACTION_ID, cartId);
-            logParamWithSuccess("item", accItem.toString());
+            logParamSetWithSuccess(Transaction.TRANSACTION_ID, cartId);
+            logParamSetWithSuccess("item", accItem.toString());
         }
         else {
             logMissingParam(new String[]{Transaction.TRANSACTION_ID, "item"}, ACC_TAG_ADD_TO_CART);
@@ -353,17 +351,17 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
                 }
                 // fires the purchase event with all the parameters
                 tracker.trackPurchase(new Purchase(id, currencyCode, totalPrice, purchaseItems));
-                logParamWithSuccess(Transaction.TRANSACTION_ID, id);
-                logParamWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currencyCode);
-                logParamWithSuccess(Transaction.TRANSACTION_TOTAL, totalPrice);
-                logParamWithSuccess(Transaction.TRANSACTION_PRODUCTS, stringsList);
+                logParamSetWithSuccess(Transaction.TRANSACTION_ID, id);
+                logParamSetWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currencyCode);
+                logParamSetWithSuccess(Transaction.TRANSACTION_TOTAL, totalPrice);
+                logParamSetWithSuccess(Transaction.TRANSACTION_PRODUCTS, stringsList);
             }
             else {
                 // fires the purchase event without the optional parameter
                 tracker.trackPurchase(new Purchase(id, currencyCode, totalPrice));
-                logParamWithSuccess(Transaction.TRANSACTION_ID, id);
-                logParamWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currencyCode);
-                logParamWithSuccess(Transaction.TRANSACTION_TOTAL, totalPrice);
+                logParamSetWithSuccess(Transaction.TRANSACTION_ID, id);
+                logParamSetWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currencyCode);
+                logParamSetWithSuccess(Transaction.TRANSACTION_TOTAL, totalPrice);
             }
         }
         // logs a warning for the missing mandatory parameters
@@ -404,15 +402,15 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
             // if the value parameter is set, build the bundle
             if (value != null) {
                 bundle.putString(key, value);
-                logParamWithSuccess("deviceInfoKey", key);
-                logParamWithSuccess("deviceInfoValue", value);
+                logParamSetWithSuccess("deviceInfoKey", key);
+                logParamSetWithSuccess("deviceInfoValue", value);
             }
             // else if the date parameter is set, build the bundle with it
             else if (date != null) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzz");
                 bundle.putString(key, dateFormat.format(date));
-                logParamWithSuccess("deviceInfoKey", key);
-                logParamWithSuccess("deviceInfoDate", dateFormat.format(date));
+                logParamSetWithSuccess("deviceInfoKey", key);
+                logParamSetWithSuccess("deviceInfoDate", dateFormat.format(date));
             }
             // logs a warning if the value or the date is missing
             else {
@@ -447,7 +445,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         Intent intent = (Intent)map.get("intent");
         if (intent != null) {
             tracker.setIntent(intent);
-//            logParamWithSuccess("intent", intent.toString());
+//            logParamSetWithSuccess("intent", intent.toString());
         }
         else {
             logMissingParam(new String[]{"intent"}, ACC_TAG_EVENT);
