@@ -130,7 +130,7 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      * @param parameter the name of the parameter which has been set.
      * @param value the value the parameter has been set to.
      */
-    protected void logParamWithSuccess(String parameter, Object value) {
+    protected void logParamSetWithSuccess(String parameter, Object value) {
         Log.v(this.key+"_handler", "Parameter '"+parameter+"' has been set to '"+
                 value.toString()+"' with success");
     }

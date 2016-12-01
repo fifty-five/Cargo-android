@@ -1,9 +1,7 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Application;
-import android.os.BaseBundle;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.models.Event;
@@ -18,19 +16,13 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 
 /**

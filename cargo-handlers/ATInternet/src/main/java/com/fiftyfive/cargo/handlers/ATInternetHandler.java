@@ -140,9 +140,9 @@ public class ATInternetHandler extends AbstractTagHandler {
             atTracker.setConfig(config, false, new SetConfigCallback() {
                 @Override
                 public void setConfigEnd() {
-                    logParamWithSuccess(SITE, siteId);
-                    logParamWithSuccess(LOG, log);
-                    logParamWithSuccess(LOG_SSL, logSSL);
+                    logParamSetWithSuccess(SITE, siteId);
+                    logParamSetWithSuccess(LOG, log);
+                    logParamSetWithSuccess(LOG_SSL, logSSL);
                 }
             });
             this.initialized = true;
@@ -163,7 +163,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         final String OVERRIDE = "override";
         final Boolean override = getBoolean(params, OVERRIDE, false);
         params.remove(OVERRIDE);
-        logParamWithSuccess(OVERRIDE, override);
+        logParamSetWithSuccess(OVERRIDE, override);
 
         HashMap<String, Object> map = new HashMap<>(params);
         atTracker.setConfig(map, override, new SetConfigCallback() {
@@ -194,7 +194,7 @@ public class ATInternetHandler extends AbstractTagHandler {
 
         if (screenName != null){
             com.atinternet.tracker.Screen atScreen = atTracker.Screens().add(screenName);
-            logParamWithSuccess(Screen.SCREEN_NAME, screenName);
+            logParamSetWithSuccess(Screen.SCREEN_NAME, screenName);
 
             atScreen = setAdditionalScreenProperties(atScreen, params);
             atScreen.sendView();
@@ -230,7 +230,7 @@ public class ATInternetHandler extends AbstractTagHandler {
             if (params.containsKey(LEVEL2)){
                 int    level2 = getInt(params, LEVEL2, -1);
                 gesture.setLevel2(level2);
-                logParamWithSuccess(LEVEL2, Integer.toString(level2));
+                logParamSetWithSuccess(LEVEL2, Integer.toString(level2));
             }
 
             switch (eventType) {
@@ -274,7 +274,7 @@ public class ATInternetHandler extends AbstractTagHandler {
             atTracker.setConfig("identifier", android_id, new SetConfigCallback() {
                 @Override
                 public void setConfigEnd() {
-                    logParamWithSuccess(User.USER_ID, android_id);
+                    logParamSetWithSuccess(User.USER_ID, android_id);
                 }
             });
         }
@@ -307,18 +307,18 @@ public class ATInternetHandler extends AbstractTagHandler {
         if (chapter1 == null)
             return (atTracker.Gestures().add(eventName));
         else if (chapter2 == null){
-            logParamWithSuccess(CHAPTER1, chapter1);
+            logParamSetWithSuccess(CHAPTER1, chapter1);
             return (atTracker.Gestures().add(eventName, chapter1));
         }
         else if (chapter3 == null){
-            logParamWithSuccess(CHAPTER1, chapter1);
-            logParamWithSuccess(CHAPTER2, chapter2);
+            logParamSetWithSuccess(CHAPTER1, chapter1);
+            logParamSetWithSuccess(CHAPTER2, chapter2);
             return (atTracker.Gestures().add(eventName, chapter1, chapter2));
         }
         else {
-            logParamWithSuccess(CHAPTER1, chapter1);
-            logParamWithSuccess(CHAPTER2, chapter2);
-            logParamWithSuccess(CHAPTER3, chapter3);
+            logParamSetWithSuccess(CHAPTER1, chapter1);
+            logParamSetWithSuccess(CHAPTER2, chapter2);
+            logParamSetWithSuccess(CHAPTER3, chapter3);
             return (atTracker.Gestures().add(eventName, chapter1, chapter2, chapter3));
         }
     }
@@ -349,13 +349,13 @@ public class ATInternetHandler extends AbstractTagHandler {
 
         if (chapter1 != null) {
             atScreen.setChapter1(chapter1);
-            logParamWithSuccess(CHAPTER1, chapter1);
+            logParamSetWithSuccess(CHAPTER1, chapter1);
             if (chapter2 != null){
                 atScreen.setChapter2(chapter2);
-                logParamWithSuccess(CHAPTER2, chapter2);
+                logParamSetWithSuccess(CHAPTER2, chapter2);
                 if (chapter3 != null) {
                     atScreen.setChapter3(chapter3);
-                    logParamWithSuccess(CHAPTER3, chapter3);
+                    logParamSetWithSuccess(CHAPTER3, chapter3);
                 }
             }
         }
@@ -363,13 +363,13 @@ public class ATInternetHandler extends AbstractTagHandler {
         if (parameters.containsKey(LEVEL2)) {
             int    level2 = getInt(parameters, LEVEL2, -1);
             atScreen.setLevel2(level2);
-            logParamWithSuccess(LEVEL2, Integer.toString(level2));
+            logParamSetWithSuccess(LEVEL2, Integer.toString(level2));
         }
 
         if (parameters.containsKey(BASKET_VIEW)){
             boolean basket = getBoolean(parameters, BASKET_VIEW, false);
             atScreen.setIsBasketScreen(basket);
-            logParamWithSuccess(BASKET_VIEW, basket);
+            logParamSetWithSuccess(BASKET_VIEW, basket);
         }
 
         return atScreen;
