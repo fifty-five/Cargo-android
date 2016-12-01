@@ -45,10 +45,6 @@ public class AccengageHandlerTest extends TestCase {
 /* *********************************** Variables declaration ************************************ */
 
     A4S accMock = Mockito.mock(A4S.class);
-    Lead leadMock = Mockito.mock(Lead.class);
-    Cart cartMock = Mockito.mock(Cart.class);
-    Item itemMock = Mockito.mock(Item.class);
-    Purchase purchaseMock = Mockito.mock(Purchase.class);
 
     AccengageHandler handler;
     @Mock Application context;
@@ -226,14 +222,7 @@ public class AccengageHandlerTest extends TestCase {
     }
 
     public void testCorrectTagLead() {
-        try {
-            PowerMockito.whenNew(Lead.class).withAnyArguments().thenReturn(leadMock);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         HashMap<String, Object> map = new HashMap<>();
-
         map.put("leadLabel", "label");
         map.put("leadValue", "value");
 
@@ -257,13 +246,6 @@ public class AccengageHandlerTest extends TestCase {
 /* ************************************** tagAddToCart Tests ************************************ */
 
     public void testCorrectAddToCart() {
-        try {
-            PowerMockito.whenNew(Cart.class).withAnyArguments().thenReturn(cartMock);
-            PowerMockito.whenNew(Item.class).withAnyArguments().thenReturn(itemMock);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         HashMap<String, Object> map = new HashMap<>();
 
         AccItem item = new AccItem("111x6", "testItem", "testCat", "USD", 66.6, 1);
@@ -302,12 +284,6 @@ public class AccengageHandlerTest extends TestCase {
 /* ************************************** tagPurchase Tests ************************************* */
 
     public void testCorrectSimpleTagPurchase() {
-        try {
-            PowerMockito.whenNew(Purchase.class).withAnyArguments().thenReturn(purchaseMock);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         HashMap<String, Object> map = new HashMap<>();
 
         map.put("transactionId", "testID");
