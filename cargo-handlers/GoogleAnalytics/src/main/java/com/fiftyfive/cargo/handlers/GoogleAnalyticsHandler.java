@@ -221,8 +221,9 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
      *                      passed through the GTM container and the execute method.
      *                      * eventCategory: the category the event belongs to
      *                      * eventAction: the type of event
-     *                      * eventLabel: a label for this event
-     *                      * eventValue: a value as Long for this event
+     *                      * eventLabel: a label for this event (optional)
+     *                      * eventValue: a value as Long for this event (optional)
+     *                      * setNonInteraction: set to true for a non interactive event (optional)
      */
     private void tagEvent(Map<String, Object> parameters) {
         String eventAction = getString(parameters, EVENT_ACTION);
