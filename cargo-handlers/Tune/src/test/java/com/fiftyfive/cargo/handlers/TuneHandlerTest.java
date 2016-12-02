@@ -29,6 +29,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
@@ -76,7 +77,7 @@ public class TuneHandlerTest extends TestCase {
         map.put("advertiserId", 123);
         map.put("conversionKey", 432);
 
-        handler.execute("Tune_init", map);
+        handler.execute("TUN_init", map);
         verifyStatic();
         Tune.init(context, "123", "432");
         assertTrue(handler.isInitialized());
@@ -87,7 +88,7 @@ public class TuneHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("conversionKey", 432);
 
-        handler.execute("Tune_init", map);
+        handler.execute("TUN_init", map);
 
         assertFalse(handler.isInitialized());
     }
@@ -96,7 +97,7 @@ public class TuneHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_ID, "123456-543210-55-42");
 
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(0)).setUserId(anyString());
     }
 
@@ -117,7 +118,7 @@ public class TuneHandlerTest extends TestCase {
         map.put("eventAttribute5", "eventAttribute5");
 
         handler.setInitialized(true);
-        handler.execute("Tune_tagEvent", map);
+        handler.execute("TUN_tagEvent", map);
         PowerMockito.verifyNew(TuneEvent.class).withArguments("eventName");
 
         verify(tuneEventMock, times(1)).withCurrencyCode("eventCurrencyCode");
@@ -151,9 +152,10 @@ public class TuneHandlerTest extends TestCase {
         map.put("eventQuantity", 42);
         Date date2 = new Date();
         map.put("eventDate2", date2);
+        map.put("lkdshfkjhdsf", "sdkjhd");
 
         handler.setInitialized(true);
-        handler.execute("Tune_tagEvent", map);
+        handler.execute("TUN_tagEvent", map);
         PowerMockito.verifyNew(TuneEvent.class).withArguments(5542);
 
         verify(tuneEventMock, times(1)).withRating(25.2);
@@ -167,6 +169,26 @@ public class TuneHandlerTest extends TestCase {
         verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
     }
 
+    public void testFailIDTagEvent() throws Exception {
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(Event.EVENT_ID, 55.5f);
+
+        handler.setInitialized(true);
+        handler.execute("TUN_tagEvent", map);
+
+        verifyZeroInteractions(tuneEventMock);
+    }
+
+    public void testFailTagEvent() throws Exception {
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("eventQuantity", 55);
+
+        handler.setInitialized(true);
+        handler.execute("TUN_tagEvent", map);
+
+        verifyZeroInteractions(tuneEventMock);
+    }
+
 /* *************************************** tagScreen Tests ************************************** */
 
     public void testSimpleTagScreen() {
@@ -174,8 +196,27 @@ public class TuneHandlerTest extends TestCase {
         map.put(Screen.SCREEN_NAME, "screenName");
 
         handler.setInitialized(true);
-        handler.execute("Tune_tagScreen", map);
+        handler.execute("TUN_tagScreen", map);
         verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
+    }
+
+    public void testComplexTagScreen() {
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(Screen.SCREEN_NAME, "screenName");
+        map.put("eventAttribute1", "eventAttribute1");
+
+        handler.setInitialized(true);
+        handler.execute("TUN_tagScreen", map);
+        verify(tuneEventMock, times(1)).withAttribute1("eventAttribute1");
+        verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
+    }
+
+    public void testFailTagScreen() {
+        HashMap<String, Object> map= new HashMap<>();
+
+        handler.setInitialized(true);
+        handler.execute("TUN_tagScreen", map);
+        verify(tuneMock, times(0)).measureEvent((TuneEvent) Matchers.any());
     }
 
 /* **************************************** identify Tests ************************************** */
@@ -185,106 +226,132 @@ public class TuneHandlerTest extends TestCase {
         map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setUserId("123456-543210-55-42");
+    }
+
+    public void testUserName(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USERNAME, "name name");
+
+        handler.setInitialized(true);
+        handler.execute("TUN_identify", map);
+        verify(tuneMock, times(1)).setUserName("name name");
+    }
+
+    public void testUserEmail(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_EMAIL, "aMailAdress");
+
+        handler.setInitialized(true);
+        handler.execute("TUN_identify", map);
+        verify(tuneMock, times(1)).setUserEmail("aMailAdress");
     }
 
     public void testUserGoogleIdWithInt(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GOOGLE_ID, 123);
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setGoogleUserId("123");
     }
 
     public void testUserGoogleIdWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GOOGLE_ID, "234");
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setGoogleUserId("234");
     }
 
     public void testUserFacebookIdWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_FACEBOOK_ID, "345");
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setFacebookUserId("345");
     }
 
     public void testUserTwitterIdWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_TWITTER_ID, "012");
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setTwitterUserId("012");
     }
 
     public void testUserAgeWithString(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_AGE, "55");
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setAge(55);
     }
 
     public void testUserAgeWithInt(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_AGE, 42);
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setAge(42);
+    }
+
+    public void testFailUserAge(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_AGE, 42.5f);
+
+        handler.setInitialized(true);
+        handler.execute("TUN_identify", map);
+        verifyZeroInteractions(tuneMock);
     }
 
     public void testUserGenderMale(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GENDER, "male");
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.MALE);
     }
 
     public void testUserGenderFemale(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GENDER, "female");
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.FEMALE);
     }
 
     public void testUserGenderUnknown(){
         HashMap<String, Object> map= new HashMap<>();
         map.put(User.USER_GENDER, "unknown");
-        map.put(User.USER_ID, "123456-543210-55-42");
 
         handler.setInitialized(true);
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
+        verify(tuneMock, times(1)).setGender(TuneGender.UNKNOWN);
+    }
+
+    public void testUserGenderForcedToUnknown(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(User.USER_GENDER, "dfjkhdrkjfgh");
+
+        handler.setInitialized(true);
+        handler.execute("TUN_identify", map);
         verify(tuneMock, times(1)).setGender(TuneGender.UNKNOWN);
     }
 
     public void testIdentifyMissingKey(){
         HashMap<String, Object> map= new HashMap<>();
         map.put("userMissingId", "123");
-        map.put(User.USER_ID, "123456-543210-55-42");
 
-        handler.execute("Tune_identify", map);
+        handler.execute("TUN_identify", map);
         assertTrue(true);
     }
 
