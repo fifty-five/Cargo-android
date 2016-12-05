@@ -35,7 +35,6 @@ public class FirebaseHandler extends AbstractTagHandler {
     private final String FIR_INIT = "FIR_init";
     private final String FIR_IDENTIFY = "FIR_identify";
     private final String FIR_TAG_EVENT = "FIR_tagEvent";
-    private final String FIR_TAG_SCREEN = "FIR_tagScreen";
 
 
 
@@ -63,7 +62,6 @@ public class FirebaseHandler extends AbstractTagHandler {
         container.registerFunctionCallTagCallback(FIR_INIT, this);
         container.registerFunctionCallTagCallback(FIR_IDENTIFY, this);
         container.registerFunctionCallTagCallback(FIR_TAG_EVENT, this);
-        container.registerFunctionCallTagCallback(FIR_TAG_SCREEN, this);
     }
 
     /**
@@ -83,9 +81,6 @@ public class FirebaseHandler extends AbstractTagHandler {
                 identify(map);
                 break;
             case FIR_TAG_EVENT:
-                tagEvent(map);
-                break;
-            case FIR_TAG_SCREEN:
                 tagEvent(map);
                 break;
             default:
