@@ -189,36 +189,6 @@ public class TuneHandlerTest extends TestCase {
         verifyZeroInteractions(tuneEventMock);
     }
 
-/* *************************************** tagScreen Tests ************************************** */
-
-    public void testSimpleTagScreen() {
-        HashMap<String, Object> map= new HashMap<>();
-        map.put(Screen.SCREEN_NAME, "screenName");
-
-        handler.setInitialized(true);
-        handler.execute("TUN_tagScreen", map);
-        verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
-    }
-
-    public void testComplexTagScreen() {
-        HashMap<String, Object> map= new HashMap<>();
-        map.put(Screen.SCREEN_NAME, "screenName");
-        map.put("eventAttribute1", "eventAttribute1");
-
-        handler.setInitialized(true);
-        handler.execute("TUN_tagScreen", map);
-        verify(tuneEventMock, times(1)).withAttribute1("eventAttribute1");
-        verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
-    }
-
-    public void testFailTagScreen() {
-        HashMap<String, Object> map= new HashMap<>();
-
-        handler.setInitialized(true);
-        handler.execute("TUN_tagScreen", map);
-        verify(tuneMock, times(0)).measureEvent((TuneEvent) Matchers.any());
-    }
-
 /* **************************************** identify Tests ************************************** */
 
     public void testUserIdWithString(){

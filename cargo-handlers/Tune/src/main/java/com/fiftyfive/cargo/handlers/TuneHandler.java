@@ -49,7 +49,6 @@ public class TuneHandler extends AbstractTagHandler {
     private final String TUN_INIT = "TUN_init";
     private final String TUN_IDENTIFY = "TUN_identify";
     private final String TUN_TAG_EVENT = "TUN_tagEvent";
-    private final String TUN_TAG_SCREEN = "TUN_tagScreen";
 
     /** All the parameters that could be set as attributes to a TuneEvent object */
     private final String EVENT_RATING = "eventRating";
@@ -113,7 +112,6 @@ public class TuneHandler extends AbstractTagHandler {
         container.registerFunctionCallTagCallback(TUN_INIT, this);
         container.registerFunctionCallTagCallback(TUN_IDENTIFY, this);
         container.registerFunctionCallTagCallback(TUN_TAG_EVENT, this);
-        container.registerFunctionCallTagCallback(TUN_TAG_SCREEN, this);
     }
 
     /**
@@ -134,9 +132,6 @@ public class TuneHandler extends AbstractTagHandler {
                     break;
                 case TUN_TAG_EVENT:
                     tagEvent(map);
-                    break;
-                case TUN_TAG_SCREEN:
-                    tagScreen(map);
                     break;
                 default:
                     logUnknownFunction(s);
@@ -287,13 +282,15 @@ public class TuneHandler extends AbstractTagHandler {
         }
         else if (map.containsKey(Event.EVENT_ID)) {
             int eventId = getInt(map, Event.EVENT_ID, -1);
-            if (eventId == -1) {
+            if (eventId != -1) {
+                tuneEvent = new TuneEvent(eventId);
+                logParamSetWithSuccess(Event.EVENT_ID, eventId);
+                map.remove(Event.EVENT_ID);
+            }
+            else {
                 logUncastableParam(Event.EVENT_ID, "int");
                 return ;
             }
-            tuneEvent = new TuneEvent(eventId);
-            logParamSetWithSuccess(Event.EVENT_ID, eventId);
-            map.remove(Event.EVENT_ID);
         }
         else {
             logMissingParam(new String[]{Event.EVENT_NAME, Event.EVENT_ID}, TUN_TAG_EVENT);
@@ -308,62 +305,6 @@ public class TuneHandler extends AbstractTagHandler {
             tune.measureEvent(tuneEvent);
         else
             Log.e(this.key="_handler", "Event object is null, the event hasn't been send.");
-    }
-
-    /**
-     * Method used to create and fire a screen view to the Tune Console
-     * The mandatory parameters is SCREEN_NAME which is a necessity to build the tagScreen.
-     * Actually, as no native tagScreen is given in the Tune SDK, we fire a custom event.
-     *
-     * After the creation of the event object, some attributes can be added through the eventBuilder
-     * method, using the map obtained from the gtm container.
-     * We recommend to use Attribute1/2 if you need more information about the screen.
-     *
-     * @param map   the parameters given at the moment of the dataLayer.push(),
-     *              passed through the GTM container and the execute method.
-     *              * screenName (String) : the name of the screen view.
-     *              * eventCurrencyCode (String)
-     *              * eventAdvertiserRefId (String)
-     *              * eventContentId (String)
-     *              * eventContentType (String)
-     *              * eventSearchString (String)
-     *              * eventAttribute1 (String)
-     *              * eventAttribute2 (String)
-     *              * eventAttribute3 (String)
-     *              * eventAttribute4 (String)
-     *              * eventAttribute5 (String)
-     *              * eventRating (Double)
-     *              * eventDate1 (Date)
-     *              * eventDate2 (Date) : Date1 needs to be set
-     *              * eventRevenue (Double)
-     *              * eventItems (list)
-     *              * eventLevel (int)
-     *              * eventReceiptData (String) : requires eventReceiptSignature
-     *              * eventReceiptSignature (String) : requires eventReceiptData
-     *              * eventQuantity (int)
-     */
-    private void tagScreen(Map<String, Object> map) {
-        TuneEvent tuneEvent;
-        String screenName = getString(map, Screen.SCREEN_NAME);
-
-        if (screenName != null) {
-            tuneEvent = new TuneEvent(screenName);
-            logParamSetWithSuccess(Screen.SCREEN_NAME, screenName);
-            map.remove(Screen.SCREEN_NAME);
-        }
-        else {
-            logMissingParam(new String[]{Screen.SCREEN_NAME}, TUN_TAG_SCREEN);
-            return ;
-        }
-
-        if (map.size() > 0)
-            tuneEvent = eventBuilder(map, tuneEvent);
-
-        // if the returned event is not null, the event is fired.
-        if (tuneEvent != null)
-            tune.measureEvent(tuneEvent);
-        else
-            Log.e(this.key="_handler", "Event object is null, the tag screen hasn't been send.");
     }
 
 
