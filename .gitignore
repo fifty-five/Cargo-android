@@ -47,3 +47,7 @@ gen-external-apklibs
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+
+# Our configuration files
+app/src/main/res/raw/gtm_container
+app/google-services.json
