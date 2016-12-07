@@ -12,90 +12,66 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import com.fiftyfive.cargo.Cargo;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.tagmanager.ContainerHolder;
+import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tagmanager.TagManager;
+
+import java.util.HashMap;
+
+public class MainActivity extends AppCompatActivity {
+
+    DataLayer dataLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        Cargo.init(this.getApplication(), ContainerHolderSingleton.getContainerHolder().getContainer());
+        Cargo.getInstance().registerHandlers();
+        dataLayer = TagManager.getInstance(this).getDataLayer();
+        dataLayer.pushEvent("applicationStart", new HashMap<String, Object>());
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        Button tagEventButton = (Button) findViewById(R.id.tagEventButton);
+        Button tagScreenButton = (Button) findViewById(R.id.tagScreenButton);
+        Button setUserButton = (Button) findViewById(R.id.identifyButton);
+        Button tagPurchaseButton = (Button) findViewById(R.id.tagPurchaseButton);
+        tagEventButton.setOnClickListener(tagEventListener);
+        tagScreenButton.setOnClickListener(tagScreenListener);
+        setUserButton.setOnClickListener(setUserListener);
+        tagPurchaseButton.setOnClickListener(tagPurchaseListener);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+    View.OnClickListener tagEventListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dataLayer.pushEvent("tagEvent", new HashMap<String, Object>());
         }
-    }
+    };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    View.OnClickListener tagScreenListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dataLayer.pushEvent("openScreen", new HashMap<String, Object>());
         }
+    };
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+    View.OnClickListener setUserListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dataLayer.pushEvent("identify", new HashMap<String, Object>());
         }
+    };
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+    View.OnClickListener tagPurchaseListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dataLayer.pushEvent("tagPurchase", new HashMap<String, Object>());
+        }
+    };
 }
