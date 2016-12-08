@@ -125,12 +125,13 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
         if (UAID != null) {
             if (UAID.startsWith("UA-")) {
                 tracker = analytics.newTracker(UAID);
-                this.initialized = true;
+                setInitialized(true);
                 logParamSetWithSuccess(Tracker.APPLICATION_ID, UAID);
             }
-            else
-                Log.w(this.key+"_handler", "The Universal Analytics Id doesn't seem " +
+            else {
+                Log.w(this.key + "_handler", "The Universal Analytics Id doesn't seem " +
                         "to correspond to the 'UA-XXXXX-Y' format");
+            }
         }
         else
             logMissingParam(new String[]{Tracker.APPLICATION_ID}, GA_INIT);

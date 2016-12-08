@@ -122,7 +122,7 @@ public class FacebookHandler extends AbstractTagHandler {
             facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
             AppEventsLogger.activateApp(cargo.getApplication());
             logParamSetWithSuccess(Tracker.APPLICATION_ID, applicationId);
-            initialized = FacebookSdk.isInitialized();
+            setInitialized(FacebookSdk.isInitialized());
         }
         else {
             logMissingParam(new String[]{Tracker.APPLICATION_ID}, FB_INIT);
@@ -276,7 +276,10 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-        AppEventsLogger.activateApp(activity);
+        if (isInitialized())
+            AppEventsLogger.activateApp(activity);
+        else
+            logUninitializedFramework();
     }
 
     /**
@@ -287,7 +290,10 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityPaused(Activity activity) {
-        AppEventsLogger.deactivateApp(activity);
+        if (isInitialized())
+            AppEventsLogger.deactivateApp(activity);
+        else
+            logUninitializedFramework();
     }
 
     /**

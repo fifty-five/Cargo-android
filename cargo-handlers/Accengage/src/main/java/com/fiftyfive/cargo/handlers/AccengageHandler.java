@@ -158,7 +158,7 @@ public class AccengageHandler extends AbstractTagHandler implements A4SIdsProvid
         partnerId = getString(map, PARTNER_ID);
 
         if (privateKey != null && partnerId != null) {
-            initialized = true;
+            setInitialized(true);
         }
         else {
             logMissingParam(new String[]{PRIVATE_KEY, PARTNER_ID}, ACC_INIT);

@@ -160,7 +160,7 @@ public class TuneHandler extends AbstractTagHandler {
 
             // retrieve the Tune instance
             tune = Tune.getInstance();
-            this.initialized = true;
+            setInitialized(true);
         }
         else
             logMissingParam(new String[]{ADVERTISER_ID, CONVERSION_KEY}, TUN_INIT);

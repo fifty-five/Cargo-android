@@ -143,9 +143,9 @@ public class ATInternetHandler extends AbstractTagHandler {
                     logParamSetWithSuccess(SITE, siteId);
                     logParamSetWithSuccess(LOG, log);
                     logParamSetWithSuccess(LOG_SSL, logSSL);
+                    setInitialized(true);
                 }
             });
-            this.initialized = true;
         }
         else
             logMissingParam(new String[]{SITE,LOG, LOG_SSL}, AT_INIT);

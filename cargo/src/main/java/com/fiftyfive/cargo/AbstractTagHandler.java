@@ -84,12 +84,20 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     }
 
     /**
-     * This setter is made for testing purpose and shouldn't be used outside of the test class.
+     * Sets initialized boolean to true if the handler has been correctly initialized
      *
      * @param value the boolean value you want the "init" attribute to be set with.
      */
     public void setInitialized(boolean value) {
         initialized = value;
+        if (initialized) {
+            Log.i(this.key + "_handler",
+                    "The handler has been correctly initialized and is ready to use");
+        }
+        else {
+            Log.w(this.key + "_handler",
+                    "DUH ! Something went wrong, the handler hasn't been initialized");
+        }
     }
 
     /**
