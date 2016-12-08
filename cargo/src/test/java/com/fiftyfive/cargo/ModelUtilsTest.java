@@ -10,7 +10,6 @@ import java.util.Map;
 import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
 import static com.fiftyfive.cargo.ModelsUtils.getInt;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
-import static org.junit.Assert.*;
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.

@@ -3,17 +3,14 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Activity;
 import android.util.Log;
 
-import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.tune.Tune;
 import com.tune.TuneEvent;
 import com.tune.TuneGender;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;

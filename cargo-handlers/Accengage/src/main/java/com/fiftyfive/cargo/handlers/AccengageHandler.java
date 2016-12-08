@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.ad4screen.sdk.A4S;
+import com.ad4screen.sdk.A4SIdsProvider;
 import com.ad4screen.sdk.analytics.Cart;
 import com.ad4screen.sdk.analytics.Item;
 import com.ad4screen.sdk.analytics.Lead;
 import com.ad4screen.sdk.analytics.Purchase;
 import com.fiftyfive.cargo.AbstractTagHandler;
+import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.Transaction;
 import com.google.android.gms.tagmanager.Container;
@@ -20,14 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import com.ad4screen.sdk.A4SIdsProvider;
 
 import static com.fiftyfive.cargo.ModelsUtils.getDate;
 import static com.fiftyfive.cargo.ModelsUtils.getDouble;
 import static com.fiftyfive.cargo.ModelsUtils.getList;
 import static com.fiftyfive.cargo.ModelsUtils.getLong;
 import static com.fiftyfive.cargo.ModelsUtils.getString;
-import com.fiftyfive.cargo.models.Event;
 
 
 /**
