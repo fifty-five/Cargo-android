@@ -3,13 +3,13 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Tracker;
 import com.fiftyfive.cargo.models.Transaction;
 import com.google.android.gms.tagmanager.Container;
-import com.facebook.FacebookSdk;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -51,10 +51,7 @@ public class FacebookHandler extends AbstractTagHandler {
     public void initialize() {
         super.initialize("FB", "Facebook");
 
-        FacebookSdk.sdkInitialize(cargo.getApplication());
-        facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
-
-        validate(FacebookSdk.isInitialized());
+        validate(true);
     }
 
     /**
@@ -117,9 +114,15 @@ public class FacebookHandler extends AbstractTagHandler {
         String applicationId = getString(map, Tracker.APPLICATION_ID);
 
         if(applicationId != null) {
-            FacebookSdk.setApplicationId(getString(map, Tracker.APPLICATION_ID));
+            // Since the applicationId isn't declared in the AndroidManifest, it is a necessity to
+            // set it before initializing the FacebookSDK, or it will throw an error.
+            FacebookSdk.setApplicationId(applicationId);
+            FacebookSdk.sdkInitialize(cargo.getApplication().getApplicationContext());
+            // Initialization of the logger which will send the events to the Fb Analytics interface
+            facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
+            AppEventsLogger.activateApp(cargo.getApplication());
             logParamSetWithSuccess(Tracker.APPLICATION_ID, applicationId);
-            initialized = true;
+            initialized = FacebookSdk.isInitialized();
         }
         else {
             logMissingParam(new String[]{Tracker.APPLICATION_ID}, FB_INIT);
