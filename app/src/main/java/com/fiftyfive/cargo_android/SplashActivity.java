@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class SplashActivity extends AppCompatActivity {
 
     int SPLASH_TIME_OUT = 750;
-    String CONTAINER_ID = "GTM-xxxxxxx";
+    String CONTAINER_ID = "GTM-WKZPWJ5";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -91,7 +91,7 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     public void setInitialized(boolean value) {
         initialized = value;
         if (initialized) {
-            Log.i(this.key + "_handler",
+            Log.d(this.key + "_handler",
                     "The handler has been correctly initialized and is ready to use");
         }
         else {
