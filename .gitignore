@@ -50,4 +50,3 @@ gen-external-apklibs
 
 # Our configuration files
 app/src/main/res/raw/gtm_container
-app/google-services.json
