@@ -1,9 +1,11 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
+import android.app.Application;
 import android.util.Log;
 
 import com.atinternet.tracker.ATInternet;
+import com.atinternet.tracker.Debugger;
 import com.atinternet.tracker.Gesture;
 import com.atinternet.tracker.SetConfigCallback;
 import com.atinternet.tracker.Tracker;
@@ -33,6 +35,8 @@ public class ATInternetHandler extends AbstractTagHandler {
     /** The tracker of the AT Internet SDK which send the events */
     public Tracker atTracker;
 
+    private boolean enableDebug = false;
+
     /** Constants used to define callbacks in the register and in the execute method */
     private final String AT_INIT = "AT_init";
     private final String AT_SET_CONFIG = "AT_setConfig";
@@ -54,7 +58,8 @@ public class ATInternetHandler extends AbstractTagHandler {
     @Override
     public void initialize() {
         super.initialize("AT", "AT Internet");
-        atTracker = ((ATInternet) cargo.getApplication()).getDefaultTracker();
+//        atTracker = ((ATInternet)cargo.getApplication()).getDefaultTracker();
+        atTracker = new Tracker(cargo.getApplication().getApplicationContext());
 
         validate(atTracker != null);
     }
@@ -86,7 +91,7 @@ public class ATInternetHandler extends AbstractTagHandler {
 
         if (AT_INIT.equals(s))
             init(map);
-        else if (this.initialized) {
+        else if (isInitialized()) {
             switch (s) {
                 case AT_SET_CONFIG:
                     setConfig(map);
@@ -130,6 +135,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         final String siteId = getString(params, SITE);
         final String log = getString(params, LOG);
         final String logSSL = getString(params, LOG_SSL);
+        enableDebug = getBoolean(params, com.fiftyfive.cargo.models.Tracker.ENABLE_DEBUG, false);
 
         if (siteId != null && log != null && logSSL != null) {
             HashMap config = new HashMap<>();
@@ -143,9 +149,9 @@ public class ATInternetHandler extends AbstractTagHandler {
                     logParamSetWithSuccess(SITE, siteId);
                     logParamSetWithSuccess(LOG, log);
                     logParamSetWithSuccess(LOG_SSL, logSSL);
-                    setInitialized(true);
                 }
             });
+            setInitialized(true);
         }
         else
             logMissingParam(new String[]{SITE,LOG, LOG_SSL}, AT_INIT);
@@ -253,7 +259,10 @@ public class ATInternetHandler extends AbstractTagHandler {
                     String[] values = new String[]{"sendTouch", "sendNavigation", "sendDownload",
                     "sendExit", "sendSearch"};
                     logNotFoundValue(eventType, Event.EVENT_TYPE, values);
+                    eventType = null;
             }
+            if (eventType != null)
+                logParamSetWithSuccess(Event.EVENT_TYPE, eventType);
         }
         else
             logMissingParam(new String[]{Event.EVENT_NAME, Event.EVENT_TYPE}, AT_TAG_EVENT);
@@ -304,18 +313,23 @@ public class ATInternetHandler extends AbstractTagHandler {
         String chapter3 = getString(parameters, CHAPTER3);
 
         // depending on the parameters, it returns the right object.
-        if (chapter1 == null)
+        if (chapter1 == null) {
+            logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             return (atTracker.Gestures().add(eventName));
+        }
         else if (chapter2 == null){
+            logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             logParamSetWithSuccess(CHAPTER1, chapter1);
             return (atTracker.Gestures().add(eventName, chapter1));
         }
         else if (chapter3 == null){
+            logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             logParamSetWithSuccess(CHAPTER1, chapter1);
             logParamSetWithSuccess(CHAPTER2, chapter2);
             return (atTracker.Gestures().add(eventName, chapter1, chapter2));
         }
         else {
+            logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             logParamSetWithSuccess(CHAPTER1, chapter1);
             logParamSetWithSuccess(CHAPTER2, chapter2);
             logParamSetWithSuccess(CHAPTER3, chapter3);
@@ -381,7 +395,8 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStarted(Activity activity) {
-
+        if (enableDebug && isInitialized())
+            Debugger.show(activity, atTracker);
     }
 
     /**
@@ -408,7 +423,6 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
-
     }
 
 /* ********************************************************************************************** */
