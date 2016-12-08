@@ -1,7 +1,5 @@
 package com.fiftyfive.cargo.models;
 
-import java.util.List;
-
 /**
  * Created by louis on 04/11/15.
  */

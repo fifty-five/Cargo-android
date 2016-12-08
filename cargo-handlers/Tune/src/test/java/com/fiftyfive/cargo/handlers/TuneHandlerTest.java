@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.User;
 import com.tune.Tune;
 import com.tune.TuneEvent;

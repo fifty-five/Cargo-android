@@ -1,7 +1,6 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.atinternet.tracker.CustomObjects;
 import com.atinternet.tracker.Gesture;
@@ -18,19 +17,15 @@ import junit.framework.TestCase;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

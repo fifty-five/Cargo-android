@@ -3,9 +3,7 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Activity;
 import android.util.Log;
 
-
 import com.fiftyfive.cargo.AbstractTagHandler;
-import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.Tracker;
 import com.fiftyfive.cargo.models.User;
