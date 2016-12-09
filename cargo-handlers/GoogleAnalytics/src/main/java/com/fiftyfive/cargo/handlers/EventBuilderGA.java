@@ -4,9 +4,8 @@ import com.google.android.gms.analytics.HitBuilders;
 
 /**
  * Created by Julien Gil on 30/11/2016.
- */
-
-/**
+ * Copyright © 2016 fifty-five All rights reserved.
+ *
  * A class designed for testing purposes. Helps to test the GoogleAnalyticsHandler's tagEvent method
  * Creates a EventBuilder Object and adds properties to it.
  */
