@@ -72,7 +72,6 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      * @param s         the string you used to register your callback (eg. "handler_init")
      * @param map       a map of the arguments which have been sent with the datalayer.push()
      */
-    @Override
     public abstract void execute(String s, Map<String, Object> map);
 
     public void validate(boolean isValid) {
