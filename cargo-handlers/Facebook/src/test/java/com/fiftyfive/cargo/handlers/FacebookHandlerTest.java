@@ -8,6 +8,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.models.Transaction;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -52,6 +54,7 @@ public class FacebookHandlerTest extends TestCase {
     public void setUp() throws Exception {
         initMocks(this);
         handler = new FacebookHandler();
+        handler.cargo = cargoMock;
         PowerMockito.mockStatic(FacebookSdk.class);
         PowerMockito.mockStatic(Cargo.class);
         PowerMockito.mockStatic(AppEventsLogger.class);
@@ -65,27 +68,26 @@ public class FacebookHandlerTest extends TestCase {
 /* **************************************** Init Tests ****************************************** */
 
     public void testInitialize(){
-        PowerMockito.when(Cargo.getInstance()).thenReturn(cargoMock);
-        when(cargoMock.getApplication()).thenReturn(context);
-
         handler.initialize();
 
-        verifyStatic();
-        Cargo.getInstance();
+        assertEquals(true, handler.valid);
+    }
+
+    public void testInitWithAllParameters(){
+        PowerMockito.when(Cargo.getInstance()).thenReturn(cargoMock);
+        when(cargoMock.getApplication()).thenReturn(context);
+        when(cargoMock.getApplication().getApplicationContext()).thenReturn(context);
+
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("applicationId", 123);
+
+        handler.execute("FB_init", map);
 
         verifyStatic();
         FacebookSdk.sdkInitialize(context);
 
         verifyStatic();
         AppEventsLogger.newLogger(context);
-    }
-
-    public void testInitWithAllParameters(){
-
-        HashMap<String, Object> map= new HashMap<>();
-        map.put("applicationId", 123);
-
-        handler.execute("FB_init", map);
 
         verifyStatic();
         FacebookSdk.setApplicationId("123");
@@ -106,7 +108,7 @@ public class FacebookHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("eventName", "hello");
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("FB_tagEvent", map);
 
         verify(facebookLoggerMock, times(1)).logEvent("hello");
@@ -117,7 +119,7 @@ public class FacebookHandlerTest extends TestCase {
         map.put("eventName", "hello");
         map.put("valueToSum", 55.42);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("FB_tagEvent", map);
 
         verify(facebookLoggerMock, times(1)).logEvent("hello", 55.42);
@@ -130,7 +132,7 @@ public class FacebookHandlerTest extends TestCase {
         map.put("itemName", "Power Ball");
         map.put("itemId", 5542);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("FB_tagEvent", map);
 
         verify(facebookLoggerMock, times(1)).logEvent(anyString(), anyDouble(), any(Bundle.class));
@@ -142,7 +144,7 @@ public class FacebookHandlerTest extends TestCase {
         map.put("itemName", "Power Ball");
         map.put("itemId", 5542);
 
-        handler.setInitialize(true);
+        handler.setInitialized(true);
         handler.execute("FB_tagEvent", map);
 
         verify(facebookLoggerMock, times(1)).logEvent(anyString(), any(Bundle.class));
@@ -155,8 +157,8 @@ public class FacebookHandlerTest extends TestCase {
         map.put(Transaction.TRANSACTION_TOTAL, 42.5);
         map.put(Transaction.TRANSACTION_CURRENCY_CODE, "USD");
 
-        handler.setInitialize(true);
-        handler.execute("FB_purchase", map);
+        handler.setInitialized(true);
+        handler.execute("FB_tagPurchase", map);
 
         verify(facebookLoggerMock, times(1)).logPurchase(BigDecimal.valueOf(42.5), Currency.getInstance("USD"));
     }
@@ -165,7 +167,8 @@ public class FacebookHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put(Transaction.TRANSACTION_TOTAL, 42.5);
 
-        handler.execute("FB_purchase", map);
+        handler.setInitialized(true);
+        handler.execute("FB_tagPurchase", map);
 
         verify(facebookLoggerMock, times(0)).logPurchase(any(BigDecimal.class), any(Currency.class));
     }

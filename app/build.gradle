@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -25,6 +26,14 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
+    compile 'com.google.android.gms:play-services:9.2.0'
+    compile project(':cargo')
+    compile project(':cargo-handlers:ATInternet')
+    compile project(':cargo-handlers:Facebook')
+    compile project(':cargo-handlers:Firebase')
+    compile project(':cargo-handlers:GoogleAnalytics')
+    compile project(':cargo-handlers:Tune')
+    compile 'com.android.support:multidex:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

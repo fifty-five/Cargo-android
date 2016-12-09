@@ -1,7 +1,6 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.atinternet.tracker.CustomObjects;
 import com.atinternet.tracker.Gesture;
@@ -18,17 +17,15 @@ import junit.framework.TestCase;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,7 +73,7 @@ public class ATInternetHandlerTest extends TestCase {
         when(atTrackerMock.Gestures()).thenReturn(gesturesMock);
         when(atTrackerMock.CustomObjects()).thenReturn(customObjMock);
 
-        when(screensMock.add(testName)).thenReturn(screenMock);
+        when(screensMock.add(anyString())).thenReturn(screenMock);
         when(screenMock.setLevel2(anyInt())).thenReturn(screenMock);
 
         when(gesturesMock.add(anyString())).thenReturn(gestureMock);
@@ -91,17 +88,45 @@ public class ATInternetHandlerTest extends TestCase {
 
     }
 
+/* **************************************** init Tests ****************************************** */
+
+    public void testInit(){
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("site", "fifty-five");
+        map.put("log", "logc1");
+        map.put("logSSL", "logSecure2");
+
+        handler.execute("AT_init", map);
+
+        verify(atTrackerMock, times(1)).setConfig(any(HashMap.class), anyBoolean(),
+                any(SetConfigCallback.class));
+        assertEquals(true, handler.isInitialized());
+    }
+
 /* ************************************** identify Tests **************************************** */
 
-    public void testIdentify(){
+    public void testIdentifyWithoutInit(){
 
         HashMap<String, Object> map = new HashMap<>();
         map.put(User.USER_ID, "Nestor");
 
         handler.execute("AT_identify", map);
 
-        verify(atTrackerMock, times(1)).setConfig("identifier", "Nestor", null);
+        verify(atTrackerMock, times(0)).setConfig(anyString(), anyString(),
+                any(SetConfigCallback.class));
+    }
 
+    public void testIdentify(){
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(User.USER_ID, "Nestor");
+
+        handler.setInitialized(true);
+        handler.execute("AT_identify", map);
+
+        verify(atTrackerMock, times(1)).setConfig(anyString(), anyString(),
+                any(SetConfigCallback.class));
     }
 
     public void testFailedIdentifyWithNullValue(){
@@ -109,6 +134,7 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put(User.USER_ID, null);
 
+        handler.setInitialized(true);
         handler.execute("AT_identify", map);
 
         verify(atTrackerMock, times(0)).setConfig("identifier", null, null);
@@ -119,6 +145,7 @@ public class ATInternetHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put("RandomKey", "Nestor");
 
+        handler.setInitialized(true);
         handler.execute("AT_identify", map);
 
         verify(atTrackerMock, times(0)).setConfig("identifier", null, null);
@@ -133,6 +160,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put(Event.EVENT_TYPE, "sendTouch");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName);
@@ -154,6 +182,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName, "chapter1", "chapter2", "chapter3");
@@ -174,6 +203,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(0)).add(testName, "chapter1", "chapter2", "chapter3");
@@ -191,6 +221,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put("chapter3", "chapter3");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName, "chapter1", "chapter2", "chapter3");
@@ -209,6 +240,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put(Event.EVENT_TYPE, "sendNavigation");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName);
@@ -227,6 +259,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put(Event.EVENT_TYPE, "sendExit");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName);
@@ -245,6 +278,7 @@ public class ATInternetHandlerTest extends TestCase {
         map.put(Event.EVENT_TYPE, "sendSearch");
         map.put(com.fiftyfive.cargo.models.Tracker.LEVEL2, 55);
 
+        handler.setInitialized(true);
         handler.execute("AT_tagEvent", map);
 
         verify(atTrackerMock.Gestures(), times(1)).add(testName);
