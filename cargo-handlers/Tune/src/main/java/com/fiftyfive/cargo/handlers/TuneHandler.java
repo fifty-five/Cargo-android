@@ -26,8 +26,8 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 
 /**
- * Author : Julien Gil
- * Created: 03/11/15
+ * Created by Julien Gil on 03/04/16.
+ * Copyright © 2016 fifty-five All rights reserved.
  *
  *  * The class which handles interactions with the Tune SDK
  */
