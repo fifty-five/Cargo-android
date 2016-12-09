@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by louis on 01/12/15.
+ * Created by louis on 02/12/15.
+ * Copyright © 2016 fifty-five All rights reserved.
  *
  * A tool class which is used to retrieve a specific typed object within a Map from its key.
  */

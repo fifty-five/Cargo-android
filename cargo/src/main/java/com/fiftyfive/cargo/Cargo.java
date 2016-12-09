@@ -6,6 +6,7 @@ import com.google.android.gms.tagmanager.Container;
 
 /**
  * Created by louis on 03/11/15.
+ * Copyright © 2016 fifty-five All rights reserved.
  *
  * The core of Cargo. Initialize the handlers.
  */
