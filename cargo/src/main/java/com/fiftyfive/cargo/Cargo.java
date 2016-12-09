@@ -6,31 +6,31 @@ import com.google.android.gms.tagmanager.Container;
 
 /**
  * Created by louis on 03/11/15.
+ *
+ * The core of Cargo. Initialize the handlers.
  */
 public class Cargo {
 
+
+/* ************************************ Variables declaration *********************************** */
+
+    /** A reference to the instance of Cargo, in order to use it as a kind of singleton */
     private static Cargo instance = null;
+    /** The name of the class, used for the logs */
     private static final String TAG = "Cargo" ;
+    /** A boolean which defines whether the instance has been correctly initialized */
     private static boolean init = false;
 
+    /** An instance of the application within Cargo is instantiated */
     private Application application;
+    /** The container which contains tags, triggers and variables defined in the GTM interface */
     private Container container;
+    /** Used to store initialized handlers and call on their activity life cycle callback methods */
     private TagHandlerManager manager;
 
 
-    /**
-     * Simply return the instance of Cargo if it has been initialized.
-     * If not, return null
-     *
-     * @return  cargo instance or null if cargo hasn't been initialized
-     */
-    public static Cargo getInstance(){
-        if(!init){
-            Log.w("55", "Cargo instance must be initialized, null will be return");
-        }
-        return instance;
-    }
 
+/* *************************************** Init methods ***************************************** */
 
     /**
      * Initialize and setup cargo
@@ -53,7 +53,8 @@ public class Cargo {
     }
 
     /**
-     * init & set the TagHandlerManager and makes it call its methods on the different LifecycleCallbacks
+     * Initialize the TagHandlerManager and register to the application life cycle callbacks.
+     * at any onStart, onStop, onResume, onPause, a callback method will be also called within the handlers
      */
     private void initManager(){
         manager = new TagHandlerManager();
@@ -61,8 +62,25 @@ public class Cargo {
     }
 
     /**
-     * register the handlers after the package name of the classes (hardcoded for now)
-     * calls on register(String classPath)
+     * Simply return the instance of Cargo if it has been initialized.
+     * If not, return null
+     *
+     * @return  cargo instance or null if cargo hasn't been initialized
+     */
+    public static Cargo getInstance(){
+        if(!init){
+            Log.w("55", "Cargo instance must be initialized, null will be return");
+        }
+        return instance;
+    }
+
+
+
+/* ****************************** Handler registration methods ********************************** */
+
+    /**
+     * Register the handlers after the package name of their classes (hardcoded for now)
+     * Calls on Cargo.register(String classPath)
      */
     public void registerHandlers(){
         if(!init){
@@ -70,17 +88,17 @@ public class Cargo {
             return;
         }
 
-        register("com.fiftyfive.cargo.handlers.TuneHandler");
-        register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
+        register("com.fiftyfive.cargo.handlers.ATInternetHandler");
         register("com.fiftyfive.cargo.handlers.FacebookHandler");
         register("com.fiftyfive.cargo.handlers.FirebaseHandler");
-
+        register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
+        register("com.fiftyfive.cargo.handlers.TuneHandler");
     }
 
-
     /**
-     * register the classes
-     * calls on register(Class<AbstractTagHandler> tagHandler)
+     * Register the class from its classpath
+     * Calls on register(Class<AbstractTagHandler> tagHandler) if the Class has been found.
+     * Throws a ClassNotFoundException if not.
      *
      * @param classPath     the class path of the handler you want to register
      */
@@ -95,9 +113,9 @@ public class Cargo {
     }
 
     /**
-     * Instanciate the handler after its class name
-     * Store each handler registered on the registerHandlers() method into the TagHandlerManager
-     * Calls on the register method of each handler to register each callbacks based on GTM tags
+     * Instantiates the handler after its class type
+     * Calls on TagHandlerManager.registerHandlers() method in order to store all the handlers
+     * Calls on the register method of each handler to register the callbacks based on GTM tags
      *
      * Display an exception if a fail occurs
      *
@@ -120,24 +138,46 @@ public class Cargo {
     }
 
 
-/* ***************************** Getters - Setters ***************************** */
 
+/* ************************************** Getters - Setters ************************************* */
+
+    /**
+     * Gets the application context Cargo has been instantiated with.
+     *
+     * @return Application      the application context
+     */
     public Application getApplication() {
         return application;
     }
 
-    public void setApplication(Application app) {
-        this.application = app;
+    /**
+     * Reset the Application context as long as the parameter isn't a null value
+     *
+     * @param app   the new Application context you want cargo to be set with
+     */
+    private void setApplication(Application app) {
+        if (app != null)
+            this.application = app;
     }
 
+    /**
+     * Gets the GTM container Cargo has been instantiated with.
+     *
+     * @return Container      the GTM container you registered to
+     */
     public Container getContainer() {
         return container;
     }
 
-    public void setContainer(Container _container) {
+    /**
+     * Sets the GTM container to the instance
+     *
+     * @param _container    the GTM container
+     */
+    private void setContainer(Container _container) {
         this.container = _container;
     }
 
-/* ***************************************************************************** */
+/* ********************************************************************************************** */
 
 }

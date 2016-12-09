@@ -11,79 +11,19 @@ import java.util.List;
  * Author : louis
  * Created: 04/11/15
  *
- * The TagHandlerManager class calls on each handler override methods
- * which are called corresponding to the life cycle of the app.
+ * The TagHandlerManager stores all the registered handlers.
+ * Since the class implements ActivityLifecycleCallbacks,
+ * it calls on the associated method in each handler when a callback is triggered.
  */
 public class TagHandlerManager implements Application.ActivityLifecycleCallbacks {
 
-    /**
-     * A List of the handlers registered in the method registerHandlers() of the Cargo class
-     */
+/* *********************************** Variables declaration ************************************ */
+
+   /** The list which stores all the registered handlers */
     private List<AbstractTagHandler> handlers = new ArrayList<AbstractTagHandler>();
 
 
-    @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-    }
-
-    /**
-     * A callback triggered when an activity starts
-     *
-     * @param activity The activity being actually started
-     */
-    @Override
-    public void onActivityStarted(Activity activity) {
-        for(AbstractTagHandler handler : handlers){
-            handler.onActivityStarted(activity);
-        }
-    }
-
-    /**
-     * A callback triggered when an activity is resumed
-     *
-     * @param activity The activity being actually resumed
-     */
-    @Override
-    public void onActivityResumed(Activity activity) {
-        for(AbstractTagHandler handler : handlers){
-            handler.onActivityResumed(activity);
-        }
-    }
-
-    /**
-     * A callback triggered when an activity is paused
-     *
-     * @param activity The activity being actually paused
-     */
-    @Override
-    public void onActivityPaused(Activity activity) {
-        for(AbstractTagHandler handler : handlers){
-            handler.onActivityPaused(activity);
-        }
-    }
-
-    /**
-     * A callback triggered when an activity is stopped
-     *
-     * @param activity The activity being actually stopped
-     */
-    @Override
-    public void onActivityStopped(Activity activity) {
-        for(AbstractTagHandler handler : handlers){
-            handler.onActivityStopped(activity);
-        }
-    }
-
-    @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-    }
-
-    @Override
-    public void onActivityDestroyed(Activity activity) {
-
-    }
-
+/* ********************************* Register handlers method *********************************** */
 
     /**
      * This method is called from the Cargo method register(Class<AbstractTagHandler> tagHandler)
@@ -98,4 +38,77 @@ public class TagHandlerManager implements Application.ActivityLifecycleCallbacks
             handlers.add(tagHandler);
         }
     }
+
+
+/* ******************************** ActivityLifeCycle callbacks ********************************* */
+
+    /**
+     * A callback triggered when an activity starts,
+     * which calls the associated method for all the registered handlers.
+     *
+     * @param activity The activity being actually started
+     */
+    @Override
+    public void onActivityStarted(Activity activity) {
+        for(AbstractTagHandler handler : handlers){
+            handler.onActivityStarted(activity);
+        }
+    }
+
+    /**
+     * A callback triggered when an activity is resumed,
+     * which calls the associated method for all the registered handlers.
+     *
+     * @param activity The activity being actually resumed
+     */
+    @Override
+    public void onActivityResumed(Activity activity) {
+        for(AbstractTagHandler handler : handlers){
+            handler.onActivityResumed(activity);
+        }
+    }
+
+    /**
+     * A callback triggered when an activity is paused,
+     * which calls the associated method for all the registered handlers.
+     *
+     * @param activity The activity being actually paused
+     */
+    @Override
+    public void onActivityPaused(Activity activity) {
+        for(AbstractTagHandler handler : handlers){
+            handler.onActivityPaused(activity);
+        }
+    }
+
+    /**
+     * A callback triggered when an activity is stopped,
+     * which calls the associated method for all the registered handlers.
+     *
+     * @param activity The activity being actually stopped
+     */
+    @Override
+    public void onActivityStopped(Activity activity) {
+        for(AbstractTagHandler handler : handlers){
+            handler.onActivityStopped(activity);
+        }
+    }
+
+
+/* ***************************** Unused ActivityLifeCycle callbacks ***************************** */
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+    }
+
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+    }
+
+
+/* ********************************************************************************************** */
 }

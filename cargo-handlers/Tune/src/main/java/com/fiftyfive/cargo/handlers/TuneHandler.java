@@ -3,20 +3,20 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Activity;
 import android.util.Log;
 
-import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.tune.Tune;
 import com.tune.TuneEvent;
 import com.tune.TuneGender;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import static com.fiftyfive.cargo.ModelsUtils.getDate;
 import static com.fiftyfive.cargo.ModelsUtils.getDouble;
@@ -26,40 +26,52 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 
 /**
- * Author : louis
+ * Author : Julien Gil
  * Created: 03/11/15
  *
  *  * The class which handles interactions with the Tune SDK
  */
 public class TuneHandler extends AbstractTagHandler {
 
-    protected Tune tune;
-    private boolean init = false;
+/* ************************************ Variables declaration *********************************** */
 
-    public Cargo cargo = Cargo.getInstance();
-
-    final String Tune_init = "Tune_init";
-    final String Tune_identify = "Tune_identify";
-    final String Tune_tagEvent = "Tune_tagEvent";
-    final String Tune_tagScreen = "Tune_tagScreen";
-
+    /** advertiserId and conversionKey are two mandatory parameters to initialize the Tune SDK */
     final String ADVERTISER_ID = "advertiserId";
     final String CONVERSION_KEY = "conversionKey";
 
+    /** The tracker of the Tune SDK which send the events */
+    protected Tune tune;
 
-    // all the parameters that could be set as attributes to a TuneEvent object
-    final String EVENT_RATING = "eventRating";
-    final String EVENT_DATE1 = "eventDate1";
-    final String EVENT_DATE2 = "eventDate2";
-    final String EVENT_REVENUE = "eventRevenue";
-    final String EVENT_ITEMS = "eventItems";
-    final String EVENT_LEVEL = "eventLevel";
-    final String EVENT_RECEIPT_DATA = "eventReceiptData";
-    final String EVENT_RECEIPT_SIGNATURE = "eventReceiptSignature";
-    final String EVENT_QUANTITY = "eventQuantity";
+    /** Constants used to define callbacks in the register and in the execute method */
+    private final String TUN_INIT = "TUN_init";
+    private final String TUN_IDENTIFY = "TUN_identify";
+    private final String TUN_TAG_EVENT = "TUN_tagEvent";
 
-    // the formatted name "eventRandomAttribute" is important here as the string is used in the
-    // eventBuilder method to call on TuneEvent methods.
+    /** All the parameters that could be set as attributes to a TuneEvent object */
+    private final String EVENT_RATING = "eventRating";
+    private final String EVENT_DATE1 = "eventDate1";
+    private final String EVENT_DATE2 = "eventDate2";
+    private final String EVENT_REVENUE = "eventRevenue";
+    private final String EVENT_ITEMS = "eventItems";
+    private final String EVENT_LEVEL = "eventLevel";
+    private final String EVENT_RECEIPT_DATA = "eventReceiptData";
+    private final String EVENT_RECEIPT_SIGNATURE = "eventReceiptSignature";
+    private final String EVENT_QUANTITY = "eventQuantity";
+
+    final String[] MIXED_PARAMETERS = {
+            EVENT_RATING,
+            EVENT_DATE1,
+            EVENT_DATE2,
+            EVENT_REVENUE,
+            EVENT_ITEMS,
+            EVENT_LEVEL,
+            EVENT_RECEIPT_DATA,
+            EVENT_RECEIPT_SIGNATURE,
+            EVENT_QUANTITY
+    };
+
+    /** the formatted name "eventRandomAttribute" is important here as the string is used in the
+        eventBuilder method to call on TuneEvent methods. */
     final String[] EVENT_PROPERTIES = {
             "eventCurrencyCode",
             "eventAdvertiserRefId",
@@ -74,83 +86,89 @@ public class TuneHandler extends AbstractTagHandler {
     };
 
 
+
+/* ************************************ Handler core methods ************************************ */
+
     /**
-     * Init properly the SDK, not needed here
+     * Called by the TagHandlerManager, initialize the core of the handler
      */
     @Override
     public void initialize() {
-        this.valid = true;
+        super.initialize("TUN", "Tune");
+        validate(true);
     }
 
     /**
-     * Register the callbacks to GTM. These will be triggered after a dataLayer.push()
+     * Register the callbacks to the container. After a dataLayer.push(),
+     * these will trigger the execute method of this handler.
      *
      * @param container The instance of the GTM container we register the callbacks to
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback(Tune_init, this);
-        container.registerFunctionCallTagCallback(Tune_identify, this);
-        container.registerFunctionCallTagCallback(Tune_tagEvent, this);
-        container.registerFunctionCallTagCallback(Tune_tagScreen, this);
-
+        container.registerFunctionCallTagCallback(TUN_INIT, this);
+        container.registerFunctionCallTagCallback(TUN_IDENTIFY, this);
+        container.registerFunctionCallTagCallback(TUN_TAG_EVENT, this);
     }
 
     /**
-     * This one will be called after an event has been pushed to the dataLayer
+     * A callback method for the registered callbacks method name mentioned in the register method.
      *
-     * @param s     The method you aime to call (this should be define in GTM interface)
+     * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
 
-        switch (s) {
-            case Tune_init:
-                init(map);
-                break;
-            case Tune_identify:
-                identify(map);
-                break;
-            case Tune_tagEvent:
-                tagEvent(map);
-                break;
-            case Tune_tagScreen:
-                tagScreen(map);
-                break;
-            default:
-                Log.i("Cargo TuneHandler", "Function "+s+" is not registered");
+        if (TUN_INIT.equals(s))
+            init(map);
+        else if (initialized) {
+            switch (s) {
+                case TUN_IDENTIFY:
+                    identify(map);
+                    break;
+                case TUN_TAG_EVENT:
+                    tagEvent(map);
+                    break;
+                default:
+                    logUnknownFunction(s);
+            }
         }
+        else
+            logUninitializedFramework();
     }
 
+
+
+/* ************************************* SDK initialization ************************************* */
+
     /**
-     * The method you need to call first. Register your tune app id to the tune SDK
+     * The method you need to call first.
+     * Register your Tune advertiserId and conversionKey to the Tune SDK
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * advertiserId & conversionKey : ids Tune gives you when you register your app
+     *              * advertiserId & conversionKey (String) : ids you got when you register your app
      */
     private void init(Map<String, Object> map) {
-        if (init)
-            Log.i("Cargo TuneHandler", "Tune has already been initialized");
-        else if (map.containsKey(ADVERTISER_ID) && map.containsKey(CONVERSION_KEY)) {
-            if (getString(map, ADVERTISER_ID) != null && getString(map, CONVERSION_KEY) != null) {
-                // set the required parameters
-                Tune.init(cargo.getApplication(),
-                        map.remove(ADVERTISER_ID).toString(),
-                        map.remove(CONVERSION_KEY).toString());
+        String advertiserId = getString(map, ADVERTISER_ID);
+        String conversionKey = getString(map, CONVERSION_KEY);
 
-                // retrieve the Tune instance
-                tune = Tune.getInstance();
-                init = true;
-            }
-            else
-                Log.w("Cargo TuneHandler", "At least one required parameter is set to null" +
-                        " in init Tune. Tune hasn't been init.");
+        if (advertiserId != null && conversionKey != null) {
+            // set the required parameters
+            Tune.init(cargo.getApplication(), advertiserId, conversionKey);
+
+            // retrieve the Tune instance
+            tune = Tune.getInstance();
+            setInitialized(true);
         }
         else
-            Log.w("Cargo TuneHandler", "Missing a required parameter to init Tune");
+            logMissingParam(new String[]{ADVERTISER_ID, CONVERSION_KEY}, TUN_INIT);
     }
+
+
+
+/* ****************************************** Tracking ****************************************** */
 
     /**
      * In order to identify the user as a unique visitor and to associate to a unique id
@@ -158,29 +176,64 @@ public class TuneHandler extends AbstractTagHandler {
      *
      * @param map    the parameters given at the moment of the dataLayer.push(),
      *               passed through the GTM container and the execute method.
-     *               The only parameter requested here is the android_id (User.USER_ID)
+     *               * userId (String) : an identifier attributed to a unique user (mandatory param)
+     *               * userGoogleId (String) : the google id if your user logged in with
+     *               * userFacebookId (String) : the facebook id if your user logged in with
+     *               * userTwitterId (String) : the twitter id if your user logged in with
+     *               * userAge (String) : the age of your user
+     *               * userName (String) : the username/name of your user
+     *               * userEmail (String) : the mail adress of your user
+     *               * userGender (String) : the gender of your user (MALE/FEMALE/UNKNOWN)
      */
     private void identify(Map<String, Object> map) {
+        String userId = getString(map, User.USER_ID);
+        String userGoogleId = getString(map, User.USER_GOOGLE_ID);
+        String userFacebookId = getString(map, User.USER_FACEBOOK_ID);
+        String userTwitterId = getString(map, User.USER_TWITTER_ID);
+        String userName = getString(map, User.USERNAME);
+        String userEmail = getString(map, User.USER_EMAIL);
+        String userGender = getString(map, User.USER_GENDER);
 
         // set the android id given through the User.USER_ID parameter in Tune
-        if (map.containsKey(User.USER_ID))
+        if (userId != null) {
             tune.setUserId(getString(map, User.USER_ID));
+            logParamSetWithSuccess(User.USER_ID, userId);
+        }
 
-        // set the GOOGLE_ID, FACEBOOK_ID, TWITTER_ID, USERNAME, EMAIL, AGE and GENDER if they exist
-        if (map.containsKey(User.USER_GOOGLE_ID))
-            tune.setGoogleUserId(getString(map, User.USER_GOOGLE_ID));
-        if (map.containsKey(User.USER_FACEBOOK_ID))
-            tune.setFacebookUserId(getString(map, User.USER_FACEBOOK_ID));
-        if (map.containsKey(User.USER_TWITTER_ID))
-            tune.setTwitterUserId(getString(map, User.USER_TWITTER_ID));
-        if (map.containsKey(User.USER_AGE))
-            tune.setAge(getInt(map, User.USER_AGE, -1));
-        if (map.containsKey(User.USERNAME))
-            tune.setUserName(getString(map, User.USERNAME));
-        if (map.containsKey(User.USER_EMAIL))
-            tune.setUserEmail(getString(map, User.USER_EMAIL));
-        if (map.containsKey(User.USER_GENDER))
-            setGender(getString(map, User.USER_GENDER));
+        // set the GOOGLE_ID, FACEBOOK_ID, TWITTER_ID, USERNAME and EMAIL if they exist
+        if (userGoogleId != null) {
+            tune.setGoogleUserId(userGoogleId);
+            logParamSetWithSuccess(User.USER_GOOGLE_ID, userGoogleId);
+        }
+        if (userFacebookId != null) {
+            tune.setFacebookUserId(userFacebookId);
+            logParamSetWithSuccess(User.USER_FACEBOOK_ID, userFacebookId);
+        }
+        if (userTwitterId != null) {
+            tune.setTwitterUserId(userTwitterId);
+            logParamSetWithSuccess(User.USER_TWITTER_ID, userTwitterId);
+        }
+        if (userName != null) {
+            tune.setUserName(userName);
+            logParamSetWithSuccess(User.USERNAME, userName);
+        }
+        if (userEmail != null) {
+            tune.setUserEmail(userEmail);
+            logParamSetWithSuccess(User.USER_EMAIL, userEmail);
+        }
+
+        // set AGE and GENDER if they exist
+        if (map.containsKey(User.USER_AGE)) {
+            int age = getInt(map, User.USER_AGE, -1);
+            if (age == -1) {
+                logUncastableParam(User.USER_AGE, "String");
+                return ;
+            }
+            tune.setAge(age);
+            logParamSetWithSuccess(User.USER_AGE, age);
+        }
+        if (userGender != null)
+            setGender(userGender);
     }
 
     /**
@@ -193,23 +246,51 @@ public class TuneHandler extends AbstractTagHandler {
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
      *              The only parameter requested here is a name or an id for the event
-     *              (Event.EVENT_NAME or Event.EVENT_ID)
+     *              * eventName (String) : the name of the event (mandatory, unless eventId is set)
+     *              * eventId (int) : id linked to the event (mandatory, unless eventName is set)
+     *              * eventCurrencyCode (String)
+     *              * eventAdvertiserRefId (String)
+     *              * eventContentId (String)
+     *              * eventContentType (String)
+     *              * eventSearchString (String)
+     *              * eventAttribute1 (String)
+     *              * eventAttribute2 (String)
+     *              * eventAttribute3 (String)
+     *              * eventAttribute4 (String)
+     *              * eventAttribute5 (String)
+     *              * eventRating (Double)
+     *              * eventDate1 (Date)
+     *              * eventDate2 (Date) : Date1 needs to be set
+     *              * eventRevenue (Double)
+     *              * eventItems (list)
+     *              * eventLevel (int)
+     *              * eventReceiptData (String) : requires eventReceiptSignature
+     *              * eventReceiptSignature (String) : requires eventReceiptData
+     *              * eventQuantity (int)
      */
     private void tagEvent(Map<String, Object> map) {
-
         TuneEvent tuneEvent;
+        String eventName = getString(map, Event.EVENT_NAME);
 
-        if (map.containsKey(Event.EVENT_NAME)) {
-            tuneEvent = new TuneEvent(getString(map, Event.EVENT_NAME));
+        if (eventName != null) {
+            tuneEvent = new TuneEvent(eventName);
+            logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             map.remove(Event.EVENT_NAME);
         }
         else if (map.containsKey(Event.EVENT_ID)) {
-            tuneEvent = new TuneEvent(getInt(map, Event.EVENT_ID, -1));
-            map.remove(Event.EVENT_ID);
+            int eventId = getInt(map, Event.EVENT_ID, -1);
+            if (eventId != -1) {
+                tuneEvent = new TuneEvent(eventId);
+                logParamSetWithSuccess(Event.EVENT_ID, eventId);
+                map.remove(Event.EVENT_ID);
+            }
+            else {
+                logUncastableParam(Event.EVENT_ID, "int");
+                return ;
+            }
         }
         else {
-            Log.w("Cargo TuneHandler", " in order to create an event, " +
-                    "an eventName or eventId is mandatory. The event hasn't been created.");
+            logMissingParam(new String[]{Event.EVENT_NAME, Event.EVENT_ID}, TUN_TAG_EVENT);
             return ;
         }
 
@@ -219,42 +300,13 @@ public class TuneHandler extends AbstractTagHandler {
         // if the returned event is not null, the event is fired.
         if (tuneEvent != null)
             tune.measureEvent(tuneEvent);
+        else
+            Log.e(this.key="_handler", "Event object is null, the event hasn't been send.");
     }
 
-    /**
-     * Method used to create and fire a screen view to the Tune Console
-     * The mandatory parameters is SCREEN_NAME which is a necessity to build the tagScreen.
-     * Actually, as no native tagScreen is given in the Tune SDK, we fire a custom event.
-     *
-     * After the creation of the event object, some attributes can be added through the eventBuilder
-     * method, using the map obtained from the gtm container.
-     * We recommend to use Attribute1/2 if you need more information about the screen.
-     *
-     * @param map   the parameters given at the moment of the dataLayer.push(),
-     *              passed through the GTM container and the execute method.
-     *              The only parameter requested here is a name for the screen
-     *              (Screen.SCREEN_NAME)
-     */
-    private void tagScreen(Map<String, Object> map) {
-        TuneEvent tuneEvent;
 
-        if (map.containsKey(Screen.SCREEN_NAME)) {
-            tuneEvent = new TuneEvent(getString(map, Screen.SCREEN_NAME));
-            map.remove(Screen.SCREEN_NAME);
-        }
-        else {
-            Log.w("Cargo TuneHandler", " in order to tag a screen, " +
-                    "an screenName is mandatory. The event hasn't been created.");
-            return ;
-        }
 
-        if (map.size() > 0)
-            tuneEvent = eventBuilder(map, tuneEvent);
-
-        // if the returned event is not null, the event is fired.
-        if (tuneEvent != null)
-            tune.measureEvent(tuneEvent);
-    }
+/* ****************************************** Utility ******************************************* */
 
     /**
      * A simple method called by identify() to set the gender in a secured way
@@ -265,8 +317,10 @@ public class TuneHandler extends AbstractTagHandler {
      */
     private void setGender(String val) {
         String gender = val.toUpperCase(Locale.ENGLISH);
-        if (gender.equals("MALE") || gender.equals("FEMALE") || gender.equals("UNKNOWN"))
+        if (gender.equals("MALE") || gender.equals("FEMALE") || gender.equals("UNKNOWN")) {
             tune.setGender(TuneGender.forValue(val));
+            logParamSetWithSuccess(User.USER_GENDER, gender);
+        }
         else {
             tune.setGender(TuneGender.UNKNOWN);
             Log.w("Cargo TuneHandler", "in identify, waiting for MALE/FEMALE/UNKNOWN," +
@@ -288,47 +342,17 @@ public class TuneHandler extends AbstractTagHandler {
     private TuneEvent eventBuilder(Map<String, Object> map, TuneEvent tuneEvent) {
 
         if (tuneEvent == null) {
-            Log.w("Cargo TuneHandler", "trying to set properties on a nil TuneEvent. " +
+            Log.e(this.key+"_handler", "trying to set properties on a nil TuneEvent. " +
                     "Operation has been cancelled");
             return null ;
         }
 
         // for all the different parameters that could be add, we check if they exist,
         // and call on the appropriate TuneEvent method to set it.
-        if (map.containsKey(EVENT_RATING)) {
-            tuneEvent.withRating(getDouble(map, EVENT_RATING, -1));
-            map.remove(EVENT_RATING);
-        }
-        if (map.containsKey(EVENT_DATE1)) {
-            tuneEvent.withDate1(getDate(map, EVENT_DATE1));
-            map.remove(EVENT_DATE1);
-
-            if (map.containsKey(EVENT_DATE2)) {
-                tuneEvent.withDate2(getDate(map, EVENT_DATE2));
-                map.remove(EVENT_DATE2);
-            }
-        }
-        if (map.containsKey(EVENT_REVENUE)) {
-            tuneEvent.withRevenue(getDouble(map, EVENT_REVENUE, -1));
-            map.remove(EVENT_REVENUE);
-        }
-        if (map.containsKey(EVENT_ITEMS)) {
-            tuneEvent.withEventItems(getList(map, EVENT_ITEMS));
-            map.remove(EVENT_ITEMS);
-        }
-        if (map.containsKey(EVENT_LEVEL)) {
-            tuneEvent.withLevel(getInt(map, EVENT_LEVEL, -1));
-            map.remove(EVENT_LEVEL);
-        }
-        if (map.containsKey(EVENT_RECEIPT_DATA)) {
-            tuneEvent.withReceipt(getString(map, EVENT_RECEIPT_DATA),
-                    getString(map, EVENT_RECEIPT_SIGNATURE));
-            map.remove(EVENT_RECEIPT_DATA);
-            map.remove(EVENT_RECEIPT_SIGNATURE);
-        }
-        if (map.containsKey(EVENT_QUANTITY)) {
-            tuneEvent.withQuantity(getInt(map, EVENT_QUANTITY, -1));
-            map.remove(EVENT_QUANTITY);
+        tuneEvent = getEventsWithNumberParameters(map, tuneEvent);
+        tuneEvent = getEventsWithComplexParameters(map, tuneEvent);
+        for (String Param : MIXED_PARAMETERS) {
+            map.remove(Param);
         }
 
         // for all the String format parameters that could be given, we check if they are set, and
@@ -345,13 +369,118 @@ public class TuneHandler extends AbstractTagHandler {
                 }
             }
         }
-        for (Map.Entry<String, Object> entry : map.entrySet())
-        {
-            Log.w("Cargo TuneHandler", " the event builder couldn't find any match with the parameter key ["+entry.getKey()+"] with value ["+entry.getValue().toString()+"]");
+        // info log for unknown entries in the map of parameters
+        Set<String> keys = map.keySet();
+        for (String key : keys) {
+            Log.i(this.key+"_handler", " the event builder couldn't find any match with the " +
+                    "parameter key [" + key + "] with value [" + getString(map, key) + "]");
         }
         return tuneEvent;
     }
 
+    /**
+     * Sets the number parameters which are present in the parameters map as TuneEvent properties
+     *
+     * @param map       the map of parameters
+     * @param tuneEvent the TuneEvent you set the specific properties to
+     * @return          the TuneEvent object with the values correctly set
+     */
+    private TuneEvent getEventsWithNumberParameters(Map<String, Object> map, TuneEvent tuneEvent) {
+        if (map.containsKey(EVENT_RATING)) {
+            double rating = getDouble(map, EVENT_RATING, -1);
+            if (rating != -1) {
+                tuneEvent.withRating(rating);
+                logParamSetWithSuccess(EVENT_RATING, rating);
+            }
+            else
+                logUncastableParam(EVENT_RATING, "double");
+        }
+
+        if (map.containsKey(EVENT_REVENUE)) {
+            double revenue = getDouble(map, EVENT_REVENUE, -1);
+            if (revenue != -1) {
+                tuneEvent.withRevenue(revenue);
+                logParamSetWithSuccess(EVENT_REVENUE, revenue);
+            }
+            else
+                logUncastableParam(EVENT_REVENUE, "double");
+        }
+
+        if (map.containsKey(EVENT_LEVEL)) {
+            int level = getInt(map, EVENT_LEVEL, -1);
+            if (level != -1) {
+                tuneEvent.withLevel(level);
+                logParamSetWithSuccess(EVENT_LEVEL, level);
+            }
+            else
+                logUncastableParam(EVENT_LEVEL, "int");
+        }
+
+        if (map.containsKey(EVENT_QUANTITY)) {
+            int quantity = getInt(map, EVENT_QUANTITY, -1);
+            if (quantity != -1) {
+                tuneEvent.withQuantity(quantity);
+                logParamSetWithSuccess(EVENT_QUANTITY, quantity);
+            }
+            else
+                logUncastableParam(EVENT_QUANTITY, "int");
+        }
+
+        return tuneEvent;
+    }
+
+    /**
+     * Sets the parameters which are present in the parameters map as TuneEvent properties
+     *
+     * @param map       the map of parameters
+     * @param tuneEvent the TuneEvent you set the specific properties to
+     * @return          the TuneEvent object with the values correctly set
+     */
+    private TuneEvent getEventsWithComplexParameters(Map<String, Object> map, TuneEvent tuneEvent) {
+        if (map.containsKey(EVENT_DATE1)) {
+            Date date = getDate(map, EVENT_DATE1);
+            if (date != null) {
+                tuneEvent.withDate1(date);
+                logParamSetWithSuccess(EVENT_DATE1, date);
+
+                if (map.containsKey(EVENT_DATE2)) {
+                    Date date2 = getDate(map, EVENT_DATE2);
+                    if (date2 != null) {
+                        tuneEvent.withDate2(date2);
+                        logParamSetWithSuccess(EVENT_DATE2, date2);
+                    }
+                    else
+                        logUncastableParam(EVENT_DATE2, "date");
+                }
+            }
+            else
+                logUncastableParam(EVENT_DATE1, "date");
+        }
+
+        if (map.containsKey(EVENT_ITEMS)) {
+            List list = getList(map, EVENT_ITEMS);
+            if (list != null) {
+                tuneEvent.withEventItems(list);
+                logParamSetWithSuccess(EVENT_ITEMS, list);
+            }
+            else
+                logUncastableParam(EVENT_ITEMS, "List");
+        }
+
+        if (map.containsKey(EVENT_RECEIPT_DATA)) {
+            String data = getString(map, EVENT_RECEIPT_DATA);
+            String signature = getString(map, EVENT_RECEIPT_SIGNATURE);
+            if (data != null && signature != null) {
+                tuneEvent.withReceipt(data, signature);
+                logParamSetWithSuccess(EVENT_RECEIPT_DATA, data);
+                logParamSetWithSuccess(EVENT_RECEIPT_SIGNATURE, signature);
+            }
+            else
+                logUncastableParam(EVENT_RECEIPT_DATA+" and/or "+EVENT_RECEIPT_SIGNATURE, "String");
+        }
+
+        return tuneEvent;
+    }
 
     /**
      * A callback triggered when an activity starts
@@ -369,7 +498,7 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-        if (init) {
+        if (initialized) {
             tune.setReferralSources(activity);
             tune.measureSession();
         }
@@ -385,15 +514,6 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
     /**
-     * The getter for the init boolean, returning if the tagHandler has been initialized
-     *
-     * @return the boolean
-     */
-    public boolean isInitialized(){
-        return init;
-    }
-
-    /**
      * A callback triggered when an activity stops
      * @param activity  the activity which triggered the callback
      */
@@ -402,7 +522,6 @@ public class TuneHandler extends AbstractTagHandler {
 
     }
 
-
-
-
+/* ********************************************************************************************** */
+    
 }

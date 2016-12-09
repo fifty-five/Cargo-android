@@ -2,16 +2,14 @@ package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
+import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.fiftyfive.cargo.Cargo;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Tracker;
 import com.fiftyfive.cargo.models.Transaction;
 import com.google.android.gms.tagmanager.Container;
-import com.facebook.FacebookSdk;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -31,143 +29,170 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  */
 public class FacebookHandler extends AbstractTagHandler {
 
-    /**
-     * From facebook doc :
-     * The AppEventsLogger class allows the developer to log various types of events back to Facebook.
-     * (https://developers.facebook.com/docs/reference/android/current/class/AppEventsLogger/)
-     */
+/* ************************************ Variables declaration *********************************** */
+
+    /** The AppEventsLogger allows to log various types of events back to Facebook. */
     protected AppEventsLogger facebookLogger;
 
-    final String FB_init = "FB_init";
-    final String FB_tagEvent = "FB_tagEvent";
-    final String FB_purchase = "FB_purchase";
-    final String VALUE_TO_SUM = "valueToSum";
+    /** Constants used to define callbacks in the register and in the execute method */
+    private final String FB_INIT = "FB_init";
+    private final String FB_TAG_EVENT = "FB_tagEvent";
+    private final String FB_PURCHASE = "FB_tagPurchase";
+
+    private final String VALUE_TO_SUM = "valueToSum";
+
+
+/* ************************************ Handler core methods ************************************ */
 
     /**
-     * Init properly facebook SDK
+     * Called by the TagHandlerManager, initialize the core of the handler
      */
     @Override
     public void initialize() {
-        // call on initialize() in AbstractTagHandler class in order to get cargo instance
-        super.initialize();
+        super.initialize("FB", "Facebook");
 
-        FacebookSdk.sdkInitialize(cargo.getApplication());
-        facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
-
-        //todo : check permissions
-        this.valid = FacebookSdk.isInitialized();
+        validate(true);
     }
 
-
     /**
-     * Register the callbacks to GTM. These will be triggered after a tag has been sent
+     * Register the callbacks to the container. After a dataLayer.push(),
+     * these will trigger the execute method of this handler.
      *
      * @param container The instance of the GTM container we register the callbacks to
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback(FB_init, this);
-        container.registerFunctionCallTagCallback(FB_tagEvent, this);
-        container.registerFunctionCallTagCallback(FB_purchase, this);
+        container.registerFunctionCallTagCallback(FB_INIT, this);
+        container.registerFunctionCallTagCallback(FB_TAG_EVENT, this);
+        container.registerFunctionCallTagCallback(FB_PURCHASE, this);
 
     }
 
     /**
-     * This one will be called after a tag has been sent
+     * A callback method for the registered callbacks method name mentioned in the register method.
      *
-     * @param s     The method you aime to call (this should be define in GTM interface)
+     * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
 
-        switch (s) {
-            case FB_init:
-                init(map);
-                break;
-            case FB_tagEvent:
-                tagEvent(map);
-                break;
-            case FB_purchase:
-                purchase(map);
-                break;
-            default:
-                Log.i("Cargo FacebookHandler", " Function "+s+" is not registered");
+        // a check fo the init method
+        if (FB_INIT.equals(s))
+            init(map);
+        // if the SDK is properly initialized, check for which method is called
+        else if (initialized) {
+            switch (s) {
+                case FB_TAG_EVENT:
+                    tagEvent(map);
+                    break;
+                case FB_PURCHASE:
+                    purchase(map);
+                    break;
+                default:
+                    logUnknownFunction(s);
+            }
         }
+        else
+            logUninitializedFramework();
     }
 
+
+
+/* ************************************* SDK initialization ************************************* */
 
     /**
      * The method you need to call first. Register your facebook app id to the facebook SDK
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * application id : the app id facebook gives you when you setup your fb app
-     *              * Tracker.ENABLE_DEBUG : the value of the bool to turn on/off the facebook debug
+     *              * applicationId (String) : the app id facebook gives when you register your app
+     *              * enableDebug (bool) : the value of the bool to turn on/off the facebook debug
      */
     private void init(Map<String, Object> map) {
 
-        if(map.containsKey(Tracker.APPLICATION_ID)){
-            FacebookSdk.setApplicationId(getString(map, Tracker.APPLICATION_ID));
+        String applicationId = getString(map, Tracker.APPLICATION_ID);
+
+        if(applicationId != null) {
+            // Since the applicationId isn't declared in the AndroidManifest, it is a necessity to
+            // set it before initializing the FacebookSDK, or it will throw an error.
+            FacebookSdk.setApplicationId(applicationId);
+            FacebookSdk.sdkInitialize(cargo.getApplication().getApplicationContext());
+            // Initialization of the logger which will send the events to the Fb Analytics interface
+            facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
+            AppEventsLogger.activateApp(cargo.getApplication());
+            logParamSetWithSuccess(Tracker.APPLICATION_ID, applicationId);
+            setInitialized(FacebookSdk.isInitialized());
+        }
+        else {
+            logMissingParam(new String[]{Tracker.APPLICATION_ID}, FB_INIT);
         }
         FacebookSdk.setIsDebugEnabled(getBoolean(map, Tracker.ENABLE_DEBUG, false));
-
     }
+
+
+
+/* ****************************************** Tracking ****************************************** */
 
     /**
      * The method used to send an event to your facebook app
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * event name : the only parameter requested here
-     *              * valueToSum : When reported, all of the valueToSum properties will be summed
-     *                              together. It is an arbitrary number that can represent any value
-     *                              (e.g., a price or a quantity).
+     *              * eventName (String) :  the only parameter requested here
+     *              * valueToSum (Double) : When reported, all of the valueToSum properties will
+     *                                      be summed together. It is an arbitrary number that can
+     *                                      represent any value (e.g., a price or a quantity).
      *              * parameters : any other key in the map will be taken as a parameter linked
-     *                              to the event. You can set up to 25 parameters for a given event.
+     *                             to the event. You can set up to 25 parameters for a given event.
      *
      */
     private void tagEvent(Map<String, Object> map){
 
-        String eventName;
-        double valueToSum;
+        String eventName = getString(map, Event.EVENT_NAME);
+        double valueToSum = getDouble(map, VALUE_TO_SUM, -1);
         Bundle parameters;
 
-        if (!map.containsKey(Event.EVENT_NAME)) {
-            Log.w("Cargo FacebookHandler", " in order to create an event, " +
-                    "an eventName is mandatory. The event hasn't been created.");
-            return ;
-        }
+        if (eventName != null) {
+            map.remove(Event.EVENT_NAME);
 
-        eventName = getString(map, Event.EVENT_NAME);
+            // attach a valueToSum to the event if it exists
+            if (valueToSum >= 0) {
+                map.remove(VALUE_TO_SUM);
 
-        // attach a valueToSum to the event if it exists
-        if (map.containsKey(VALUE_TO_SUM)) {
-            valueToSum = getDouble(map, VALUE_TO_SUM, 0);
-            map.remove(VALUE_TO_SUM);
-
-            // check for parameters and set them to the event if they exist.
-            if (map.size() > 1) {
-                parameters = eventParamBuilder(map);
-                // fire the tag with the given parameters & valueToSum
-                facebookLogger.logEvent(eventName, valueToSum, parameters);
-                return ;
+                // check for parameters and set them to the event if they exist.
+                if (map.size() > 1) {
+                    parameters = eventParamBuilder(map);
+                    // fire the tag with the given parameters & valueToSum
+                    facebookLogger.logEvent(eventName, valueToSum, parameters);
+                    logParamSetWithSuccess(Event.EVENT_NAME, eventName);
+                    logParamSetWithSuccess(VALUE_TO_SUM, valueToSum);
+                    logParamSetWithSuccess("parameters", parameters);
+                }
+                else {
+                    // fire the tag with the given valueToSum
+                    facebookLogger.logEvent(eventName, valueToSum);
+                    logParamSetWithSuccess(Event.EVENT_NAME, eventName);
+                    logParamSetWithSuccess(VALUE_TO_SUM, valueToSum);
+                }
             }
-            // fire the tag with the given valueToSum
-            facebookLogger.logEvent(eventName, valueToSum);
-            return ;
+            // attach parameters to the event if they exist
+            else if (map.size() > 1) {
+                parameters = eventParamBuilder(map);
+                // fire the tag with the given parameters
+                facebookLogger.logEvent(eventName, parameters);
+                logParamSetWithSuccess(Event.EVENT_NAME, eventName);
+                logParamSetWithSuccess("parameters", parameters);
+            }
+            else {
+                // fire the tag
+                facebookLogger.logEvent(eventName);
+                logParamSetWithSuccess(Event.EVENT_NAME, eventName);
+            }
         }
-
-        // attach parameters to the event if they exist
-        if (map.size() > 1) {
-            parameters = eventParamBuilder(map);
-            // fire the tag with the given parameters
-            facebookLogger.logEvent(eventName, parameters);
-            return ;
+        else {
+            logMissingParam(new String[]{Event.EVENT_NAME}, FB_TAG_EVENT);
         }
-
-        // fire the tag
-        facebookLogger.logEvent(eventName);
     }
 
     /**
@@ -175,35 +200,45 @@ public class FacebookHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * cartPrice : represents the amount of money spent on the purchase
-     *              * currencyCode : the code of the currency the purchase has been registered with
+     *              * transactionTotal (Double) : represents the total amount of the purchase
+     *              * transactionCurrencyCode (String) : the code of the currency the purchase
+     *                                                   was made with
      *
      */
     private void purchase (Map<String, Object> map) {
-        if (!map.containsKey(Transaction.TRANSACTION_TOTAL) || !map.containsKey(Transaction.TRANSACTION_CURRENCY_CODE)) {
-            Log.w("Cargo FacebookHandler", " in order to log a purchase, you have to " +
-                    "set a moneySpent and a currencyCode parameters. Operation has been cancelled");
-            return ;
-        }
 
-        double price = getDouble(map, Transaction.TRANSACTION_TOTAL, -1);
+        double total = getDouble(map, Transaction.TRANSACTION_TOTAL, -1);
         String currency = getString(map, Transaction.TRANSACTION_CURRENCY_CODE);
-        facebookLogger.logPurchase(BigDecimal.valueOf(price), Currency.getInstance(currency));
+
+        if (total >= 0 && currency != null){
+            facebookLogger.logPurchase(BigDecimal.valueOf(total), Currency.getInstance(currency));
+            logParamSetWithSuccess(Transaction.TRANSACTION_TOTAL, total);
+            logParamSetWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currency);
+        }
+        else {
+            logMissingParam(new String[]{
+                    Transaction.TRANSACTION_TOTAL,
+                    Transaction.TRANSACTION_CURRENCY_CODE
+            }, FB_PURCHASE);
+        }
     }
+
+
+
+/* ****************************************** Utility ******************************************* */
 
     /**
      * A simple method to put the parameters given in a bundle and to return it
+     * This method is just called from tagEvent method
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
      * @return      the bundle containing all the parameters initially given for an event
      *
      */
-    protected Bundle eventParamBuilder(Map<String, Object> map) {
+    private Bundle eventParamBuilder(Map<String, Object> map) {
 
         Bundle bundle = new Bundle();
-        String eventName = getString(map, Event.EVENT_NAME);
-        map.remove(Event.EVENT_NAME);
 
         Set<String> keys = map.keySet();
         for (String key : keys) {
@@ -218,8 +253,7 @@ public class FacebookHandler extends AbstractTagHandler {
             else if (map.get(key) instanceof Integer)
                 bundle.putInt(key, getInt(map, key, 0));
             else
-                Log.i("Cargo FacebookHandler", " parameter with key " + key + " isn't " +
-                    "recognize as String, Boolean or int and will be ignored for event " + eventName);
+                logUncastableParam(key, "String/Boolean/Int");
         }
         return bundle;
     }
@@ -242,7 +276,10 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-        AppEventsLogger.activateApp(activity);
+        if (isInitialized())
+            AppEventsLogger.activateApp(activity);
+        else
+            logUninitializedFramework();
     }
 
     /**
@@ -253,7 +290,10 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityPaused(Activity activity) {
-        AppEventsLogger.deactivateApp(activity);
+        if (isInitialized())
+            AppEventsLogger.deactivateApp(activity);
+        else
+            logUninitializedFramework();
     }
 
     /**
@@ -267,6 +307,6 @@ public class FacebookHandler extends AbstractTagHandler {
     }
 
 
-
+/* ********************************************************************************************** */
 
 }

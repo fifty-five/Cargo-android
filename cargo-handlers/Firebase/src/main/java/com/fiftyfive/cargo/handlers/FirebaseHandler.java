@@ -22,66 +22,75 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
  * Author : louis
  * Created: 03/11/15
  *
- *  * The class which handles interactions with the Facebook SDK
+ *  * The class which handles interactions with the Firebase SDK
  */
 public class FirebaseHandler extends AbstractTagHandler {
 
-    final String Firebase_init = "Firebase_init";
-    final String Firebase_tagEvent = "Firebase_tagEvent";
-    final String Firebase_identify = "Firebase_identify";
-    final String ENABLE_COLLECTION = "enableCollection";
+/* ************************************ Variables declaration *********************************** */
 
+    /** The tracker of the Firebase SDK which send the events */
     protected FirebaseAnalytics mFirebaseAnalytics;
 
+    /** Constants used to define callbacks in the register and in the execute method */
+    private final String FIR_INIT = "FIR_init";
+    private final String FIR_IDENTIFY = "FIR_identify";
+    private final String FIR_TAG_EVENT = "FIR_tagEvent";
+
+
+
+/* ************************************ Handler core methods ************************************ */
 
     /**
-     * Init properly the SDK, getting the instance of Firebase.
+     * Called by the TagHandlerManager, initialize the core of the handler
      */
     @Override
     public void initialize() {
-        // call on initialize() in AbstractTagHandler class in order to get cargo instance
-        super.initialize();
-
+        super.initialize("FIR", "Firebase");
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(cargo.getApplication());
 
-        this.valid = true;
+        validate(mFirebaseAnalytics != null);
     }
 
     /**
-     * Register the callbacks to GTM. These will be triggered after a dataLayer.push()
+     * Register the callbacks to the container. After a dataLayer.push(),
+     * these will trigger the execute method of this handler.
      *
      * @param container The instance of the GTM container we register the callbacks to
      */
     @Override
     public void register(Container container) {
-        container.registerFunctionCallTagCallback(Firebase_init, this);
-        container.registerFunctionCallTagCallback(Firebase_identify, this);
-        container.registerFunctionCallTagCallback(Firebase_tagEvent, this);
+        container.registerFunctionCallTagCallback(FIR_INIT, this);
+        container.registerFunctionCallTagCallback(FIR_IDENTIFY, this);
+        container.registerFunctionCallTagCallback(FIR_TAG_EVENT, this);
     }
 
     /**
-     * This one will be called after an event has been pushed to the dataLayer
+     * A callback method for the registered callbacks method name mentioned in the register method.
      *
-     * @param s     The method you aime to call (this should be define in GTM interface)
+     * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
 
         switch (s) {
-            case Firebase_init:
+            case FIR_INIT:
                 init(map);
                 break;
-            case Firebase_identify:
+            case FIR_IDENTIFY:
                 identify(map);
                 break;
-            case Firebase_tagEvent:
+            case FIR_TAG_EVENT:
                 tagEvent(map);
                 break;
             default:
-                Log.i("Cargo TuneHandler", "Function "+s+" is not registered");
+                logUnknownFunction(s);
         }
     }
+
+
+
+/* ************************************* SDK initialization ************************************* */
 
     /**
      * The method you may call first if you want to disable the Firebase analytics collection
@@ -89,18 +98,33 @@ public class FirebaseHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method
-     *              * ANALYTICS_COLLECTION : a boolean true/false for collection enabled/disabled
+     *              * enableCollection (boolean) : true(default)/false to enable/disable collection
      */
     private void init(Map<String, Object> map) {
+        final String ENABLE_COLLECTION = "enableCollection";
 
         if (map.containsKey(ENABLE_COLLECTION)) {
             boolean enabled = getBoolean(map, ENABLE_COLLECTION, true);
             mFirebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+            logParamSetWithSuccess(ENABLE_COLLECTION, enabled);
+            if (!enabled) {
+                Log.w(this.key + "_handler", "The analytics collection has been disabled, " +
+                        "you won't be able to send anything to the Firebase console. " +
+                        "Call on the " + FIR_INIT + " method with the " + ENABLE_COLLECTION +
+                        " parameter set to true to enable the collection again.");
+            }
+        }
+        else {
+            logMissingParam(new String[]{ENABLE_COLLECTION}, FIR_INIT);
         }
     }
 
+
+
+/* ****************************************** Tracking ****************************************** */
+
     /**
-     * In order to identify the user as a unique visitor, with a custom ID
+     * In order to identify users as unique visitor. Setting the userId to null removes the user ID.
      * You may supply up to 25 unique UserProperties per app, and you can use the name
      * and value of your choosing for each one. UserProperty names can be up to 24 characters
      * long, may only contain alphanumeric characters and underscores ("_"), and must start
@@ -110,16 +134,30 @@ public class FirebaseHandler extends AbstractTagHandler {
      *
      * @param map    the parameters given at the moment of the dataLayer.push(),
      *               passed through the GTM container and the execute method.
-     *               * USER_ID is the only parameter requested here
+     *               * userId (String) : the identifier for a unique user (mandatory)
      *               * some user properties you may want to set
      */
     private void identify(Map<String, Object> map) {
+        String userId = getString(map, User.USER_ID);
+        String tempValue;
+
         if (map.containsKey(User.USER_ID)) {
-            mFirebaseAnalytics.setUserId(getString(map, User.USER_ID));
+            mFirebaseAnalytics.setUserId(userId);
+            logParamSetWithSuccess(User.USER_ID, (userId == null ? "null" : userId));
             map.remove(User.USER_ID);
         }
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            mFirebaseAnalytics.setUserProperty(entry.getKey(), getString(map, entry.getKey()));
+        // all the other parameters in the map are considered as extra user properties
+        if (!map.isEmpty()) {
+            Set<String> keys = map.keySet();
+            for (String key : keys) {
+                tempValue = getString(map, key);
+                if (tempValue != null) {
+                    mFirebaseAnalytics.setUserProperty(key, tempValue);
+                    logParamSetWithSuccess(key, tempValue);
+                }
+                else
+                    logUncastableParam(key, "String");
+            }
         }
     }
 
@@ -136,40 +174,47 @@ public class FirebaseHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              * EVENT_NAME : the only parameter requested here
+     *              * eventName (String) : the only parameter requested here
      */
     private void tagEvent(Map<String, Object> map) {
+        String eventName = getString(map, Event.EVENT_NAME);
 
         // check for the eventName parameter. If it doesn't exist, the tag is aborted
-        if (map.containsKey(Event.EVENT_NAME)) {
-            String eventName = map.remove(Event.EVENT_NAME).toString();
-
+        if (eventName != null) {
+            map.remove(Event.EVENT_NAME);
+            logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             // if the map contains other parameters than the event name, loop on the parameters and
             // put them in a bundle in order to send them as event parameters
-            if (map.size() > 0) {
-
+            if (!map.isEmpty()) {
                 Bundle params = new Bundle();
                 Set<String> keys = map.keySet();
 
                 for (String key : keys) {
-                    if (map.get(key) instanceof String)
+                    if (map.get(key) instanceof String) {
                         params.putString(key, getString(map, key));
-                    else if (map.get(key) instanceof Long)
+                        logParamSetWithSuccess(key, getString(map, key));
+                    }
+                    else if (map.get(key) instanceof Long) {
                         params.putLong(key, getLong(map, key, 0));
+                        logParamSetWithSuccess(key, getLong(map, key, 0));
+                    }
                     else
-                        Log.i("Cargo FirebaseHandler", " parameter with key " + key + " isn't " +
-                                "recognize as String or long and will be ignored for event " + eventName);
+                        logUncastableParam(key, "String or Long");
                 }
                 mFirebaseAnalytics.logEvent(eventName, params);
                 return;
             }
             // use null which means that there is no parameters
             mFirebaseAnalytics.logEvent(eventName, null);
+            logParamSetWithSuccess("params", "null");
         }
         else
-            Log.w("Cargo FirebaseHandler", " in order to create an event, " +
-                    "an eventName is required. The event hasn't been created.");
+            logMissingParam(new String[]{Event.EVENT_NAME}, FIR_TAG_EVENT);
     }
+
+
+
+/* ****************************************** Utility ******************************************* */
 
     /**
      * A callback triggered when an activity starts
