@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * Author : louis
- * Created: 03/11/15
+ * Created by louis on 03/11/15.
+ * Copyright © 2016 fifty-five All rights reserved.
  *
  * An Abstract class which TagHandlerManager extends from.
  * It defines what methods should be implemented in each handler.
