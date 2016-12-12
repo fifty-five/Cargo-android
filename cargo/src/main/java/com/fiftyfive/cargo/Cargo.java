@@ -29,7 +29,11 @@ public class Cargo {
     /** Used to store initialized handlers and call on their activity life cycle callback methods */
     private TagHandlerManager manager;
 
-
+    private static final String AT_INTERNET = "AT Internet";
+    private static final String FACEBOOK = "Facebook";
+    private static final String FIREBASE = "Firebase";
+    private static final String GOOGLE_ANALYTICS = "Google Analytics";
+    private static final String TUNE = "Tune";
 
 /* *************************************** Init methods ***************************************** */
 
@@ -70,7 +74,7 @@ public class Cargo {
      */
     public static Cargo getInstance(){
         if(!init){
-            Log.w("55", "Cargo instance must be initialized, null will be return");
+            Log.w(TAG, "Cargo instance must be initialized, null will be return");
         }
         return instance;
     }
@@ -80,20 +84,54 @@ public class Cargo {
 /* ****************************** Handler registration methods ********************************** */
 
     /**
-     * Register the handlers after the package name of their classes (hardcoded for now)
-     * Calls on Cargo.register(String classPath)
+     * Instantiate several handlers in the same time.
+     * It has to be called once Cargo has been initialized.
+     *
+     * @param handlers An array of Handler enums corresponding to the handlers to instantiate.
      */
-    public void registerHandlers(){
+    public void registerHandlers(Handler[] handlers){
         if(!init){
-            Log.w("55", "You should init Cargo before registering handlers");
+            Log.w(TAG, "You should initialize Cargo before trying to register handlers");
             return;
         }
 
-        register("com.fiftyfive.cargo.handlers.ATInternetHandler");
-        register("com.fiftyfive.cargo.handlers.FacebookHandler");
-        register("com.fiftyfive.cargo.handlers.FirebaseHandler");
-        register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
-        register("com.fiftyfive.cargo.handlers.TuneHandler");
+        for (Handler handler : handlers) {
+            registerHandler(handler);
+        }
+    }
+
+    /**
+     * Instantiate the handler from the Handler enum passed as parameter.
+     * It has to be called once Cargo has been initialized.
+     *
+     * @param handler The Handler enum corresponding to the handler to instantiate.
+     */
+    public void registerHandler(Handler handler) {
+        if(!init){
+            Log.w(TAG, "You should initialize Cargo before trying to register handlers");
+            return;
+        }
+
+        switch (handler.toString()) {
+            case AT_INTERNET:
+                register("com.fiftyfive.cargo.handlers.ATInternetHandler");
+                break;
+            case FACEBOOK:
+                register("com.fiftyfive.cargo.handlers.FacebookHandler");
+                break;
+            case FIREBASE:
+                register("com.fiftyfive.cargo.handlers.FirebaseHandler");
+                break;
+            case GOOGLE_ANALYTICS:
+                register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
+                break;
+            case TUNE:
+                register("com.fiftyfive.cargo.handlers.TuneHandler");
+                break;
+            default:
+                Log.w(TAG, handler.toString()+" hasn't been recognized as a correct " +
+                        "handler and won't be initialized");
+        }
     }
 
     /**
@@ -138,6 +176,24 @@ public class Cargo {
 
     }
 
+    public enum Handler {
+        AT(AT_INTERNET),
+        FB(FACEBOOK),
+        FIR(FIREBASE),
+        GA(GOOGLE_ANALYTICS),
+        TUN(TUNE);
+
+        private final String stringValue;
+
+        private Handler(String toString) {
+            stringValue = toString;
+        }
+
+        @Override
+        public String toString() {
+            return stringValue;
+        }
+    }
 
 
 /* ************************************** Getters - Setters ************************************* */
