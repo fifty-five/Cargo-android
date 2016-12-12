@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Author : louis
- * Created: 04/11/15
+ * Created by louis on 04/11/15.
+ * Copyright © 2016 fifty-five All rights reserved.
  *
  * The TagHandlerManager stores all the registered handlers.
  * Since the class implements ActivityLifecycleCallbacks,

@@ -19,8 +19,8 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 
 /**
- * Author : louis
- * Created: 03/11/15
+ * Created by louis on 03/11/15.
+ * Copyright © 2016 fifty-five All rights reserved.
  *
  *  * The class which handles interactions with the Firebase SDK
  */
