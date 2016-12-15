@@ -2,23 +2,24 @@
 
 ext {
     bintrayRepo = 'maven'
-    bintrayName = 'Cargo-Android'
+    bintrayName = 'cargo-android'
 
 
     publishedGroupId = 'com.fiftyfive.cargo'
-    libraryName = 'Cargo-Android'
+    libraryName = 'cargo-android'
     artifact = ARTIFACT
 
 
-    libraryDescription = 'Cargo-Android ease third party integration to Google Tag Manager'
+    libraryDescription = 'Cargo makes it easy and quick to integrate analytics third party SDK ' +
+            'in your app through Google Tag Manager'
 
     siteUrl = 'https://github.com/fifty-five/Cargo-android'
     gitUrl = 'https://github.com/fifty-five/Cargo-android.git'
 
-    libraryVersion = System.getenv('CARGOVERSION')
+    libraryVersion = '0.4.2'
 
-    developerId = 'louischavane'
-    developerName = 'Louis Chavane'
+    developerId = 'juliengil'
+    developerName = 'Julien Gil'
     developerEmail = 'contact@fifty-five.com'
 
     licenseName = 'The Apache Software License, Version 2.0'
