@@ -18,7 +18,9 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
-
+    }
+    tasks.withType(Javadoc).all {
+        enabled = false
     }
 }
 
