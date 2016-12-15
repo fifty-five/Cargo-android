@@ -136,7 +136,7 @@ public class Cargo {
 
     /**
      * Register the class from its classpath
-     * Calls on register(Class<AbstractTagHandler> tagHandler) if the Class has been found.
+     * Calls on register(which takes tagHandler Class as parameter) if the Class has been found.
      * Throws a ClassNotFoundException if not.
      *
      * @param classPath     the class path of the handler you want to register
