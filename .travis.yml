@@ -23,7 +23,7 @@ android:
     - sys-img-armeabi-v7a-android-23
 
 script:
-    - ./gradlew test
+    - ./gradlew install && ./gradlew test
 
 notifications:
   slack: cargo55:q9T7nhZcJ7J0Gkl7UG2oVXao
