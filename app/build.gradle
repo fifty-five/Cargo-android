@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.fiftyfive.cargo_android"
@@ -28,11 +28,11 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.google.android.gms:play-services:9.2.0'
     compile project(':cargo')
-    compile project(':cargo-handlers:ATInternet')
-    compile project(':cargo-handlers:Facebook')
-    compile project(':cargo-handlers:Firebase')
-    compile project(':cargo-handlers:GoogleAnalytics')
-    compile project(':cargo-handlers:Tune')
+    compile project(':cargo-handlers:atinternet')
+    compile project(':cargo-handlers:facebook')
+    compile project(':cargo-handlers:firebase')
+    compile project(':cargo-handlers:google-analytics')
+    compile project(':cargo-handlers:tune')
     compile 'com.android.support:multidex:1.0.0'
 }
 

@@ -1,6 +1,7 @@
 package com.fiftyfive.cargo;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import com.google.android.gms.tagmanager.Container;
 
@@ -22,8 +23,8 @@ public class Cargo {
     /** A boolean which defines whether the instance has been correctly initialized */
     private static boolean init = false;
 
-    /** An instance of the application within Cargo is instantiated */
-    private Application application;
+    /** An instance of the appContext within Cargo is instantiated */
+    private Context appContext;
     /** The container which contains tags, triggers and variables defined in the GTM interface */
     private Container container;
     /** Used to store initialized handlers and call on their activity life cycle callback methods */
@@ -41,16 +42,16 @@ public class Cargo {
      * Initialize and setup cargo
      * Static method, its call should be followed by Cargo.getInstance()
      *
-     * @param application   Your application instance
+     * @param application   Your appContext instance
      * @param container     The GTM container
      */
     public static void init(Application  application, Container container ){
         if (!init){
             instance = new Cargo();
-            instance.setApplication(application);
+            instance.setAppContext(application.getApplicationContext());
             instance.setContainer(container);
 
-            instance.initManager();
+            instance.initManager(application);
             init = true;
         }
         else
@@ -58,10 +59,12 @@ public class Cargo {
     }
 
     /**
-     * Initialize the TagHandlerManager and register to the application life cycle callbacks.
+     * Initialize the TagHandlerManager and register to the appContext life cycle callbacks.
      * at any onStart, onStop, onResume, onPause, a callback method will be also called within the handlers
+     *
+     * @param application   the application instance
      */
-    private void initManager(){
+    private void initManager(Application application){
         manager = new TagHandlerManager();
         application.registerActivityLifecycleCallbacks(manager);
     }
@@ -136,7 +139,7 @@ public class Cargo {
 
     /**
      * Register the class from its classpath
-     * Calls on register(Class<AbstractTagHandler> tagHandler) if the Class has been found.
+     * Calls on register(which takes tagHandler Class as parameter) if the Class has been found.
      * Throws a ClassNotFoundException if not.
      *
      * @param classPath     the class path of the handler you want to register
@@ -199,22 +202,22 @@ public class Cargo {
 /* ************************************** Getters - Setters ************************************* */
 
     /**
-     * Gets the application context Cargo has been instantiated with.
+     * Gets the appContext context Cargo has been instantiated with.
      *
-     * @return Application      the application context
+     * @return appContext  the appContext context
      */
-    public Application getApplication() {
-        return application;
+    public Context getAppContext() {
+        return appContext;
     }
 
     /**
      * Reset the Application context as long as the parameter isn't a null value
      *
-     * @param app   the new Application context you want cargo to be set with
+     * @param appContext   the new Application context you want cargo to be set with
      */
-    private void setApplication(Application app) {
-        if (app != null)
-            this.application = app;
+    private void setAppContext(Context appContext) {
+        if (appContext != null)
+            this.appContext = appContext;
     }
 
     /**
