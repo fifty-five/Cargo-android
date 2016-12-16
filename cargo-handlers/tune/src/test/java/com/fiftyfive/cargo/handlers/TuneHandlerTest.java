@@ -69,7 +69,7 @@ public class TuneHandlerTest extends TestCase {
 /* **************************************** Init Tests ****************************************** */
 
     public void testInitWithAllParameters(){
-        when(cargo.getApplication()).thenReturn(context);
+        when(cargo.getAppContext()).thenReturn(context);
         PowerMockito.mockStatic(Tune.class);
 
         HashMap<String, Object> map= new HashMap<>();
@@ -83,7 +83,7 @@ public class TuneHandlerTest extends TestCase {
     }
 
     public void testInitWithWrongParameters(){
-        when(cargo.getApplication()).thenReturn(context);
+        when(cargo.getAppContext()).thenReturn(context);
         HashMap<String, Object> map= new HashMap<>();
         map.put("conversionKey", 432);
 

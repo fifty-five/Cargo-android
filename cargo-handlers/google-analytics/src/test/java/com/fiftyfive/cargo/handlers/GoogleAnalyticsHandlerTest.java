@@ -56,7 +56,7 @@ public class GoogleAnalyticsHandlerTest extends TestCase {
     public void setUp() throws Exception {
         initMocks(this);
 
-        when(cargo.getApplication()).thenReturn(context);
+        when(cargo.getAppContext()).thenReturn(context);
         PowerMockito.whenNew(EventBuilderGA.class).withNoArguments().thenReturn(eventMock);
         when(eventMock.getEvent()).thenReturn(new HitBuilders.EventBuilder().setAction("").setCategory(""));
 

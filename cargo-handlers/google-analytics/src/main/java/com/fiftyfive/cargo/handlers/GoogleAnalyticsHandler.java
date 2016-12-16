@@ -56,7 +56,7 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
     @Override
     public void initialize() {
         super.initialize("GA", "Google Analytics");
-        analytics = GoogleAnalytics.getInstance(cargo.getApplication());
+        analytics = GoogleAnalytics.getInstance(cargo.getAppContext());
 
         validate(analytics != null);
     }

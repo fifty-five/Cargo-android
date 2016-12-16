@@ -156,7 +156,7 @@ public class TuneHandler extends AbstractTagHandler {
 
         if (advertiserId != null && conversionKey != null) {
             // set the required parameters
-            Tune.init(cargo.getApplication(), advertiserId, conversionKey);
+            Tune.init(cargo.getAppContext(), advertiserId, conversionKey);
 
             // retrieve the Tune instance
             tune = Tune.getInstance();

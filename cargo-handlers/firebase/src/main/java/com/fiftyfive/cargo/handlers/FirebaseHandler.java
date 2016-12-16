@@ -46,7 +46,7 @@ public class FirebaseHandler extends AbstractTagHandler {
     @Override
     public void initialize() {
         super.initialize("FIR", "Firebase");
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(cargo.getApplication());
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(cargo.getAppContext());
 
         validate(mFirebaseAnalytics != null);
     }

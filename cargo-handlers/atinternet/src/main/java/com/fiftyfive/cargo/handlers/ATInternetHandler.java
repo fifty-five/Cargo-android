@@ -1,10 +1,8 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
-import android.app.Application;
 import android.util.Log;
 
-import com.atinternet.tracker.ATInternet;
 import com.atinternet.tracker.Debugger;
 import com.atinternet.tracker.Gesture;
 import com.atinternet.tracker.SetConfigCallback;
@@ -59,8 +57,8 @@ public class ATInternetHandler extends AbstractTagHandler {
     @Override
     public void initialize() {
         super.initialize("AT", "AT Internet");
-//        atTracker = ((ATInternet)cargo.getApplication()).getDefaultTracker();
-        atTracker = new Tracker(cargo.getApplication().getApplicationContext());
+//        atTracker = ((ATInternet)cargo.getAppContext()).getDefaultTracker();
+        atTracker = new Tracker(cargo.getAppContext());
 
         validate(atTracker != null);
     }

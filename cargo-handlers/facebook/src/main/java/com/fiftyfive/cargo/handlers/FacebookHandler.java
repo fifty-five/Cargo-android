@@ -117,10 +117,10 @@ public class FacebookHandler extends AbstractTagHandler {
             // Since the applicationId isn't declared in the AndroidManifest, it is a necessity to
             // set it before initializing the FacebookSDK, or it will throw an error.
             FacebookSdk.setApplicationId(applicationId);
-            FacebookSdk.sdkInitialize(cargo.getApplication().getApplicationContext());
+            FacebookSdk.sdkInitialize(cargo.getAppContext());
             // Initialization of the logger which will send the events to the Fb Analytics interface
-            facebookLogger = AppEventsLogger.newLogger(cargo.getApplication());
-            AppEventsLogger.activateApp(cargo.getApplication());
+            facebookLogger = AppEventsLogger.newLogger(cargo.getAppContext());
+            AppEventsLogger.activateApp(cargo.getAppContext());
             logParamSetWithSuccess(Tracker.APPLICATION_ID, applicationId);
             setInitialized(FacebookSdk.isInitialized());
         }
