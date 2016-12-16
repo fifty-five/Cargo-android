@@ -4,41 +4,21 @@
 ![Build Status](https://travis-ci.org/fifty-five/Cargo-android.svg?branch=master)
 
 
-## Mission
+### The goal of Cargo
 Cargo is a tool developed by [fifty-five](http://fifty-five.com).
-It allows to integrate third party SDK in Google Tag Manager.
+It allows to quickly and easily integrate third-party analytics SDKs through Google Tag Manager.
 
-#### Current supported SDK
-- Tune - Attribution Analytics
+### Google Tag Manager
+With Google Tag Manager (GTM), developers are able to change configuration values in their
+mobile applications using the GTM interface without having to rebuild and resubmit
+app binaries to app marketplaces.
 
+### Current supported SDK
+- AT Internet - v2.2.0
+- Facebook Analytics - v4.10.1
+- Firebase Analytics - v9.2.0
+- Google Analytics - v9.2.0
+- Tune - v4.3.0
 
-#### Google Tag Manager
-Google Tag Manager enables developers to change configuration values in their mobile applications using the Google Tag Manager interface without having to rebuild and resubmit application binaries to app marketplaces.
-
-#### Tracker DataLayer
-
-| Name            | Definittion   |
-|----------       |:-------------|
-| **Tracker DataLayer** |
-| enableDebug     |  Enable debug mode for your tracker |
-| enableOptOut    |  Opt-out tracking for a specific customer |
-| disableTracking |  Disable all tracking |
-| dispatchPeriod   |  Define an interval of time to dispatch hits |
-| **Screen DataLayer** |
-| screenName     |  Name of the screen |
-| **Event DataLayer** |
-| eventName     |  Name of the event |
-| **User DataLayer** |
-| userGoogleId     |  Google Id of the user |
-| userFacebookId     |  Facebook Id of the user |
-| userId     |  CRM Id of the user |
-| **Transaction DataLayer** |
-| transactionId       |  A unique Id of the transaction |
-| transactionTotal    |  Total amount of the transaction |
-| transactionProducts |  An array of products in the transaction |
-| **Product DataLayer** |
-| name                |  Name of the product |
-| sku                 | Sku of the product |
-| price               |  Price of the product |
-| category            |  Category of the product |
-| quantity            |  Quantity of the product |
+### How to integrate Cargo in my App ?
+Please take a look at our wiki ! Promised, it won't take long ;)
