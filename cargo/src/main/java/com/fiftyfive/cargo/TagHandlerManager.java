@@ -26,9 +26,9 @@ public class TagHandlerManager implements Application.ActivityLifecycleCallbacks
 /* ********************************* Register handlers method *********************************** */
 
     /**
-     * This method is called from the Cargo method register(Class<AbstractTagHandler> tagHandler)
+     * This method is called from the Cargo method register(with tagHandler Class as parameter)
      * It initializes each handler with its own initialize() method
-     * If the initialization is being done without error, stores the handler in the List<AbstractTagHandler>
+     * If the initialization is being done without error, stores the handler in a List.
      *
      * @param tagHandler The handler being registered
      */

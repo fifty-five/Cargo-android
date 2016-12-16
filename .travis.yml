@@ -4,11 +4,11 @@ android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
-    # - platform-tools
-    # - tools
+    - platform-tools
+    - tools
 
     # The BuildTools version used by your project
-    - build-tools-22.0.1
+    - build-tools-23.0.3
 
     # The SDK version used to compile your project
     - android-23
@@ -23,7 +23,7 @@ android:
     - sys-img-armeabi-v7a-android-23
 
 script:
-    - ./gradlew test
+    - ./gradlew install && ./gradlew test
 
 notifications:
   slack: cargo55:q9T7nhZcJ7J0Gkl7UG2oVXao

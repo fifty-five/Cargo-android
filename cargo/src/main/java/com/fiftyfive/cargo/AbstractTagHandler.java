@@ -50,6 +50,9 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      * Stores name and key of the handler, plus the Cargo instance as a variable to
      * allow the handler to access to variables of the cargo instance
      * as they are often needed to setup SDK
+     *
+     * @param hKey  key as a string for this handler
+     * @param hName name of the handler
      */
     public void initialize(String hKey, String hName){
         this.cargo = Cargo.getInstance();
