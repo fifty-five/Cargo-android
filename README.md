@@ -21,4 +21,4 @@ app binaries to app marketplaces.
 - Tune - v4.3.0
 
 ### How to integrate Cargo in my App ?
-Please take a look at our wiki ! Promised, it won't take long ;)
+Please take a look at our [wiki](https://github.com/fifty-five/Cargo-android/wiki) ! Promised, it won't take long ;)
