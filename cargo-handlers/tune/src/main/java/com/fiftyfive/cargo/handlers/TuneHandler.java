@@ -27,9 +27,9 @@ import static com.fiftyfive.cargo.ModelsUtils.getString;
 
 /**
  * Created by Julien Gil on 03/04/16.
- * Copyright © 2016 fifty-five All rights reserved.
+ * Copyright 2016 fifty-five All rights reserved.
  *
- *  * The class which handles interactions with the Tune SDK
+ * The class which handles interactions with the Tune SDK
  */
 public class TuneHandler extends AbstractTagHandler {
 
