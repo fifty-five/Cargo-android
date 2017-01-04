@@ -9,11 +9,11 @@ import java.util.List;
 
 /**
  * Created by louis on 04/11/15.
- * Copyright © 2016 fifty-five All rights reserved.
+ * Copyright 2016 fifty-five All rights reserved.
  *
  * The TagHandlerManager stores all the registered handlers.
- * Since the class implements ActivityLifecycleCallbacks,
- * it calls on the associated method in each handler when a callback is triggered.
+ * Since the class implements ActivityLifecycleCallbacks, it calls on the associated method
+ * in each handler when an activity lifecycle callback is triggered.
  */
 public class TagHandlerManager implements Application.ActivityLifecycleCallbacks {
 

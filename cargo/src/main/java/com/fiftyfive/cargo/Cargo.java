@@ -7,7 +7,7 @@ import com.google.android.gms.tagmanager.Container;
 
 /**
  * Created by louis on 03/11/15.
- * Copyright © 2016 fifty-five All rights reserved.
+ * Copyright 2016 fifty-five All rights reserved.
  *
  * The core of Cargo. Initialize the handlers.
  */
@@ -179,11 +179,19 @@ public class Cargo {
 
     }
 
+    /**
+     * An enum which allows to initialize the desired handlers without any risk of mistake.
+     */
     public enum Handler {
+        /** The enum constant for the AT Internet handler */
         AT(AT_INTERNET),
+        /** The enum constant for the Facebook handler */
         FB(FACEBOOK),
+        /** The enum constant for the Firebase handler */
         FIR(FIREBASE),
+        /** The enum constant for the Google Analytics handler */
         GA(GOOGLE_ANALYTICS),
+        /** The enum constant for the Tune handler */
         TUN(TUNE);
 
         private final String stringValue;
@@ -192,6 +200,11 @@ public class Cargo {
             stringValue = toString;
         }
 
+        /**
+         * Returns the string value of the Handler constant.
+         *
+         * @return the string value for the constant it is called from.
+         */
         @Override
         public String toString() {
             return stringValue;
