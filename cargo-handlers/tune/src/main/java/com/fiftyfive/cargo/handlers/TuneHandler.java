@@ -18,12 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static com.fiftyfive.cargo.ModelsUtils.getDate;
-import static com.fiftyfive.cargo.ModelsUtils.getDouble;
-import static com.fiftyfive.cargo.ModelsUtils.getInt;
-import static com.fiftyfive.cargo.ModelsUtils.getList;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
-
+import static com.fiftyfive.cargo.ModelsUtils.*;
 
 /**
  * Created by Julien Gil on 03/04/16.
@@ -35,8 +30,9 @@ public class TuneHandler extends AbstractTagHandler {
 
 /* ************************************ Variables declaration *********************************** */
 
-    /** advertiserId and conversionKey are two mandatory parameters to initialize the Tune SDK */
+    /** advertiserId is one of the two parameters required to initialize the Tune SDK */
     final String ADVERTISER_ID = "advertiserId";
+    /** conversionKey is one of the two parameters required to initialize the Tune SDK */
     final String CONVERSION_KEY = "conversionKey";
 
     /** The tracker of the Tune SDK which send the events */
@@ -58,7 +54,8 @@ public class TuneHandler extends AbstractTagHandler {
     private final String EVENT_RECEIPT_SIGNATURE = "eventReceiptSignature";
     private final String EVENT_QUANTITY = "eventQuantity";
 
-    final String[] MIXED_PARAMETERS = {
+    /** The above parameters in an array, which is used to clean the map of parameters */
+    private final String[] MIXED_PARAMETERS = {
             EVENT_RATING,
             EVENT_DATE1,
             EVENT_DATE2,
@@ -70,9 +67,9 @@ public class TuneHandler extends AbstractTagHandler {
             EVENT_QUANTITY
     };
 
-    /** the formatted name "eventRandomAttribute" is important here as the string is used in the
+    /** the formatted name "eventAttributeName" is important here as the string is used in the
         eventBuilder method to call on TuneEvent methods. */
-    final String[] EVENT_PROPERTIES = {
+    private final String[] EVENT_PROPERTIES = {
             "eventCurrencyCode",
             "eventAdvertiserRefId",
             "eventContentId",

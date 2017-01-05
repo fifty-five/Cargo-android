@@ -16,9 +16,7 @@ import com.google.android.gms.tagmanager.Container;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
-import static com.fiftyfive.cargo.ModelsUtils.getInt;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
+import static com.fiftyfive.cargo.ModelsUtils.*;
 import static com.fiftyfive.cargo.models.Tracker.LEVEL2;
 
 /**

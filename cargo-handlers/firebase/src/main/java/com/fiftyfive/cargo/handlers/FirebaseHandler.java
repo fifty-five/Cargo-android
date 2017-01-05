@@ -13,9 +13,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.Map;
 import java.util.Set;
 
-import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
-import static com.fiftyfive.cargo.ModelsUtils.getLong;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
+import static com.fiftyfive.cargo.ModelsUtils.*;
 
 
 /**

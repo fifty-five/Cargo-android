@@ -16,10 +16,7 @@ import java.util.Currency;
 import java.util.Map;
 import java.util.Set;
 
-import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
-import static com.fiftyfive.cargo.ModelsUtils.getDouble;
-import static com.fiftyfive.cargo.ModelsUtils.getInt;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
+import static com.fiftyfive.cargo.ModelsUtils.*;
 
 /**
  * Created by louis on 03/11/15.

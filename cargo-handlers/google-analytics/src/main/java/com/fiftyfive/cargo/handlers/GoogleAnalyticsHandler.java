@@ -13,10 +13,7 @@ import com.google.android.gms.tagmanager.Container;
 
 import java.util.Map;
 
-import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
-import static com.fiftyfive.cargo.ModelsUtils.getInt;
-import static com.fiftyfive.cargo.ModelsUtils.getLong;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
+import static com.fiftyfive.cargo.ModelsUtils.*;
 
 /**
  * Created by dali on 25/11/15.
