@@ -5,7 +5,7 @@ ext {
     bintrayName = 'cargo-android'
 
 
-    publishedGroupId = 'com.fiftyfive.cargo'
+    publishedGroupId = 'com.fifty-five.cargo'
     libraryName = 'cargo-android'
     artifact = ARTIFACT
 
@@ -16,7 +16,7 @@ ext {
     siteUrl = 'https://github.com/fifty-five/Cargo-android'
     gitUrl = 'https://github.com/fifty-five/Cargo-android.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.1-beta'
 
     developerId = 'juliengil'
     developerName = 'Julien Gil'
