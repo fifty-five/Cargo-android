@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Created by louis on 02/12/15.
- * Copyright © 2016 fifty-five All rights reserved.
+ * Copyright 2016 fifty-five All rights reserved.
  *
  * A tool class which is used to retrieve a specific typed object within a Map from its key.
  */
@@ -72,6 +72,9 @@ public class ModelsUtils {
         Object value = params.get(name);
         if (value instanceof Date){
             return (Date) value;
+        }
+        else if (value instanceof Long) {
+            return new Date((Long)value);
         }
         else if (value instanceof String) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

@@ -16,14 +16,11 @@ import java.util.Currency;
 import java.util.Map;
 import java.util.Set;
 
-import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
-import static com.fiftyfive.cargo.ModelsUtils.getDouble;
-import static com.fiftyfive.cargo.ModelsUtils.getInt;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
+import static com.fiftyfive.cargo.ModelsUtils.*;
 
 /**
  * Created by louis on 03/11/15.
- * Copyright © 2016 fifty-five All rights reserved.
+ * Copyright 2016 fifty-five All rights reserved.
  *
  * The class which handles interactions with the Facebook SDK
  */
@@ -76,6 +73,7 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
+        logReceivedFunction(s, map);
 
         // a check fo the init method
         if (FB_INIT.equals(s))
