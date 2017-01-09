@@ -73,6 +73,9 @@ public class ModelsUtils {
         if (value instanceof Date){
             return (Date) value;
         }
+        else if (value instanceof Long) {
+            return new Date((Long)value);
+        }
         else if (value instanceof String) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             try {
