@@ -9,9 +9,13 @@ import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.tune.Tune;
 import com.tune.TuneEvent;
+import com.tune.TuneEventItem;
 import com.tune.TuneGender;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -116,6 +120,7 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
+        logReceivedFunction(s, map);
 
         if (TUN_INIT.equals(s))
             init(map);
@@ -455,13 +460,18 @@ public class TuneHandler extends AbstractTagHandler {
         }
 
         if (map.containsKey(EVENT_ITEMS)) {
-            List list = getList(map, EVENT_ITEMS);
-            if (list != null) {
-                tuneEvent.withEventItems(list);
-                logParamSetWithSuccess(EVENT_ITEMS, list);
+            String jsonString = getString(map, EVENT_ITEMS);
+            if (jsonString != null) {
+                List items = getItems(jsonString);
+                if (items != null) {
+                    tuneEvent.withEventItems(items);
+                    logParamSetWithSuccess(EVENT_ITEMS, items);
+                }
+                else
+                    logUncastableParam(EVENT_ITEMS, "List");
             }
             else
-                logUncastableParam(EVENT_ITEMS, "List");
+                logUncastableParam(EVENT_ITEMS, "String");
         }
 
         if (map.containsKey(EVENT_RECEIPT_DATA)) {
@@ -477,6 +487,135 @@ public class TuneHandler extends AbstractTagHandler {
         }
 
         return tuneEvent;
+    }
+
+    /**
+     * Create a List of TuneEventItem objects from a String json formatted.
+     *
+     * @param jsonString the string containing the TuneEventItems in a JSON format
+     * @return the list of TuneEventItem objects
+     */
+    private List<TuneEventItem> getItems(String jsonString) {
+        // transforms the String object into a JSONObject, logs an error in case of fail, returns null
+        JSONObject jsonItems;
+        try {
+            jsonItems = new JSONObject(jsonString);
+        }
+        catch (Throwable t) {
+            logUncastableParam(EVENT_ITEMS, "JSONObject");
+            return null;
+        }
+
+        // fill the List with TuneEventItem objects after they get retrieved from the JSONObject
+        List<TuneEventItem> tuneEventItems = new ArrayList<TuneEventItem>();
+        boolean moreItems = true;
+        int i = 0;
+        while (moreItems) {
+            JSONObject jsonItem;
+            try {
+                jsonItem = jsonItems.getJSONObject(Integer.toString(i++));
+
+                // A method to transform the JSONObject into a TuneEventItem object
+                TuneEventItem item = buildItem(jsonItem);
+                if (item == null) {
+                    logUncastableParam(EVENT_ITEMS, "TuneEventItem");
+                    return null;
+                }
+                tuneEventItems.add(item);
+            }
+            catch (Throwable t) {
+                moreItems = false;
+            }
+        }
+        return tuneEventItems;
+    }
+
+    /**
+     * Creates a TuneEventItem from a JSONObject and fills the required fields.
+     *
+     * @param jsonItem the item with the JSONObject type
+     * @return the item with the correct type, which is TuneEventItem
+     */
+    private TuneEventItem buildItem(JSONObject jsonItem) {
+        // get the name of the object, if it doesn't work, cancel the operation returning null
+        String name = getStringFromJson(jsonItem, "item");
+        if (name != null) {
+            int quantity = getIntFromJson(jsonItem, "quantity");
+            double unitPrice = getDoubleFromJson(jsonItem, "unitPrice");
+            double revenue = getDoubleFromJson(jsonItem, "revenue");
+            String attribute1 = getStringFromJson(jsonItem, "attribute1");
+            String attribute2 = getStringFromJson(jsonItem, "attribute2");
+            String attribute3 = getStringFromJson(jsonItem, "attribute3");
+            String attribute4 = getStringFromJson(jsonItem, "attribute4");
+            String attribute5 = getStringFromJson(jsonItem, "attribute5");
+
+            // fills the attributes of the item if they exist
+            TuneEventItem tuneItem = new TuneEventItem(name.toString());
+            if (quantity != -1)
+                tuneItem.quantity = quantity;
+            if (unitPrice != -1)
+                tuneItem.unitPrice = unitPrice;
+            if (revenue != -1)
+                tuneItem.revenue = revenue;
+            if (attribute1 != null)
+                tuneItem.attribute1 = attribute1;
+            if (attribute2 != null)
+                tuneItem.attribute2 = attribute2;
+            if (attribute3 != null)
+                tuneItem.attribute3 = attribute3;
+            if (attribute4 != null)
+                tuneItem.attribute4 = attribute4;
+            if (attribute5 != null)
+                tuneItem.attribute5 = attribute5;
+
+            return tuneItem;
+        }
+        return null;
+    }
+
+    /**
+     * retrieves an int entry from a JSONObject
+     * @param json the JSONObject you want to retrieve the entry from
+     * @param key the String key the value is stored under.
+     * @return the int value, with -1 in case of missing key
+     */
+    private int getIntFromJson(JSONObject json, String key) {
+        try {
+            return json.getInt(key);
+        }
+        catch (Throwable t) {
+            return -1;
+        }
+    }
+
+    /**
+     * retrieves a double entry from a JSONObject
+     * @param json the JSONObject you want to retrieve the entry from
+     * @param key the String key the value is stored under.
+     * @return the double value, with -1 in case of missing key
+     */
+    private double getDoubleFromJson(JSONObject json, String key) {
+        try {
+            return json.getDouble(key);
+        }
+        catch (Throwable t) {
+            return -1;
+        }
+    }
+
+    /**
+     * retrieves a String entry from a JSONObject
+     * @param json the JSONObject you want to retrieve the entry from
+     * @param key the String key the value is stored under.
+     * @return the String value, null in case of missing key
+     */
+    private String getStringFromJson(JSONObject json, String key) {
+        try {
+            return json.getString(key);
+        }
+        catch (Throwable t) {
+            return null;
+        }
     }
 
     /**
