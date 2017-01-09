@@ -13,14 +13,11 @@ import com.google.android.gms.tagmanager.Container;
 
 import java.util.Map;
 
-import static com.fiftyfive.cargo.ModelsUtils.getBoolean;
-import static com.fiftyfive.cargo.ModelsUtils.getInt;
-import static com.fiftyfive.cargo.ModelsUtils.getLong;
-import static com.fiftyfive.cargo.ModelsUtils.getString;
+import static com.fiftyfive.cargo.ModelsUtils.*;
 
 /**
  * Created by dali on 25/11/15.
- * Copyright © 2016 fifty-five All rights reserved.
+ * Copyright 2016 fifty-five All rights reserved.
  *
  * The class which handles interactions with the Google Analytics SDK.
  */
@@ -84,6 +81,8 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
+        logReceivedFunction(s, map);
+
         if (GA_INIT.equals(s))
             init(map);
         else if (initialized) {

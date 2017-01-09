@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * Created by louis on 03/11/15.
- * Copyright © 2016 fifty-five All rights reserved.
+ * Copyright 2016 fifty-five All rights reserved.
  *
  * An Abstract class which TagHandlerManager extends from.
  * It defines what methods should be implemented in each handler.
@@ -20,19 +20,19 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
 
 /* ************************************ Variables declaration *********************************** */
 
-    /** A boolean which validates or not if the handler has been instantiated */
+    /** Validates whether the SDK has been instantiated. */
     public boolean valid = false;
 
-    /** A boolean which validates or not if the third part SDK has been initialized */
+    /** Validates whether the third part SDK has been correctly initialized. */
     protected boolean initialized = false;
 
-    /** A reference to the Cargo instance, to retrieve easily the context, among other things */
+    /** A reference to the Cargo instance, to retrieve easily the context, among other things. */
     public Cargo cargo;
 
-    /** The name of the handler for the logs */
+    /** Name of the handler, which will be used for the logs. */
     protected String name;
 
-    /** The key of the handler for the logs */
+    /** Key of the handler, which will be used for the logs. */
     protected String key;
 
 
@@ -77,6 +77,14 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      */
     public abstract void execute(String s, Map<String, Object> map);
 
+    /**
+     * Called from the child class in order to verify that the SDK has been correctly initialized.
+     * Sets the handler's "valid" attribute to the value given as parameter,
+     * which is usually the result of a condition checking for the non null value of a SDK instance.
+     * It also logs with verbose if the value is true, or with an error if the value is false.
+     *
+     * @param isValid the value verifying whether the SDK has been correctly instantiated.
+     */
     public void validate(boolean isValid) {
         this.valid = isValid;
         if (isValid)

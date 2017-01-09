@@ -7,7 +7,6 @@ import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.User;
 import com.tune.Tune;
 import com.tune.TuneEvent;
-import com.tune.TuneEventItem;
 import com.tune.TuneGender;
 
 import junit.framework.TestCase;
@@ -19,10 +18,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -141,10 +138,6 @@ public class TuneHandlerTest extends TestCase {
         Date date1 = new Date();
         map.put("eventDate1", date1);
         map.put("eventRevenue", 55.42);
-        List<TuneEventItem> eventItems = new ArrayList<>();
-        eventItems.add(new TuneEventItem("itemName1").withQuantity(55));
-        eventItems.add(new TuneEventItem("itemName2").withQuantity(42));
-        map.put("eventItems", eventItems);
         map.put("eventLevel", 55);
         map.put("eventReceiptData", "test1");
         map.put("eventReceiptSignature", "test 2");
@@ -161,7 +154,6 @@ public class TuneHandlerTest extends TestCase {
         verify(tuneEventMock, times(1)).withDate1(date1);
         verify(tuneEventMock, times(1)).withDate2(date2);
         verify(tuneEventMock, times(1)).withRevenue(55.42);
-        verify(tuneEventMock, times(1)).withEventItems(eventItems);
         verify(tuneEventMock, times(1)).withLevel(55);
         verify(tuneEventMock, times(1)).withReceipt("test1", "test 2");
         verify(tuneEventMock, times(1)).withQuantity(42);
