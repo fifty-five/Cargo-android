@@ -81,6 +81,8 @@ public class GoogleAnalyticsHandler extends AbstractTagHandler {
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
+        logReceivedFunction(s, map);
+
         if (GA_INIT.equals(s))
             init(map);
         else if (initialized) {

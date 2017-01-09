@@ -70,6 +70,7 @@ public class FirebaseHandler extends AbstractTagHandler {
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
+        logReceivedFunction(s, map);
 
         switch (s) {
             case FIR_INIT:

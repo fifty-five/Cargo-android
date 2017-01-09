@@ -73,6 +73,7 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void execute(String s, Map<String, Object> map) {
+        logReceivedFunction(s, map);
 
         // a check fo the init method
         if (FB_INIT.equals(s))
