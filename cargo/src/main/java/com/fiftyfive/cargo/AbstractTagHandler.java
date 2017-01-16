@@ -16,7 +16,7 @@ import java.util.Map;
  * An Abstract class which TagHandlerManager extends from.
  * It defines what methods should be implemented in each handler.
  */
-public abstract class AbstractTagHandler implements Container.FunctionCallTagCallback {
+public abstract class AbstractTagHandler {
 
 /* ************************************ Variables declaration *********************************** */
 
@@ -42,8 +42,7 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     /**
      * Default method.
      */
-    public void initialize(){
-
+    protected void initialize(){
     }
 
     /**
@@ -59,14 +58,6 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
         this.key = hKey;
         this.name = hName;
     }
-
-    /**
-     * Link a callback at a specific trigger for this handler.
-     * eg. of the calls you make :  container.registerFunctionCallTagCallback("handler_init", this);
-     *
-     * @param container     the container you register your callbacks to
-     */
-    public abstract void register(Container container);
 
     /**
      * This method which will allow you to redistribute the callbacks suscribed
