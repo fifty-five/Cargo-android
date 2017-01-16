@@ -50,25 +50,11 @@ public class FirebaseHandler extends AbstractTagHandler {
     }
 
     /**
-     * Register the callbacks to the container. After a dataLayer.push(),
-     * these will trigger the execute method of this handler.
-     *
-     * @param container The instance of the GTM container we register the callbacks to
-     */
-    @Override
-    public void register(Container container) {
-        container.registerFunctionCallTagCallback(FIR_INIT, this);
-        container.registerFunctionCallTagCallback(FIR_IDENTIFY, this);
-        container.registerFunctionCallTagCallback(FIR_TAG_EVENT, this);
-    }
-
-    /**
      * A callback method for the registered callbacks method name mentioned in the register method.
      *
      * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
-    @Override
     public void execute(String s, Map<String, Object> map) {
         logReceivedFunction(s, map);
 

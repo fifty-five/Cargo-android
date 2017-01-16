@@ -2,6 +2,7 @@ package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -52,26 +53,11 @@ public class FacebookHandler extends AbstractTagHandler {
     }
 
     /**
-     * Register the callbacks to the container. After a dataLayer.push(),
-     * these will trigger the execute method of this handler.
-     *
-     * @param container The instance of the GTM container we register the callbacks to
-     */
-    @Override
-    public void register(Container container) {
-        container.registerFunctionCallTagCallback(FB_INIT, this);
-        container.registerFunctionCallTagCallback(FB_TAG_EVENT, this);
-        container.registerFunctionCallTagCallback(FB_PURCHASE, this);
-
-    }
-
-    /**
      * A callback method for the registered callbacks method name mentioned in the register method.
      *
      * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
-    @Override
     public void execute(String s, Map<String, Object> map) {
         logReceivedFunction(s, map);
 
@@ -109,9 +95,11 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     private void init(Map<String, Object> map) {
 
-        String applicationId = getString(map, Tracker.APPLICATION_ID);
+        Double appIdDouble = getDouble(map, Tracker.APPLICATION_ID, 0);
+        Long appIdLong = appIdDouble.longValue();
+        String applicationId = Long.toString(appIdLong);
 
-        if(applicationId != null) {
+        if(appIdLong != 0 && applicationId != null) {
             // Since the applicationId isn't declared in the AndroidManifest, it is a necessity to
             // set it before initializing the FacebookSDK, or it will throw an error.
             FacebookSdk.setApplicationId(applicationId);
@@ -126,6 +114,7 @@ public class FacebookHandler extends AbstractTagHandler {
             logMissingParam(new String[]{Tracker.APPLICATION_ID}, FB_INIT);
         }
         FacebookSdk.setIsDebugEnabled(getBoolean(map, Tracker.ENABLE_DEBUG, false));
+        Log.d(this.key+"_handler", "debug enabled : " + Boolean.toString(FacebookSdk.isDebugEnabled()));
     }
 
 
