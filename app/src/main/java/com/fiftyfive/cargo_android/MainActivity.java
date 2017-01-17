@@ -2,26 +2,17 @@ package com.fiftyfive.cargo_android;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.fiftyfive.cargo.Cargo;
-import com.fiftyfive.cargo.handlers.TuneCustomItem;
-import com.google.android.gms.tagmanager.DataLayer;
-import com.google.android.gms.tagmanager.TagManager;
-import com.tune.Tune;
-import com.tune.TuneEventItem;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    DataLayer dataLayer;
+    FirebaseAnalytics mFirebaseAnalytics;
+
     Cargo.Handler[] handlerArray = new Cargo.Handler[]{
             Cargo.Handler.AT,
             Cargo.Handler.FB,
@@ -34,19 +25,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         // initialize Cargo with the context and the GTM container
         // which has been received in the SplashActivity
-        Cargo.init(this.getApplication(), ContainerHolderSingleton.getContainerHolder().getContainer());
+        Cargo.init(this.getApplication());
 
-        // Register several handlers at a time with an array of Handler enum.
-        Cargo.getInstance().registerHandlers(handlerArray);
+//        // Register several handlers at a time with an array of Handler enum.
+//        Cargo.getInstance().registerHandlers(handlerArray);
         // Register a single handler with a Handler enum
-        Cargo.getInstance().registerHandler(Cargo.Handler.TUN);
-
-        // Retrieve the datalayer in order to send an event which will trigger
-        // all the registered handler's initialization method with required parameters.
-        dataLayer = TagManager.getInstance(this).getDataLayer();
-        dataLayer.pushEvent("applicationStart", new HashMap<String, Object>());
+        Cargo.getInstance().registerHandler(Cargo.Handler.FB);
 
         Button tagEventButton = (Button) findViewById(R.id.tagEventButton);
         Button tagScreenButton = (Button) findViewById(R.id.tagScreenButton);
@@ -56,46 +44,34 @@ public class MainActivity extends AppCompatActivity {
         tagScreenButton.setOnClickListener(tagScreenListener);
         setUserButton.setOnClickListener(setUserListener);
         tagPurchaseButton.setOnClickListener(tagPurchaseListener);
-
+        mFirebaseAnalytics.logEvent("applicationStart", null);
     }
 
     View.OnClickListener tagEventListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
-            TuneCustomItem tuneItem1 = new TuneCustomItem("piano");
-            tuneItem1.setQuantity(15);
-            tuneItem1.setUnitPrice(9.99);
-            tuneItem1.setAttribute1("piano a queue");
-            tuneItem1.setAttribute2("modele enfant");
-
-            dataLayer.pushEvent("tagEvent",
-                    DataLayer.mapOf(
-                            "eventDate1", new Date().getTime(),
-                            "eventItems", TuneCustomItem.toGTM(new TuneCustomItem[]{tuneItem1})
-                    )
-            );
+            mFirebaseAnalytics.logEvent("tagEvent", null);
         }
     };
 
     View.OnClickListener tagScreenListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            dataLayer.pushEvent("openScreen", new HashMap<String, Object>());
+            mFirebaseAnalytics.logEvent("tagScreen", null);
         }
     };
 
     View.OnClickListener setUserListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            dataLayer.pushEvent("identify", new HashMap<String, Object>());
+            mFirebaseAnalytics.logEvent("identify", null);
         }
     };
 
     View.OnClickListener tagPurchaseListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            dataLayer.pushEvent("tagPurchase", new HashMap<String, Object>());
+            mFirebaseAnalytics.logEvent("tagPurchase", null);
         }
     };
 }
