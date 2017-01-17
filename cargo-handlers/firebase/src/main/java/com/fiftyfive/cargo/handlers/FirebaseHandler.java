@@ -7,7 +7,6 @@ import android.util.Log;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.User;
-import com.google.android.gms.tagmanager.Container;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.Map;

@@ -9,7 +9,6 @@ import com.fiftyfive.cargo.models.Tracker;
 import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.tagmanager.Container;
 
 import java.util.Map;
 

@@ -1,7 +1,5 @@
 package com.fiftyfive.cargo;
 
-import android.util.Log;
-
 import java.util.Map;
 
 /**

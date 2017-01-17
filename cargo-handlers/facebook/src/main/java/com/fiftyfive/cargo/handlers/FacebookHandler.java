@@ -10,7 +10,6 @@ import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Tracker;
 import com.fiftyfive.cargo.models.Transaction;
-import com.google.android.gms.tagmanager.Container;
 
 import java.math.BigDecimal;
 import java.util.Currency;
