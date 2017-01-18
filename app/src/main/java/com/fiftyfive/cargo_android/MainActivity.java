@@ -2,22 +2,16 @@ package com.fiftyfive.cargo_android;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.fiftyfive.cargo.Cargo;
-import com.fiftyfive.cargo.handlers.TuneCustomItem;
+import com.fiftyfive.cargo.CargoItem;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
-import com.tune.Tune;
-import com.tune.TuneEventItem;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,16 +57,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
-            TuneCustomItem tuneItem1 = new TuneCustomItem("piano");
+            CargoItem tuneItem1 = new CargoItem("piano");
             tuneItem1.setQuantity(15);
             tuneItem1.setUnitPrice(9.99);
-            tuneItem1.setAttribute1("piano a queue");
+            tuneItem1.setAttribute1("piano droit");
             tuneItem1.setAttribute2("modele enfant");
 
             dataLayer.pushEvent("tagEvent",
                     DataLayer.mapOf(
                             "eventDate1", new Date().getTime(),
-                            "eventItems", TuneCustomItem.toGTM(new TuneCustomItem[]{tuneItem1})
+                            "eventItems", CargoItem.toGTM(new CargoItem[]{tuneItem1})
                     )
             );
         }

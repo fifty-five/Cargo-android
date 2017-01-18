@@ -420,6 +420,8 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
+        if (enableDebug && isInitialized())
+            Debugger.setViewerVisibility(false);
     }
 
 /* ********************************************************************************************** */

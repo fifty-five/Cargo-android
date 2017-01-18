@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
+import com.fiftyfive.cargo.models.Item;
 import com.fiftyfive.cargo.models.User;
 import com.google.android.gms.tagmanager.Container;
 import com.tune.Tune;
@@ -538,16 +539,16 @@ public class TuneHandler extends AbstractTagHandler {
      */
     private TuneEventItem buildItem(JSONObject jsonItem) {
         // get the name of the object, if it doesn't work, cancel the operation returning null
-        String name = getStringFromJson(jsonItem, "item");
+        String name = getStringFromJson(jsonItem, Item.NAME);
         if (name != null) {
-            int quantity = getIntFromJson(jsonItem, "quantity");
-            double unitPrice = getDoubleFromJson(jsonItem, "unitPrice");
-            double revenue = getDoubleFromJson(jsonItem, "revenue");
-            String attribute1 = getStringFromJson(jsonItem, "attribute1");
-            String attribute2 = getStringFromJson(jsonItem, "attribute2");
-            String attribute3 = getStringFromJson(jsonItem, "attribute3");
-            String attribute4 = getStringFromJson(jsonItem, "attribute4");
-            String attribute5 = getStringFromJson(jsonItem, "attribute5");
+            int quantity = getIntFromJson(jsonItem, Item.QUANTITY);
+            double unitPrice = getDoubleFromJson(jsonItem, Item.UNIT_PRICE);
+            double revenue = getDoubleFromJson(jsonItem, Item.REVENUE);
+            String attribute1 = getStringFromJson(jsonItem, Item.ATTR1);
+            String attribute2 = getStringFromJson(jsonItem, Item.ATTR2);
+            String attribute3 = getStringFromJson(jsonItem, Item.ATTR3);
+            String attribute4 = getStringFromJson(jsonItem, Item.ATTR4);
+            String attribute5 = getStringFromJson(jsonItem, Item.ATTR5);
 
             // fills the attributes of the item if they exist
             TuneEventItem tuneItem = new TuneEventItem(name.toString());
