@@ -13,28 +13,10 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseAnalytics mFirebaseAnalytics;
 
-    Cargo.Handler[] handlerArray = new Cargo.Handler[]{
-            Cargo.Handler.AT,
-            Cargo.Handler.FB,
-            Cargo.Handler.FIR,
-            Cargo.Handler.GA
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        // initialize Cargo with the context and the GTM container
-        // which has been received in the SplashActivity
-        Cargo.init(this.getApplication());
-
-//        // Register several handlers at a time with an array of Handler enum.
-//        Cargo.getInstance().registerHandlers(handlerArray);
-        // Register a single handler with a Handler enum
-        Cargo.getInstance().registerHandler(Cargo.Handler.FB);
 
         Button tagEventButton = (Button) findViewById(R.id.tagEventButton);
         Button tagScreenButton = (Button) findViewById(R.id.tagScreenButton);
@@ -44,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         tagScreenButton.setOnClickListener(tagScreenListener);
         setUserButton.setOnClickListener(setUserListener);
         tagPurchaseButton.setOnClickListener(tagPurchaseListener);
-        mFirebaseAnalytics.logEvent("applicationStart", null);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     View.OnClickListener tagEventListener = new View.OnClickListener() {
