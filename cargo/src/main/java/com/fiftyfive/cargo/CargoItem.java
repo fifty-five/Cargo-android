@@ -1,5 +1,7 @@
 package com.fiftyfive.cargo;
 
+import com.fiftyfive.cargo.models.Item;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -93,43 +95,43 @@ public class CargoItem {
             JSONObject jsonObject = new JSONObject();
             for (CargoItem item : itemArray) {
                 JSONObject itemJson = new JSONObject();
-                itemJson.put("name", item.getName());
+                itemJson.put(Item.NAME, item.getName());
                 if (item.getId() != null)
-                    itemJson.put("id", item.getId());
+                    itemJson.put(Item.ID, item.getId());
                 if (item.getUnitPrice() != -1)
-                    itemJson.put("unitPrice", item.getUnitPrice());
+                    itemJson.put(Item.UNIT_PRICE, item.getUnitPrice());
                 if (item.getQuantity() != -1)
-                    itemJson.put("quantity", item.getQuantity());
+                    itemJson.put(Item.QUANTITY, item.getQuantity());
                 if (item.getRevenue() != -1)
-                    itemJson.put("revenue", item.getRevenue());
+                    itemJson.put(Item.REVENUE, item.getRevenue());
                 if (item.getBrand() != null)
-                    itemJson.put("brand", item.getBrand());
+                    itemJson.put(Item.BRAND, item.getBrand());
                 if (item.getCategory() != null)
-                    itemJson.put("category", item.getCategory());
+                    itemJson.put(Item.CATEGORY, item.getCategory());
                 if (item.getId() != null)
-                    itemJson.put("variant", item.getVariant());
+                    itemJson.put(Item.VARIANT, item.getVariant());
                 if (item.getPosition() != -1)
-                    itemJson.put("position", item.getPosition());
+                    itemJson.put(Item.POSITION, item.getPosition());
                 if (item.getCouponCode() != null)
-                    itemJson.put("couponCode", item.getCouponCode());
+                    itemJson.put(Item.COUPON_CODE, item.getCouponCode());
                 if (item.getiDimension() != -1 && item.getvDimension() != null) {
-                    itemJson.put("iDimension", item.getiDimension());
-                    itemJson.put("vDimension", item.getvDimension());
+                    itemJson.put(Item.INDEX_DIM, item.getiDimension());
+                    itemJson.put(Item.VALUE_DIM, item.getvDimension());
                 }
                 if (item.getiMetric() != -1 && item.getvMetric() != -1) {
-                    itemJson.put("iMetric", item.getiMetric());
-                    itemJson.put("iDimension", item.getvMetric());
+                    itemJson.put(Item.INDEX_METRIC, item.getiMetric());
+                    itemJson.put(Item.VALUE_METRIC, item.getvMetric());
                 }
                 if (item.getAttribute1() != null)
-                    itemJson.put("attribute1", item.getAttribute1());
+                    itemJson.put(Item.ATTR1, item.getAttribute1());
                 if (item.getAttribute2() != null)
-                    itemJson.put("attribute2", item.getAttribute2());
+                    itemJson.put(Item.ATTR2, item.getAttribute2());
                 if (item.getAttribute3() != null)
-                    itemJson.put("attribute3", item.getAttribute3());
+                    itemJson.put(Item.ATTR3, item.getAttribute3());
                 if (item.getAttribute4() != null)
-                    itemJson.put("attribute4", item.getAttribute4());
+                    itemJson.put(Item.ATTR4, item.getAttribute4());
                 if (item.getAttribute5() != null)
-                    itemJson.put("attribute5", item.getAttribute5());
+                    itemJson.put(Item.ATTR5, item.getAttribute5());
 
                 jsonObject.put(Integer.toString(i++), itemJson);
             }
@@ -151,25 +153,25 @@ public class CargoItem {
         StringBuilder builder = new StringBuilder();
 
         builder.append("{CargoCustomItem:");
-        builder.append(" name=").append(this.name);
+        builder.append(" "+Item.NAME+"=").append(this.name);
         if (id != null)
-            builder.append(", id=").append(this.id);
+            builder.append(", "+Item.ID+"=").append(this.id);
         if (unitPrice != -1)
-            builder.append(", unitPrice=").append(Double.toString(this.unitPrice));
+            builder.append(", "+Item.UNIT_PRICE+"=").append(Double.toString(this.unitPrice));
         if (quantity != -1)
-            builder.append(", quantity=").append(Integer.toString(this.quantity));
+            builder.append(", "+Item.QUANTITY+"=").append(Integer.toString(this.quantity));
         if (revenue != -1)
-            builder.append(", revenue=").append(Double.toString(this.revenue));
+            builder.append(", "+Item.REVENUE+"=").append(Double.toString(this.revenue));
         if (brand != null)
-            builder.append(", brand=").append(this.brand);
+            builder.append(", "+Item.BRAND+"=").append(this.brand);
         if (category != null)
-            builder.append(", category=").append(this.category);
+            builder.append(", "+Item.CATEGORY+"=").append(this.category);
         if (variant != null)
-            builder.append(", variant=").append(this.variant);
+            builder.append(", "+Item.VARIANT+"=").append(this.variant);
         if (position != -1)
-            builder.append(", position=").append(Integer.toString(this.position));
+            builder.append(", "+Item.POSITION+"=").append(Integer.toString(this.position));
         if (couponCode != null)
-            builder.append(", couponCode=").append(this.couponCode);
+            builder.append(", "+Item.COUPON_CODE+"=").append(this.couponCode);
         if (iDimension != -1 && vDimension != null) {
             builder.append(", customDim='").append(Integer.toString(this.iDimension) + "="
                     + this.vDimension + "'");
@@ -179,15 +181,15 @@ public class CargoItem {
                     + Integer.toString(this.vMetric) + "'");
         }
         if (attribute1 != null)
-            builder.append(", attribute1=").append(this.attribute1);
+            builder.append(", "+Item.ATTR1+"=").append(this.attribute1);
         if (attribute2 != null)
-            builder.append(", attribute2=").append(this.attribute2);
+            builder.append(", "+Item.ATTR2+"=").append(this.attribute2);
         if (attribute3 != null)
-            builder.append(", attribute3=").append(this.attribute3);
+            builder.append(", "+Item.ATTR3+"=").append(this.attribute3);
         if (attribute4 != null)
-            builder.append(", attribute4=").append(this.attribute4);
+            builder.append(", "+Item.ATTR4+"=").append(this.attribute4);
         if (attribute5 != null)
-            builder.append(", attribute5=").append(this.attribute5);
+            builder.append(", "+Item.ATTR5+"=").append(this.attribute5);
         builder.append("}");
         return builder.toString();
     }
