@@ -32,13 +32,10 @@ public class Cargo {
     /** Used to store initialized handlers and call on their activity life cycle callback methods */
     private TagHandlerManager manager;
 
-    private static final String HANDLER_KEY = "handlerKey";
     private static final String HANDLER_METHOD = "handlerMethod";
 
     private static final String AT_INTERNET = "AT Internet";
     private static final String FACEBOOK = "Facebook";
-    private static final String FIREBASE = "Firebase";
-    private static final String GOOGLE_ANALYTICS = "Google Analytics";
     private static final String TUNE = "Tune";
 
 /* *************************************** Init methods ***************************************** */
@@ -123,12 +120,6 @@ public class Cargo {
                 break;
             case FACEBOOK:
                 register("com.fiftyfive.cargo.handlers.FacebookHandler");
-                break;
-            case FIREBASE:
-                register("com.fiftyfive.cargo.handlers.FirebaseHandler");
-                break;
-            case GOOGLE_ANALYTICS:
-                register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
                 break;
             case TUNE:
                 register("com.fiftyfive.cargo.handlers.TuneHandler");
@@ -232,10 +223,6 @@ public class Cargo {
         AT(AT_INTERNET),
         /** The enum constant for the Facebook handler */
         FB(FACEBOOK),
-        /** The enum constant for the Firebase handler */
-        FIR(FIREBASE),
-        /** The enum constant for the Google Analytics handler */
-        GA(GOOGLE_ANALYTICS),
         /** The enum constant for the Tune handler */
         TUN(TUNE);
 
