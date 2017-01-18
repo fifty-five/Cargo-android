@@ -1,4 +1,4 @@
-package com.fiftyfive.cargo.handlers;
+package com.fiftyfive.cargo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * Created by Julien Gil on 06/01/2017.
  */
 
-public class TuneCustomItem {
+public class CargoItem {
 
     /** name of the item */
     private String item;
@@ -30,17 +30,17 @@ public class TuneCustomItem {
 
 
     /**
-     * Constructor for the TuneCustomItem object. Creates the object with an item name.
+     * Constructor for the CargoItem object. Creates the object with an item name.
      * Use these objects in order to send items related hits to the Tune SDK.
      *
      * @param item the name of the item.
      */
-    public TuneCustomItem(String item) {
+    public CargoItem(String item) {
         this.item = item;
     }
 
     /**
-     * Constructor for the TuneCustomItem object.
+     * Constructor for the CargoItem object.
      * Creates the object with an item name, its price, and the quantity selected.
      * The revenue is automatically generated (unitPrice x quantity).
      * Use these objects in order to send items related hits to the Tune SDK.
@@ -49,7 +49,7 @@ public class TuneCustomItem {
      * @param unitPrice the unit price for this item.
      * @param quantity number of items concerned by the hit.
      */
-    public TuneCustomItem(String item, double unitPrice, int quantity) {
+    public CargoItem(String item, double unitPrice, int quantity) {
         this.item = item;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
@@ -58,18 +58,18 @@ public class TuneCustomItem {
 
     /**
      * Static method you have to call in order to send items through GTM with Cargo.
-     * Cargo transforms the TuneCustomItem array into a String containing a JSON object.
+     * Cargo transforms the CargoItem array into a String containing a JSON object.
      * Once GTM transmitted the parameter with the callback,
      * the array is rebuilt with true TuneEventItem objects.
      *
-     * @param itemArray an array of TuneCustomItem to send to the Tune SDK.
+     * @param itemArray an array of CargoItem to send to the Tune SDK.
      * @return a String containing a JSON which represents the array given as parameter.
      */
-    public static String toGTM(TuneCustomItem[] itemArray) {
+    public static String toGTM(CargoItem[] itemArray) {
         int i = 0;
         try {
             JSONObject jsonObject = new JSONObject();
-            for (TuneCustomItem item : itemArray) {
+            for (CargoItem item : itemArray) {
                 JSONObject itemJson = new JSONObject();
                 itemJson.put("item", item.getItem());
                 if (item.getUnitPrice() != -1)
@@ -100,7 +100,7 @@ public class TuneCustomItem {
     }
 
     /**
-     * The toString method for the TuneCustomItem object.
+     * The toString method for the CargoItem object.
      *
      * @return the description of the current object as a String.
      */
