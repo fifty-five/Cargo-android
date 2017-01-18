@@ -1,6 +1,4 @@
 include ':app', ':cargo'
 include ':cargo-handlers:tune'
-include ':cargo-handlers:google-analytics'
 include ':cargo-handlers:facebook'
-include ':cargo-handlers:firebase'
 include ':cargo-handlers:atinternet'
