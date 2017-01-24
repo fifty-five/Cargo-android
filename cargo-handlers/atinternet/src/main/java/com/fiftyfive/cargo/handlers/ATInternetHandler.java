@@ -112,12 +112,14 @@ public class ATInternetHandler extends AbstractTagHandler {
         final String LOG = "log";
         final String LOG_SSL = "logSSL";
 
-        final String siteId = getString(params, SITE);
+        Double appIdDouble = getDouble(params, SITE, 0);
+        Long appIdLong = appIdDouble.longValue();
+        final String siteId = Long.toString(appIdLong);
         final String log = getString(params, LOG);
         final String logSSL = getString(params, LOG_SSL);
         enableDebug = getBoolean(params, com.fiftyfive.cargo.models.Tracker.ENABLE_DEBUG, false);
 
-        if (siteId != null && log != null && logSSL != null) {
+        if (appIdLong != 0 && siteId != null && log != null && logSSL != null) {
             HashMap config = new HashMap<>();
             config.put(SITE, siteId);
             config.put(LOG, log);

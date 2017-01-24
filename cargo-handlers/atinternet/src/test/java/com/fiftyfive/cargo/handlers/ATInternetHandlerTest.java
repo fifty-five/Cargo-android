@@ -93,7 +93,7 @@ public class ATInternetHandlerTest extends TestCase {
     public void testInit(){
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("site", "fifty-five");
+        map.put("site", "123456.0");
         map.put("log", "logc1");
         map.put("logSSL", "logSecure2");
 
