@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -13,9 +13,45 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:text="user name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userNameTextView"
+            android:textAlignment="center" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/usernameInput"
+            android:hint="user name"
+            android:textAlignment="center" />
+
+        <TextView
+            android:text="email adress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mailTextView"
+            android:textAlignment="center" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/mailAdressInput"
+            android:hint="email adress"
+            android:textAlignment="center" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="23dp" />
 
         <Button
             android:text="tag event"
@@ -38,6 +74,24 @@
             android:id="@+id/identifyButton"
             android:layout_centerHorizontal="true" />
 
+        <CheckBox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boxXbox"
+            android:text="xBox One" />
+
+        <CheckBox
+            android:text="Playstation 4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boxPlaystation" />
+
+        <CheckBox
+            android:text="Nintendo Switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boxNintendo" />
+
         <Button
         android:text="tag purchase"
         android:layout_width="match_parent"
@@ -47,4 +101,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>
