@@ -235,8 +235,8 @@ public class TuneHandler extends AbstractTagHandler {
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              The only parameter requested here is a name or an id for the event
-     *              * eventName (String) : the name of the event (mandatory, unless eventId is set)
+     *              The only parameter requested here is an event name
+     *              * eventName (String) : the name of the event (mandatory)
      *              * eventCurrencyCode (String)
      *              * eventAdvertiserRefId (String)
      *              * eventContentId (String)
