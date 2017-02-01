@@ -10,6 +10,9 @@ import com.tune.Tune;
 import com.tune.TuneEvent;
 import com.tune.TuneEventItem;
 import com.tune.TuneGender;
+import com.tune.ma.application.TuneActivity;
+import com.tune.ma.application.TuneActivityLifecycleCallbacks;
+import com.tune.ma.application.TuneApplication;
 
 import org.json.JSONObject;
 
@@ -225,7 +228,7 @@ public class TuneHandler extends AbstractTagHandler {
 
     /**
      * Method used to create and fire an event to the Tune Console
-     * The mandatory parameters are EVENT_NAME or EVENT_ID which are a necessity to build the event
+     * The mandatory parameter is EVENT_NAME which is a necessity to build the event
      * Without this parameter, the event won't be built.
      * After the creation of the event object, some attributes can be added through the eventBuilder
      * method, using the map obtained from the gtm container.
@@ -234,7 +237,6 @@ public class TuneHandler extends AbstractTagHandler {
      *              passed through the GTM container and the execute method.
      *              The only parameter requested here is a name or an id for the event
      *              * eventName (String) : the name of the event (mandatory, unless eventId is set)
-     *              * eventId (int) : id linked to the event (mandatory, unless eventName is set)
      *              * eventCurrencyCode (String)
      *              * eventAdvertiserRefId (String)
      *              * eventContentId (String)
@@ -264,20 +266,8 @@ public class TuneHandler extends AbstractTagHandler {
             logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             map.remove(Event.EVENT_NAME);
         }
-        else if (map.containsKey(Event.EVENT_ID)) {
-            int eventId = getInt(map, Event.EVENT_ID, -1);
-            if (eventId != -1) {
-                tuneEvent = new TuneEvent(eventId);
-                logParamSetWithSuccess(Event.EVENT_ID, eventId);
-                map.remove(Event.EVENT_ID);
-            }
-            else {
-                logUncastableParam(Event.EVENT_ID, "int");
-                return ;
-            }
-        }
         else {
-            logMissingParam(new String[]{Event.EVENT_NAME, Event.EVENT_ID}, TUN_TAG_EVENT);
+            logMissingParam(new String[]{Event.EVENT_NAME}, TUN_TAG_EVENT);
             return ;
         }
 
@@ -394,7 +384,8 @@ public class TuneHandler extends AbstractTagHandler {
         }
 
         if (map.containsKey(EVENT_LEVEL)) {
-            int level = getInt(map, EVENT_LEVEL, -1);
+            Double levelDouble = getDouble(map, EVENT_LEVEL, -1);
+            int level = levelDouble.intValue();
             if (level != -1) {
                 tuneEvent.withLevel(level);
                 logParamSetWithSuccess(EVENT_LEVEL, level);
@@ -404,7 +395,8 @@ public class TuneHandler extends AbstractTagHandler {
         }
 
         if (map.containsKey(EVENT_QUANTITY)) {
-            int quantity = getInt(map, EVENT_QUANTITY, -1);
+            Double quantityDouble = getDouble(map, EVENT_QUANTITY, -1);
+            int quantity = quantityDouble.intValue();
             if (quantity != -1) {
                 tuneEvent.withQuantity(quantity);
                 logParamSetWithSuccess(EVENT_QUANTITY, quantity);
@@ -535,7 +527,7 @@ public class TuneHandler extends AbstractTagHandler {
             String attribute5 = getStringFromJson(jsonItem, "attribute5");
 
             // fills the attributes of the item if they exist
-            TuneEventItem tuneItem = new TuneEventItem(name.toString());
+            TuneEventItem tuneItem = new TuneEventItem(name);
             if (quantity != -1)
                 tuneItem.quantity = quantity;
             if (unitPrice != -1)
@@ -609,7 +601,9 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStarted(Activity activity) {
-
+        if (initialized) {
+            TuneActivity.onStart(activity);
+        }
     }
 
     /**
@@ -620,8 +614,7 @@ public class TuneHandler extends AbstractTagHandler {
     @Override
     public void onActivityResumed(Activity activity) {
         if (initialized) {
-            tune.setReferralSources(activity);
-            tune.measureSession();
+            TuneActivity.onResume(activity);
         }
     }
 
@@ -640,7 +633,9 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
-
+        if (initialized) {
+            TuneActivity.onStop(activity);
+        }
     }
 
 /* ********************************************************************************************** */
