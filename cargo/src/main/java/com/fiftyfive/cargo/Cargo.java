@@ -197,7 +197,7 @@ public class Cargo {
                         "for the handler matching the '"+ handlerKey +"' key.");
                 List<AbstractTagHandler> handlers = manager.getHandlers();
                 for (AbstractTagHandler handler : handlers) {
-                    if (handlerKey.equals(handler.key)) {
+                    if (handlerKey.toUpperCase().equals(handler.key.toUpperCase())) {
                         handler.execute(handlerMethod, map);
                         return ;
                     }
