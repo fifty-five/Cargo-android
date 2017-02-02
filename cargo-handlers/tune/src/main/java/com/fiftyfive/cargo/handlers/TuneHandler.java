@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.fiftyfive.cargo.AbstractTagHandler;
+import com.fiftyfive.cargo.CargoItem;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Item;
 import com.fiftyfive.cargo.models.User;
@@ -98,7 +99,7 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void initialize() {
-        super.initialize("TUN", "Tune");
+        super.initialize("TUN", "Tune", true);
         validate(true);
     }
 
@@ -252,7 +253,7 @@ public class TuneHandler extends AbstractTagHandler {
      *              * eventDate1 (Date)
      *              * eventDate2 (Date) : Date1 needs to be set
      *              * eventRevenue (Double)
-     *              * eventItems (list)
+     *              * eventItems (boolean)
      *              * eventLevel (int)
      *              * eventReceiptData (String) : requires eventReceiptSignature
      *              * eventReceiptSignature (String) : requires eventReceiptData
@@ -438,9 +439,9 @@ public class TuneHandler extends AbstractTagHandler {
         }
 
         if (map.containsKey(EVENT_ITEMS)) {
-            String jsonString = getString(map, EVENT_ITEMS);
-            if (jsonString != null) {
-                List items = getItems(jsonString);
+            Boolean eventItemsBool = getBoolean(map, EVENT_ITEMS, false);
+            if (eventItemsBool) {
+                List items = getItems();
                 if (items != null) {
                     tuneEvent.withEventItems(items);
                     logParamSetWithSuccess(EVENT_ITEMS, items);
@@ -468,132 +469,53 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
     /**
-     * Create a List of TuneEventItem objects from a String json formatted.
+     * Create a List of TuneEventItem objects from the CargoItem.itemsList attribute.
      *
-     * @param jsonString the string containing the TuneEventItems in a JSON format
      * @return the list of TuneEventItem objects
      */
-    private List<TuneEventItem> getItems(String jsonString) {
-        // transforms the String object into a JSONObject, logs an error in case of fail, returns null
-        JSONObject jsonItems;
-        try {
-            jsonItems = new JSONObject(jsonString);
-        }
-        catch (Throwable t) {
-            logUncastableParam(EVENT_ITEMS, "JSONObject");
-            return null;
-        }
-
+    private List<TuneEventItem> getItems() {
         // fill the List with TuneEventItem objects after they get retrieved from the JSONObject
         List<TuneEventItem> tuneEventItems = new ArrayList<TuneEventItem>();
-        boolean moreItems = true;
-        int i = 0;
-        while (moreItems) {
-            JSONObject jsonItem;
-            try {
-                jsonItem = jsonItems.getJSONObject(Integer.toString(i++));
 
-                // A method to transform the JSONObject into a TuneEventItem object
-                TuneEventItem item = buildItem(jsonItem);
-                if (item == null) {
-                    logUncastableParam(EVENT_ITEMS, "TuneEventItem");
-                    return null;
-                }
-                tuneEventItems.add(item);
-            }
-            catch (Throwable t) {
-                moreItems = false;
-            }
+        for (CargoItem item : CargoItem.itemsList) {
+            tuneEventItems.add(buildItem(item));
         }
+        CargoItem.itemsListGotUsed();
         return tuneEventItems;
     }
 
     /**
      * Creates a TuneEventItem from a JSONObject and fills the required fields.
      *
-     * @param jsonItem the item with the JSONObject type
+     * @param item the item with the CargoItem type
      * @return the item with the correct type, which is TuneEventItem
      */
-    private TuneEventItem buildItem(JSONObject jsonItem) {
-        // get the name of the object, if it doesn't work, cancel the operation returning null
-        String name = getStringFromJson(jsonItem, Item.NAME);
-        if (name != null) {
-            int quantity = getIntFromJson(jsonItem, Item.QUANTITY);
-            double unitPrice = getDoubleFromJson(jsonItem, Item.UNIT_PRICE);
-            double revenue = getDoubleFromJson(jsonItem, Item.REVENUE);
-            String attribute1 = getStringFromJson(jsonItem, Item.ATTR1);
-            String attribute2 = getStringFromJson(jsonItem, Item.ATTR2);
-            String attribute3 = getStringFromJson(jsonItem, Item.ATTR3);
-            String attribute4 = getStringFromJson(jsonItem, Item.ATTR4);
-            String attribute5 = getStringFromJson(jsonItem, Item.ATTR5);
+    private TuneEventItem buildItem(CargoItem item) {
 
-            // fills the attributes of the item if they exist
-            TuneEventItem tuneItem = new TuneEventItem(name);
-            if (quantity != -1)
-                tuneItem.quantity = quantity;
-            if (unitPrice != -1)
-                tuneItem.unitPrice = unitPrice;
-            if (revenue != -1)
-                tuneItem.revenue = revenue;
-            if (attribute1 != null)
-                tuneItem.attribute1 = attribute1;
-            if (attribute2 != null)
-                tuneItem.attribute2 = attribute2;
-            if (attribute3 != null)
-                tuneItem.attribute3 = attribute3;
-            if (attribute4 != null)
-                tuneItem.attribute4 = attribute4;
-            if (attribute5 != null)
-                tuneItem.attribute5 = attribute5;
+        TuneEventItem tuneItem = new TuneEventItem(item.getName());
 
-            return tuneItem;
+        // fills the attributes of the item if they exist
+        if (item.getQuantity() != -1)
+            tuneItem.quantity = item.getQuantity();
+        if (item.getUnitPrice() != -1)
+            tuneItem.unitPrice = item.getUnitPrice();
+        if (item.getRevenue() != -1)
+            tuneItem.revenue = item.getRevenue();
+        else if (item.getUnitPrice() != -1 && item.getQuantity() != -1) {
+            tuneItem.revenue = item.getUnitPrice() * item.getQuantity();
         }
-        return null;
-    }
+        if (item.getAttribute1() != null)
+            tuneItem.attribute1 = item.getAttribute1();
+        if (item.getAttribute2() != null)
+            tuneItem.attribute2 = item.getAttribute2();
+        if (item.getAttribute3() != null)
+            tuneItem.attribute3 = item.getAttribute3();
+        if (item.getAttribute4() != null)
+            tuneItem.attribute4 = item.getAttribute4();
+        if (item.getAttribute5() != null)
+            tuneItem.attribute5 = item.getAttribute5();
 
-    /**
-     * retrieves an int entry from a JSONObject
-     * @param json the JSONObject you want to retrieve the entry from
-     * @param key the String key the value is stored under.
-     * @return the int value, with -1 in case of missing key
-     */
-    private int getIntFromJson(JSONObject json, String key) {
-        try {
-            return json.getInt(key);
-        }
-        catch (Throwable t) {
-            return -1;
-        }
-    }
-
-    /**
-     * retrieves a double entry from a JSONObject
-     * @param json the JSONObject you want to retrieve the entry from
-     * @param key the String key the value is stored under.
-     * @return the double value, with -1 in case of missing key
-     */
-    private double getDoubleFromJson(JSONObject json, String key) {
-        try {
-            return json.getDouble(key);
-        }
-        catch (Throwable t) {
-            return -1;
-        }
-    }
-
-    /**
-     * retrieves a String entry from a JSONObject
-     * @param json the JSONObject you want to retrieve the entry from
-     * @param key the String key the value is stored under.
-     * @return the String value, null in case of missing key
-     */
-    private String getStringFromJson(JSONObject json, String key) {
-        try {
-            return json.getString(key);
-        }
-        catch (Throwable t) {
-            return null;
-        }
+        return tuneItem;
     }
 
     /**
