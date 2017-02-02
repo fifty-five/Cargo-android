@@ -53,7 +53,7 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void initialize() {
-        super.initialize("AT", "AT Internet");
+        super.initialize("AT", "AT Internet", false);
 //        atTracker = ((ATInternet)cargo.getAppContext()).getDefaultTracker();
         atTracker = new Tracker(cargo.getAppContext());
 
