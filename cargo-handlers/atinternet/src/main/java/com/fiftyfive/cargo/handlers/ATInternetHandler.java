@@ -32,6 +32,7 @@ public class ATInternetHandler extends AbstractTagHandler {
     public Tracker atTracker;
 
     private boolean enableDebug = false;
+    private boolean debugEnabled = false;
 
     /** Constants used to define callbacks in the register and in the execute method */
     private final String AT_INIT = "AT_init";
@@ -377,8 +378,10 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStarted(Activity activity) {
-        if (enableDebug && isInitialized())
+        if (enableDebug && isInitialized()) {
             Debugger.show(activity, atTracker);
+            debugEnabled = true;
+        }
     }
 
     /**
@@ -405,8 +408,10 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
-        if (enableDebug && isInitialized())
+        if (enableDebug && isInitialized() && debugEnabled) {
             Debugger.setViewerVisibility(false);
+            debugEnabled = false;
+        }
     }
 
 /* ********************************************************************************************** */
