@@ -33,6 +33,8 @@ public abstract class AbstractTagHandler {
     /** Key of the handler, which will be used for the logs. */
     protected String key;
 
+    protected boolean isHandlerWithItems;
+
 
 
 /* ************************************ Handlers core methods *********************************** */
@@ -51,10 +53,11 @@ public abstract class AbstractTagHandler {
      * @param hKey  key as a string for this handler
      * @param hName name of the handler
      */
-    public void initialize(String hKey, String hName){
+    public void initialize(String hKey, String hName, boolean hWithItems){
         this.cargo = Cargo.getInstance();
         this.key = hKey;
         this.name = hName;
+        this.isHandlerWithItems = hWithItems;
     }
 
     /**
