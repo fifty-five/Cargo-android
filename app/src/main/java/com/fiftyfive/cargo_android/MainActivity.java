@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.fiftyfive.cargo.CargoItem;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 
@@ -98,15 +99,22 @@ public class MainActivity extends AppCompatActivity {
             if (userMail.length() > 0)
                 bundle.putString("userEmail", userMail);
 
-            if (xboxBox.isChecked())
+            if (xboxBox.isChecked()) {
                 revenue += 149.99;
-            if (playBox.isChecked())
+                CargoItem.attachItemToEvent(new CargoItem("xboxBox").setUnitPrice(149.99).setQuantity(1).setAttribute1("attr1TESTforTune"));
+            }
+            if (playBox.isChecked()) {
                 revenue += 199;
-            if (nintendoBox.isChecked())
+                CargoItem.attachItemToEvent(new CargoItem("playBox").setUnitPrice(199).setQuantity(1).setAttribute1("attr1TESTforTune"));
+            }
+            if (nintendoBox.isChecked()) {
                 revenue += 255;
+                CargoItem.attachItemToEvent(new CargoItem("nintendoBox").setUnitPrice(255).setQuantity(1).setAttribute1("attr1TESTforTune"));
+            }
 
             bundle.putString("currencyCode", "EUR");
             bundle.putDouble("totalRevenue", revenue);
+            bundle.putBoolean("eventItems", true);
             mFirebaseAnalytics.logEvent("tagPurchase", bundle);
         }
     };
