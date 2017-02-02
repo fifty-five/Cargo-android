@@ -1,15 +1,21 @@
 package com.fiftyfive.cargo;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import com.fiftyfive.cargo.models.Item;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
 /**
  * Created by Julien Gil on 06/01/2017.
  */
 
 public class CargoItem {
+
+    public static ArrayList<CargoItem> itemsList = null;
+    public static int handlersWithItems = 0;
+    private static int listValidForHandlers = 0;
 
     /** name of the item */
     private String name;
@@ -53,13 +59,38 @@ public class CargoItem {
     private String attribute5;
 
 
+    public static void attachItemToEvent(@NonNull CargoItem item) {
+        if (itemsList == null) {
+            itemsList = new ArrayList<CargoItem>();
+            listValidForHandlers = handlersWithItems;
+        }
+        itemsList.add(item);
+    }
+
+    public static void itemsListGotUsed() {
+        listValidForHandlers--;
+        if (listValidForHandlers <= 0) {
+            itemsList = null;
+        }
+    }
+
+    public static void detachItemToEvent(@NonNull String identifier) {
+        for (CargoItem item : itemsList) {
+            if (identifier.equals(item.id) || identifier.equals(item.name)) {
+                itemsList.remove(item);
+                Log.d("Cargo", "CargoItem with id/name '"+identifier+"' has been successfully deleted.");
+                break ;
+            }
+        }
+    }
+
     /**
      * Constructor for the CargoItem object. Creates the object with an item name.
      * Use these objects in order to send items related hits to SDKs.
      *
      * @param name the name of the item.
      */
-    public CargoItem(String name) {
+    public CargoItem(@NonNull String name) {
         this.name = name;
     }
 
@@ -73,74 +104,11 @@ public class CargoItem {
      * @param unitPrice the unit price for this item.
      * @param quantity number of items concerned by the hit.
      */
-    public CargoItem(String name, double unitPrice, int quantity) {
+    public CargoItem(@NonNull String name, double unitPrice, int quantity) {
         this.name = name;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
         this.revenue = unitPrice * (double) quantity;
-    }
-
-    /**
-     * Static method you have to call in order to send items through GTM with Cargo.
-     * Cargo transforms the CargoItem array into a String containing a JSON object.
-     * Once GTM transmitted the parameter with the callback,
-     * the array is rebuilt with true Item objects depending on the handler within they are rebuilt.
-     *
-     * @param itemArray an array of CargoItem to send to a SDK.
-     * @return a String containing a JSON which represents the array given as parameter.
-     */
-    public static String toGTM(CargoItem[] itemArray) {
-        int i = 0;
-        try {
-            JSONObject jsonObject = new JSONObject();
-            for (CargoItem item : itemArray) {
-                JSONObject itemJson = new JSONObject();
-                itemJson.put(Item.NAME, item.getName());
-                if (item.getId() != null)
-                    itemJson.put(Item.ID, item.getId());
-                if (item.getUnitPrice() != -1)
-                    itemJson.put(Item.UNIT_PRICE, item.getUnitPrice());
-                if (item.getQuantity() != -1)
-                    itemJson.put(Item.QUANTITY, item.getQuantity());
-                if (item.getRevenue() != -1)
-                    itemJson.put(Item.REVENUE, item.getRevenue());
-                if (item.getBrand() != null)
-                    itemJson.put(Item.BRAND, item.getBrand());
-                if (item.getCategory() != null)
-                    itemJson.put(Item.CATEGORY, item.getCategory());
-                if (item.getId() != null)
-                    itemJson.put(Item.VARIANT, item.getVariant());
-                if (item.getPosition() != -1)
-                    itemJson.put(Item.POSITION, item.getPosition());
-                if (item.getCouponCode() != null)
-                    itemJson.put(Item.COUPON_CODE, item.getCouponCode());
-                if (item.getiDimension() != -1 && item.getvDimension() != null) {
-                    itemJson.put(Item.INDEX_DIM, item.getiDimension());
-                    itemJson.put(Item.VALUE_DIM, item.getvDimension());
-                }
-                if (item.getiMetric() != -1 && item.getvMetric() != -1) {
-                    itemJson.put(Item.INDEX_METRIC, item.getiMetric());
-                    itemJson.put(Item.VALUE_METRIC, item.getvMetric());
-                }
-                if (item.getAttribute1() != null)
-                    itemJson.put(Item.ATTR1, item.getAttribute1());
-                if (item.getAttribute2() != null)
-                    itemJson.put(Item.ATTR2, item.getAttribute2());
-                if (item.getAttribute3() != null)
-                    itemJson.put(Item.ATTR3, item.getAttribute3());
-                if (item.getAttribute4() != null)
-                    itemJson.put(Item.ATTR4, item.getAttribute4());
-                if (item.getAttribute5() != null)
-                    itemJson.put(Item.ATTR5, item.getAttribute5());
-
-                jsonObject.put(Integer.toString(i++), itemJson);
-            }
-            return jsonObject.toString();
-        }
-        catch(JSONException ex) {
-            ex.printStackTrace();
-        }
-        return null;
     }
 
     /**
@@ -376,8 +344,9 @@ public class CargoItem {
      *
      * @param name the new name to set for this object.
      */
-    public void setName(String name) {
+    public CargoItem setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
@@ -385,8 +354,9 @@ public class CargoItem {
      *
      * @param unitPrice the new unitPrice to set for this object.
      */
-    public void setUnitPrice(double unitPrice) {
+    public CargoItem setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
+        return this;
     }
 
     /**
@@ -394,8 +364,9 @@ public class CargoItem {
      *
      * @param quantity the new quantity to set for this object.
      */
-    public void setQuantity(int quantity) {
+    public CargoItem setQuantity(int quantity) {
         this.quantity = quantity;
+        return this;
     }
 
     /**
@@ -403,8 +374,9 @@ public class CargoItem {
      *
      * @param revenue the new revenue to set for this object.
      */
-    public void setRevenue(double revenue) {
+    public CargoItem setRevenue(double revenue) {
         this.revenue = revenue;
+        return this;
     }
 
     /**
@@ -412,8 +384,9 @@ public class CargoItem {
      *
      * @param vMetric the new vMetric to set for this object.
      */
-    public void setvMetric(int vMetric) {
+    public CargoItem setvMetric(int vMetric) {
         this.vMetric = vMetric;
+        return this;
     }
 
     /**
@@ -421,8 +394,9 @@ public class CargoItem {
      *
      * @param id the new id to set for this object.
      */
-    public void setId(String id) {
+    public CargoItem setId(String id) {
         this.id = id;
+        return this;
     }
 
     /**
@@ -430,8 +404,9 @@ public class CargoItem {
      *
      * @param brand the new brand to set for this object.
      */
-    public void setBrand(String brand) {
+    public CargoItem setBrand(String brand) {
         this.brand = brand;
+        return this;
     }
 
     /**
@@ -439,8 +414,9 @@ public class CargoItem {
      *
      * @param category the new category to set for this object.
      */
-    public void setCategory(String category) {
+    public CargoItem setCategory(String category) {
         this.category = category;
+        return this;
     }
 
     /**
@@ -448,8 +424,9 @@ public class CargoItem {
      *
      * @param variant the new variant to set for this object.
      */
-    public void setVariant(String variant) {
+    public CargoItem setVariant(String variant) {
         this.variant = variant;
+        return this;
     }
 
     /**
@@ -457,8 +434,9 @@ public class CargoItem {
      *
      * @param position the new position to set for this object.
      */
-    public void setPosition(int position) {
+    public CargoItem setPosition(int position) {
         this.position = position;
+        return this;
     }
 
     /**
@@ -466,8 +444,9 @@ public class CargoItem {
      *
      * @param couponCode the new couponCode to set for this object.
      */
-    public void setCouponCode(String couponCode) {
+    public CargoItem setCouponCode(String couponCode) {
         this.couponCode = couponCode;
+        return this;
     }
 
     /**
@@ -475,8 +454,9 @@ public class CargoItem {
      *
      * @param iDimension the new iDimension to set for this object.
      */
-    public void setiDimension(int iDimension) {
+    public CargoItem setiDimension(int iDimension) {
         this.iDimension = iDimension;
+        return this;
     }
 
     /**
@@ -484,8 +464,9 @@ public class CargoItem {
      *
      * @param vDimension the new vDimension to set for this object.
      */
-    public void setvDimension(String vDimension) {
+    public CargoItem setvDimension(String vDimension) {
         this.vDimension = vDimension;
+        return this;
     }
 
     /**
@@ -493,8 +474,9 @@ public class CargoItem {
      *
      * @param iMetric the new iMetric to set for this object.
      */
-    public void setiMetric(int iMetric) {
+    public CargoItem setiMetric(int iMetric) {
         this.iMetric = iMetric;
+        return this;
     }
 
     /**
@@ -502,8 +484,9 @@ public class CargoItem {
      *
      * @param attribute1 the new attribute1 to set for this object.
      */
-    public void setAttribute1(String attribute1) {
+    public CargoItem setAttribute1(String attribute1) {
         this.attribute1 = attribute1;
+        return this;
     }
 
     /**
@@ -511,8 +494,9 @@ public class CargoItem {
      *
      * @param attribute2 the new attribute2 to set for this object.
      */
-    public void setAttribute2(String attribute2) {
+    public CargoItem setAttribute2(String attribute2) {
         this.attribute2 = attribute2;
+        return this;
     }
 
     /**
@@ -520,8 +504,9 @@ public class CargoItem {
      *
      * @param attribute3 the new attribute3 to set for this object.
      */
-    public void setAttribute3(String attribute3) {
+    public CargoItem setAttribute3(String attribute3) {
         this.attribute3 = attribute3;
+        return this;
     }
 
     /**
@@ -529,8 +514,9 @@ public class CargoItem {
      *
      * @param attribute4 the new attribute4 to set for this object.
      */
-    public void setAttribute4(String attribute4) {
+    public CargoItem setAttribute4(String attribute4) {
         this.attribute4 = attribute4;
+        return this;
     }
 
     /**
@@ -538,7 +524,8 @@ public class CargoItem {
      *
      * @param attribute5 the new attribute5 to set for this object.
      */
-    public void setAttribute5(String attribute5) {
+    public CargoItem setAttribute5(String attribute5) {
         this.attribute5 = attribute5;
+        return this;
     }
 }
