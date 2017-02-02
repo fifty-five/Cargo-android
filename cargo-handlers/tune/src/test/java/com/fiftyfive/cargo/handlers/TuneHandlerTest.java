@@ -3,6 +3,7 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Application;
 
 import com.fiftyfive.cargo.Cargo;
+import com.fiftyfive.cargo.CargoItem;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.User;
 import com.tune.Tune;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -127,6 +129,22 @@ public class TuneHandlerTest extends TestCase {
         verify(tuneEventMock, times(1)).withAttribute3("eventAttribute3");
         verify(tuneEventMock, times(1)).withAttribute4("eventAttribute4");
         verify(tuneEventMock, times(1)).withAttribute5("eventAttribute5");
+
+        verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
+    }
+
+    public void testTagWithEventItems() throws Exception {
+        HashMap<String, Object> map= new HashMap<>();
+        map.put(Event.EVENT_NAME, "purchase");
+        map.put("eventItems", true);
+
+        CargoItem.attachItemToEvent(new CargoItem("wonderfulItem").setQuantity(1).setUnitPrice(19.99));
+        CargoItem.attachItemToEvent(new CargoItem("amazingItem").setQuantity(6).setUnitPrice(9.99));
+        handler.setInitialized(true);
+        handler.execute("TUN_tagEvent", map);
+        PowerMockito.verifyNew(TuneEvent.class).withArguments("purchase");
+
+        verify(tuneEventMock, times(1)).withEventItems(anyList());
 
         verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
     }
