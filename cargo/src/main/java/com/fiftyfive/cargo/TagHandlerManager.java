@@ -36,6 +36,9 @@ public class TagHandlerManager implements Application.ActivityLifecycleCallbacks
         tagHandler.initialize();
         if(tagHandler.valid) {
             handlers.add(tagHandler);
+            if (tagHandler.isHandlerWithItems) {
+                CargoItem.handlersWithItems += 1;
+            }
         }
     }
 
