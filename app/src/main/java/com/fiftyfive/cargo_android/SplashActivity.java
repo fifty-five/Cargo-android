@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.fiftyfive.cargo.Cargo;
+import com.fiftyfive.cargo.CargoInterface;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 
@@ -38,8 +39,14 @@ public class SplashActivity extends AppCompatActivity {
 
         mFirebaseAnalytics.logEvent("applicationStart", null);
 
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish(); // prevent to come back to the splashScreen
+        // register to the callback which is triggered when the tracking is ready
+        Cargo.getInstance().trackingReady = new CargoInterface() {
+            @Override
+            public void isReady() {
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish(); // prevent to come back to the splashScreen
+            }
+        };
     }
 }
