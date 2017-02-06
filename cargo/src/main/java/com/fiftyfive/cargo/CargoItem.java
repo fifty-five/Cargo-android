@@ -35,7 +35,7 @@ public class CargoItem {
     /** variant of the item */
     private String variant;
     /** position of the item */
-    private int position = 1;
+    private int position = -1;
     /** couponCode of the item */
     private String couponCode;
     /** index for an item customDim */
