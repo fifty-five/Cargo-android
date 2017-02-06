@@ -343,6 +343,7 @@ public class CargoItem {
      * Setter for the item attribute.
      *
      * @param name the new name to set for this object.
+     * @return the current item
      */
     public CargoItem setName(String name) {
         this.name = name;
@@ -353,6 +354,7 @@ public class CargoItem {
      * Setter for the unitPrice attribute.
      *
      * @param unitPrice the new unitPrice to set for this object.
+     * @return the current item
      */
     public CargoItem setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
@@ -363,6 +365,7 @@ public class CargoItem {
      * Setter for the quantity attribute.
      *
      * @param quantity the new quantity to set for this object.
+     * @return the current item
      */
     public CargoItem setQuantity(int quantity) {
         this.quantity = quantity;
@@ -373,6 +376,7 @@ public class CargoItem {
      * Setter for the revenue attribute.
      *
      * @param revenue the new revenue to set for this object.
+     * @return the current item
      */
     public CargoItem setRevenue(double revenue) {
         this.revenue = revenue;
@@ -383,6 +387,7 @@ public class CargoItem {
      * Setter for the vMetric attribute.
      *
      * @param vMetric the new vMetric to set for this object.
+     * @return the current item
      */
     public CargoItem setvMetric(int vMetric) {
         this.vMetric = vMetric;
@@ -393,6 +398,7 @@ public class CargoItem {
      * Setter for the id attribute.
      *
      * @param id the new id to set for this object.
+     * @return the current item
      */
     public CargoItem setId(String id) {
         this.id = id;
@@ -403,6 +409,7 @@ public class CargoItem {
      * Setter for the brand attribute.
      *
      * @param brand the new brand to set for this object.
+     * @return the current item
      */
     public CargoItem setBrand(String brand) {
         this.brand = brand;
@@ -413,6 +420,7 @@ public class CargoItem {
      * Setter for the category attribute.
      *
      * @param category the new category to set for this object.
+     * @return the current item
      */
     public CargoItem setCategory(String category) {
         this.category = category;
@@ -423,6 +431,7 @@ public class CargoItem {
      * Setter for the variant attribute.
      *
      * @param variant the new variant to set for this object.
+     * @return the current item
      */
     public CargoItem setVariant(String variant) {
         this.variant = variant;
@@ -433,6 +442,7 @@ public class CargoItem {
      * Setter for the position attribute.
      *
      * @param position the new position to set for this object.
+     * @return the current item
      */
     public CargoItem setPosition(int position) {
         this.position = position;
@@ -443,6 +453,7 @@ public class CargoItem {
      * Setter for the couponCode attribute.
      *
      * @param couponCode the new couponCode to set for this object.
+     * @return the current item
      */
     public CargoItem setCouponCode(String couponCode) {
         this.couponCode = couponCode;
@@ -453,6 +464,7 @@ public class CargoItem {
      * Setter for the iDimension attribute.
      *
      * @param iDimension the new iDimension to set for this object.
+     * @return the current item
      */
     public CargoItem setiDimension(int iDimension) {
         this.iDimension = iDimension;
@@ -463,6 +475,7 @@ public class CargoItem {
      * Setter for the vDimension attribute.
      *
      * @param vDimension the new vDimension to set for this object.
+     * @return the current item
      */
     public CargoItem setvDimension(String vDimension) {
         this.vDimension = vDimension;
@@ -473,6 +486,7 @@ public class CargoItem {
      * Setter for the iMetric attribute.
      *
      * @param iMetric the new iMetric to set for this object.
+     * @return the current item
      */
     public CargoItem setiMetric(int iMetric) {
         this.iMetric = iMetric;
@@ -483,6 +497,7 @@ public class CargoItem {
      * Setter for the attribute1 attribute.
      *
      * @param attribute1 the new attribute1 to set for this object.
+     * @return the current item
      */
     public CargoItem setAttribute1(String attribute1) {
         this.attribute1 = attribute1;
@@ -493,6 +508,7 @@ public class CargoItem {
      * Setter for the attribute2 attribute.
      *
      * @param attribute2 the new attribute2 to set for this object.
+     * @return the current item
      */
     public CargoItem setAttribute2(String attribute2) {
         this.attribute2 = attribute2;
@@ -503,6 +519,7 @@ public class CargoItem {
      * Setter for the attribute3 attribute.
      *
      * @param attribute3 the new attribute3 to set for this object.
+     * @return the current item
      */
     public CargoItem setAttribute3(String attribute3) {
         this.attribute3 = attribute3;
@@ -513,6 +530,7 @@ public class CargoItem {
      * Setter for the attribute4 attribute.
      *
      * @param attribute4 the new attribute4 to set for this object.
+     * @return the current item
      */
     public CargoItem setAttribute4(String attribute4) {
         this.attribute4 = attribute4;
@@ -523,6 +541,7 @@ public class CargoItem {
      * Setter for the attribute5 attribute.
      *
      * @param attribute5 the new attribute5 to set for this object.
+     * @return the current item
      */
     public CargoItem setAttribute5(String attribute5) {
         this.attribute5 = attribute5;

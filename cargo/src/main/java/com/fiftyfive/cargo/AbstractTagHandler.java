@@ -52,6 +52,8 @@ public abstract class AbstractTagHandler {
      *
      * @param hKey  key as a string for this handler
      * @param hName name of the handler
+     * @param hWithItems a boolean set to true if the SDK provides items related events,
+     *                   tracked with the CargoItem class
      */
     public void initialize(String hKey, String hName, boolean hWithItems){
         this.cargo = Cargo.getInstance();
