@@ -93,6 +93,7 @@ public abstract class AbstractTagHandler {
     public void setInitialized(boolean value) {
         initialized = value;
         if (initialized) {
+            this.cargo.setHandlerInit();
             Log.d(this.key + "_handler",
                     "The handler has been correctly initialized and is ready to use");
         }
