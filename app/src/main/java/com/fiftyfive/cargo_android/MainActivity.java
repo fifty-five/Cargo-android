@@ -24,17 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button tagEventButton = (Button) findViewById(R.id.tagEventButton);
-        Button tagScreenButton = (Button) findViewById(R.id.tagScreenButton);
-        Button setUserButton = (Button) findViewById(R.id.identifyButton);
-        Button tagPurchaseButton = (Button) findViewById(R.id.tagPurchaseButton);
-        userText = (EditText)findViewById(R.id.usernameInput);
-        mailAdressText = (EditText)findViewById(R.id.mailAdressInput);
-
-        tagEventButton.setOnClickListener(tagEventListener);
-        tagScreenButton.setOnClickListener(tagScreenListener);
-        setUserButton.setOnClickListener(setUserListener);
-        tagPurchaseButton.setOnClickListener(tagPurchaseListener);
+        setupUI();
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
@@ -42,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener tagEventListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
             Bundle bundle = new Bundle();
 
             username = userText.getText().toString();
@@ -67,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener setUserListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
             Bundle bundle = new Bundle();
             username = userText.getText().toString();
             userMail = mailAdressText.getText().toString();
@@ -86,10 +74,8 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             Bundle bundle = new Bundle();
             Double revenue = 0.0;
-
             username = userText.getText().toString();
             userMail = mailAdressText.getText().toString();
-
             CheckBox xboxBox = (CheckBox)findViewById(R.id.boxXbox);
             CheckBox playBox = (CheckBox)findViewById(R.id.boxPlaystation);
             CheckBox nintendoBox = (CheckBox)findViewById(R.id.boxNintendo);
@@ -118,4 +104,19 @@ public class MainActivity extends AppCompatActivity {
             mFirebaseAnalytics.logEvent("tagPurchase", bundle);
         }
     };
+
+    void setupUI() {
+        Button tagEventButton = (Button) findViewById(R.id.tagEventButton);
+        Button tagScreenButton = (Button) findViewById(R.id.tagScreenButton);
+        Button setUserButton = (Button) findViewById(R.id.identifyButton);
+        Button tagPurchaseButton = (Button) findViewById(R.id.tagPurchaseButton);
+
+        userText = (EditText)findViewById(R.id.usernameInput);
+        mailAdressText = (EditText)findViewById(R.id.mailAdressInput);
+
+        tagEventButton.setOnClickListener(tagEventListener);
+        tagScreenButton.setOnClickListener(tagScreenListener);
+        setUserButton.setOnClickListener(setUserListener);
+        tagPurchaseButton.setOnClickListener(tagPurchaseListener);
+    }
 }

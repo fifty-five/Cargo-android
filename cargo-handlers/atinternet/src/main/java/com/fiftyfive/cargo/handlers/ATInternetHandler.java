@@ -132,9 +132,9 @@ public class ATInternetHandler extends AbstractTagHandler {
                     logParamSetWithSuccess(SITE, siteId);
                     logParamSetWithSuccess(LOG, log);
                     logParamSetWithSuccess(LOG_SSL, logSSL);
+                    setInitialized(true);
                 }
             });
-            setInitialized(true);
         }
         else
             logMissingParam(new String[]{SITE,LOG, LOG_SSL}, AT_INIT);
@@ -358,7 +358,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         }
 
         if (parameters.containsKey(LEVEL2)) {
-            int    level2 = getInt(parameters, LEVEL2, -1);
+            int level2 = getInt(parameters, LEVEL2, -1);
             atScreen.setLevel2(level2);
             logParamSetWithSuccess(LEVEL2, Integer.toString(level2));
         }
