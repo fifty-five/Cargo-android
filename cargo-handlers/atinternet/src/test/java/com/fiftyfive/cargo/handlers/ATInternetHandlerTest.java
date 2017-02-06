@@ -101,7 +101,6 @@ public class ATInternetHandlerTest extends TestCase {
 
         verify(atTrackerMock, times(1)).setConfig(any(HashMap.class), anyBoolean(),
                 any(SetConfigCallback.class));
-        assertEquals(true, handler.isInitialized());
     }
 
 /* ************************************** identify Tests **************************************** */
