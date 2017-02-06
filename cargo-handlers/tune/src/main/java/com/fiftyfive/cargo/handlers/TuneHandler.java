@@ -6,17 +6,12 @@ import android.util.Log;
 import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.CargoItem;
 import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.Item;
 import com.fiftyfive.cargo.models.User;
 import com.tune.Tune;
 import com.tune.TuneEvent;
 import com.tune.TuneEventItem;
 import com.tune.TuneGender;
-import com.tune.ma.application.TuneActivity;
-import com.tune.ma.application.TuneActivityLifecycleCallbacks;
-import com.tune.ma.application.TuneApplication;
 
-import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -524,9 +519,7 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStarted(Activity activity) {
-        if (initialized) {
-            TuneActivity.onStart(activity);
-        }
+
     }
 
     /**
@@ -536,8 +529,9 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-        if (initialized) {
-            TuneActivity.onResume(activity);
+       if (initialized) {
+            tune.setReferralSources(activity);
+            tune.measureSession();
         }
     }
 
@@ -556,9 +550,7 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
-        if (initialized) {
-            TuneActivity.onStop(activity);
-        }
+
     }
 
 /* ********************************************************************************************** */
