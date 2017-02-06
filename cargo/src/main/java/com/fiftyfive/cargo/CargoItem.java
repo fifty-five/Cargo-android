@@ -13,8 +13,11 @@ import java.util.ArrayList;
 
 public class CargoItem {
 
+    /** a list of CargoItem which will be sent to some SDK at the next event */
     public static ArrayList<CargoItem> itemsList = null;
+    /** a variable which count how many handlers operate event with items */
     public static int handlersWithItems = 0;
+    /** a variable which hold the count of operations left before the list deletion */
     private static int listValidForHandlers = 0;
 
     /** name of the item */
@@ -59,6 +62,11 @@ public class CargoItem {
     private String attribute5;
 
 
+    /**
+     * Adds an item to the list which will be sent to the next "item relative" event.
+     *
+     * @param item the item to add as a parameter to the future event.
+     */
     public static void attachItemToEvent(@NonNull CargoItem item) {
         if (itemsList == null) {
             itemsList = new ArrayList<CargoItem>();
@@ -67,6 +75,11 @@ public class CargoItem {
         itemsList.add(item);
     }
 
+    /**
+     * A method to call each time the list has been used in a handler.
+     * It will decrease the listValidForHandlers variable.
+     * When it reach the 0 value, the list is deleted.
+     */
     public static void itemsListGotUsed() {
         listValidForHandlers--;
         if (listValidForHandlers <= 0) {
@@ -74,6 +87,11 @@ public class CargoItem {
         }
     }
 
+    /**
+     * Deletes an item from the list which will be sent to the next "item relative" event.
+     * 
+     * @param identifier the id or the name of the event to delete from the list.
+     */
     public static void detachItemToEvent(@NonNull String identifier) {
         for (CargoItem item : itemsList) {
             if (identifier.equals(item.id) || identifier.equals(item.name)) {
