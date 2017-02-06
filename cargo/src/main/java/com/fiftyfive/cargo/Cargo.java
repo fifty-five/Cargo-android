@@ -26,11 +26,14 @@ public class Cargo {
     private static final String TAG = "Cargo" ;
     /** A boolean which defines whether the instance has been correctly initialized */
     private static boolean init = false;
+    private int handlersReady = 0;
 
     /** An instance of the appContext within Cargo is instantiated */
     private Context appContext;
     /** Used to store initialized handlers and call on their activity life cycle callback methods */
     private TagHandlerManager manager;
+    /** Callback called when Cargo and its handlers are ready */
+    public CargoInterface trackingReady;
 
     private static final String HANDLER_METHOD = "handlerMethod";
 
@@ -167,7 +170,6 @@ public class Cargo {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -268,6 +270,15 @@ public class Cargo {
     private void setAppContext(Context appContext) {
         if (appContext != null)
             this.appContext = appContext;
+    }
+
+    /**
+     * A setter which is triggered when a handler has been initialized correctly.
+     * When all the handlers are ready to be used, triggers a callback to inform cargo is ready.
+     */
+    void setHandlerInit() {
+        if (++handlersReady == manager.getHandlers().size())
+            trackingReady.isReady();
     }
 
 /* ********************************************************************************************** */
