@@ -1,6 +1,7 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
+import android.os.Build;
 import android.util.Log;
 
 import com.fiftyfive.cargo.AbstractTagHandler;
@@ -11,6 +12,7 @@ import com.tune.Tune;
 import com.tune.TuneEvent;
 import com.tune.TuneEventItem;
 import com.tune.TuneGender;
+import com.tune.ma.application.TuneActivity;
 
 
 import java.lang.reflect.Method;
@@ -138,12 +140,17 @@ public class TuneHandler extends AbstractTagHandler {
      *              * advertiserId & conversionKey (String) : ids you got when you register your app
      */
     private void init(Map<String, Object> map) {
-        String advertiserId = getString(map, ADVERTISER_ID);
-        String conversionKey = getString(map, CONVERSION_KEY);
 
-        if (advertiserId != null && conversionKey != null) {
+        Double advertIdDouble = getDouble(map, ADVERTISER_ID, 0);
+        Long advertIdLong = advertIdDouble.longValue();
+        final String advertiserId = Long.toString(advertIdLong);
+        final String conversionKey = getString(map, CONVERSION_KEY);
+
+        if (advertIdLong != 0 && advertiserId != null && conversionKey != null) {
             // set the required parameters
             Tune.init(cargo.getAppContext(), advertiserId, conversionKey);
+            logParamSetWithSuccess(ADVERTISER_ID, advertiserId);
+            logParamSetWithSuccess(CONVERSION_KEY, conversionKey);
 
             // retrieve the Tune instance
             tune = Tune.getInstance();
@@ -364,7 +371,7 @@ public class TuneHandler extends AbstractTagHandler {
             double rating = getDouble(map, EVENT_RATING, -1);
             if (rating != -1) {
                 tuneEvent.withRating(rating);
-                logParamSetWithSuccess(EVENT_RATING, rating);
+                logParamSetWithSuccess(EVENT_RATING, tuneEvent.getRating());
             }
             else
                 logUncastableParam(EVENT_RATING, "double");
@@ -374,7 +381,7 @@ public class TuneHandler extends AbstractTagHandler {
             double revenue = getDouble(map, EVENT_REVENUE, -1);
             if (revenue != -1) {
                 tuneEvent.withRevenue(revenue);
-                logParamSetWithSuccess(EVENT_REVENUE, revenue);
+                logParamSetWithSuccess(EVENT_REVENUE, tuneEvent.getRevenue());
             }
             else
                 logUncastableParam(EVENT_REVENUE, "double");
@@ -385,7 +392,7 @@ public class TuneHandler extends AbstractTagHandler {
             int level = levelDouble.intValue();
             if (level != -1) {
                 tuneEvent.withLevel(level);
-                logParamSetWithSuccess(EVENT_LEVEL, level);
+                logParamSetWithSuccess(EVENT_LEVEL, tuneEvent.getLevel());
             }
             else
                 logUncastableParam(EVENT_LEVEL, "int");
@@ -396,7 +403,7 @@ public class TuneHandler extends AbstractTagHandler {
             int quantity = quantityDouble.intValue();
             if (quantity != -1) {
                 tuneEvent.withQuantity(quantity);
-                logParamSetWithSuccess(EVENT_QUANTITY, quantity);
+                logParamSetWithSuccess(EVENT_QUANTITY, tuneEvent.getQuantity());
             }
             else
                 logUncastableParam(EVENT_QUANTITY, "int");
@@ -417,13 +424,13 @@ public class TuneHandler extends AbstractTagHandler {
             Date date = getDate(map, EVENT_DATE1);
             if (date != null) {
                 tuneEvent.withDate1(date);
-                logParamSetWithSuccess(EVENT_DATE1, date);
+                logParamSetWithSuccess(EVENT_DATE1, tuneEvent.getDate1());
 
                 if (map.containsKey(EVENT_DATE2)) {
                     Date date2 = getDate(map, EVENT_DATE2);
                     if (date2 != null) {
                         tuneEvent.withDate2(date2);
-                        logParamSetWithSuccess(EVENT_DATE2, date2);
+                        logParamSetWithSuccess(EVENT_DATE2, tuneEvent.getDate2());
                     }
                     else
                         logUncastableParam(EVENT_DATE2, "date");
@@ -439,13 +446,11 @@ public class TuneHandler extends AbstractTagHandler {
                 List items = getItems();
                 if (items != null) {
                     tuneEvent.withEventItems(items);
-                    logParamSetWithSuccess(EVENT_ITEMS, items);
+                    logParamSetWithSuccess(EVENT_ITEMS, tuneEvent.getEventItems());
                 }
                 else
                     logUncastableParam(EVENT_ITEMS, "List");
             }
-            else
-                logUncastableParam(EVENT_ITEMS, "String");
         }
 
         if (map.containsKey(EVENT_RECEIPT_DATA)) {
@@ -453,8 +458,8 @@ public class TuneHandler extends AbstractTagHandler {
             String signature = getString(map, EVENT_RECEIPT_SIGNATURE);
             if (data != null && signature != null) {
                 tuneEvent.withReceipt(data, signature);
-                logParamSetWithSuccess(EVENT_RECEIPT_DATA, data);
-                logParamSetWithSuccess(EVENT_RECEIPT_SIGNATURE, signature);
+                logParamSetWithSuccess(EVENT_RECEIPT_DATA, tuneEvent.getReceiptData());
+                logParamSetWithSuccess(EVENT_RECEIPT_SIGNATURE, tuneEvent.getReceiptSignature());
             }
             else
                 logUncastableParam(EVENT_RECEIPT_DATA+" and/or "+EVENT_RECEIPT_SIGNATURE, "String");
@@ -469,7 +474,7 @@ public class TuneHandler extends AbstractTagHandler {
      * @return the list of TuneEventItem objects
      */
     private List<TuneEventItem> getItems() {
-        // fill the List with TuneEventItem objects after they get retrieved from the JSONObject
+        // fill the List with TuneEventItem objects from the CargoItem list
         List<TuneEventItem> tuneEventItems = new ArrayList<TuneEventItem>();
 
         for (CargoItem item : CargoItem.itemsList) {
@@ -496,9 +501,6 @@ public class TuneHandler extends AbstractTagHandler {
             tuneItem.unitPrice = item.getUnitPrice();
         if (item.getRevenue() != -1)
             tuneItem.revenue = item.getRevenue();
-        else if (item.getUnitPrice() != -1 && item.getQuantity() != -1) {
-            tuneItem.revenue = item.getUnitPrice() * item.getQuantity();
-        }
         if (item.getAttribute1() != null)
             tuneItem.attribute1 = item.getAttribute1();
         if (item.getAttribute2() != null)
@@ -519,7 +521,9 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStarted(Activity activity) {
-
+        if (initialized) {
+            TuneActivity.onStart(activity);
+        }
     }
 
     /**
@@ -529,9 +533,8 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-       if (initialized) {
-            tune.setReferralSources(activity);
-            tune.measureSession();
+        if (initialized) {
+            TuneActivity.onResume(activity);
         }
     }
 
@@ -550,7 +553,9 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
-
+        if (initialized) {
+            TuneActivity.onStop(activity);
+        }
     }
 
 /* ********************************************************************************************** */
