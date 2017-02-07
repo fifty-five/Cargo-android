@@ -264,8 +264,6 @@ public class FacebookHandler extends AbstractTagHandler {
     public void onActivityResumed(Activity activity) {
         if (isInitialized())
             AppEventsLogger.activateApp(activity);
-        else
-            logUninitializedFramework();
     }
 
     /**
@@ -278,8 +276,6 @@ public class FacebookHandler extends AbstractTagHandler {
     public void onActivityPaused(Activity activity) {
         if (isInitialized())
             AppEventsLogger.deactivateApp(activity);
-        else
-            logUninitializedFramework();
     }
 
     /**
