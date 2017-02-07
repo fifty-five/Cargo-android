@@ -138,7 +138,7 @@ public class CargoItem {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("{CargoCustomItem:");
+        builder.append("{CargoItem:");
         builder.append(" "+Item.NAME+"=").append(this.name);
         if (id != null)
             builder.append(", "+Item.ID+"=").append(this.id);
