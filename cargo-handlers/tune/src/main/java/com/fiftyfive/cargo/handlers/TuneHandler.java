@@ -17,6 +17,7 @@ import com.tune.ma.application.TuneActivity;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -446,7 +447,6 @@ public class TuneHandler extends AbstractTagHandler {
                 List items = getItems();
                 if (items != null) {
                     tuneEvent.withEventItems(items);
-                    logParamSetWithSuccess(EVENT_ITEMS, tuneEvent.getEventItems());
                 }
                 else
                     logUncastableParam(EVENT_ITEMS, "List");
@@ -475,12 +475,17 @@ public class TuneHandler extends AbstractTagHandler {
      */
     private List<TuneEventItem> getItems() {
         // fill the List with TuneEventItem objects from the CargoItem list
-        List<TuneEventItem> tuneEventItems = new ArrayList<TuneEventItem>();
+        List<TuneEventItem> tuneEventItems = new ArrayList<>();
+        List<String> itemsString = new ArrayList<>();
+        TuneEventItem tuneItem = null;
 
         for (CargoItem item : CargoItem.itemsList) {
-            tuneEventItems.add(buildItem(item));
+            tuneItem = buildItem(item);
+            tuneEventItems.add(tuneItem);
+            itemsString.add(tuneItem.toJson().toString());
         }
         CargoItem.itemsListGotUsed();
+        logParamSetWithSuccess("eventItems", Arrays.toString(itemsString.toArray()));
         return tuneEventItems;
     }
 
