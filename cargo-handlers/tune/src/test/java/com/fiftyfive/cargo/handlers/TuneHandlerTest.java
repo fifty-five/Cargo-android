@@ -72,7 +72,7 @@ public class TuneHandlerTest extends TestCase {
         PowerMockito.mockStatic(Tune.class);
 
         HashMap<String, Object> map= new HashMap<>();
-        map.put("advertiserId", 123);
+        map.put("advertiserId", 123.0);
         map.put("conversionKey", 432);
 
         handler.execute("TUN_init", map);
