@@ -46,7 +46,7 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void initialize() {
-        super.initialize("FB", "Facebook", false);
+        super.initialize("FB", "Facebook");
 
         validate(true);
     }

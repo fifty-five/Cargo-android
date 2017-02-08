@@ -97,7 +97,7 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void initialize() {
-        super.initialize("TUN", "Tune", true);
+        super.initialize("TUN", "Tune");
         validate(true);
     }
 
