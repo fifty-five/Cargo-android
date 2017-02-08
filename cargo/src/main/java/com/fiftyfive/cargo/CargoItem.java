@@ -99,22 +99,14 @@ public class CargoItem {
      * @param newList A new ArrayList of CargoItem objects, which value can be null.
      */
     public static void setItemsList(ArrayList<CargoItem> newList) {
-        // changes the value of a null list and its linked data depending on the given list value.
-        if (itemsList == null) {
-            if (newList != null && !newList.isEmpty()) {
-                listValidForHandlers = handlersWithItems;
-                itemsList = newList;
-            }
-        }
         // changes the value of the list and its linked data depending on the given list value.
+        if (newList != null && !newList.isEmpty()) {
+            listValidForHandlers = handlersWithItems;
+            itemsList = newList;
+        }
         else {
-            if (newList != null && !newList.isEmpty()) {
-                itemsList = newList;
-            }
-            else {
-                itemsList = null;
-                listValidForHandlers = 0;
-            }
+            itemsList = null;
+            listValidForHandlers = 0;
         }
     }
 
