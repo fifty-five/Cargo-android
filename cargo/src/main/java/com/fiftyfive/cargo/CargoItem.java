@@ -16,7 +16,7 @@ public class CargoItem {
     /** a list of CargoItem which will be sent to some SDK at the next event */
     public static ArrayList<CargoItem> itemsList = null;
     /** a variable which count how many handlers operate event with items */
-    public static int handlersWithItems = 0;
+    static int handlersWithItems = 0;
     /** a variable which hold the count of operations left before the list deletion */
     private static int listValidForHandlers = 0;
 
@@ -84,21 +84,6 @@ public class CargoItem {
         listValidForHandlers--;
         if (listValidForHandlers <= 0) {
             itemsList = null;
-        }
-    }
-
-    /**
-     * Deletes an item from the list which will be sent to the next "item relative" event.
-     * 
-     * @param identifier the id or the name of the event to delete from the list.
-     */
-    public static void detachItemToEvent(@NonNull String identifier) {
-        for (CargoItem item : itemsList) {
-            if (identifier.equals(item.id) || identifier.equals(item.name)) {
-                itemsList.remove(item);
-                Log.d("Cargo", "CargoItem with id/name '"+identifier+"' has been successfully deleted.");
-                break ;
-            }
         }
     }
 
