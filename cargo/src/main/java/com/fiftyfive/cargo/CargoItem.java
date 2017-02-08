@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class CargoItem {
 
     /** a list of CargoItem which will be sent to some SDK at the next event */
-    public static ArrayList<CargoItem> itemsList = null;
+    private static ArrayList<CargoItem> itemsList = null;
     /** a variable which count how many handlers operate event with items */
     static int handlersWithItems = 0;
     /** a variable which hold the count of operations left before the list deletion */
@@ -62,12 +62,18 @@ public class CargoItem {
     private String attribute5;
 
 
+
+/** ***************************************** itemsList ***************************************** */
+
     /**
      * Adds an item to the list which will be sent to the next "item relative" event.
+     * A null parameter will be ignored.
      *
      * @param item the item to add as a parameter to the future event.
      */
     public static void attachItemToEvent(@NonNull CargoItem item) {
+        if (item == null)
+            return ;
         if (itemsList == null) {
             itemsList = new ArrayList<CargoItem>();
             listValidForHandlers = handlersWithItems;
@@ -86,6 +92,45 @@ public class CargoItem {
             itemsList = null;
         }
     }
+
+    /**
+     * Sets the list of items which will be sent to the next "item relative" event with a new value.
+     *
+     * @param newList A new ArrayList of CargoItem objects, which value can be null.
+     */
+    public static void setItemsList(ArrayList<CargoItem> newList) {
+        // changes the value of a null list and its linked data depending on the given list value.
+        if (itemsList == null) {
+            if (newList != null && !newList.isEmpty()) {
+                listValidForHandlers = handlersWithItems;
+                itemsList = newList;
+            }
+        }
+        // changes the value of the list and its linked data depending on the given list value.
+        else {
+            if (newList != null && !newList.isEmpty()) {
+                itemsList = newList;
+            }
+            else {
+                itemsList = null;
+                listValidForHandlers = 0;
+            }
+        }
+    }
+
+    /**
+     * A getter for the list of items which will be sent to the next "item relative" event.
+     * May be used to modify some objects before setting a new list with setItemsList() method.
+     *
+     * @return an ArrayList of CargoItem object.
+     */
+    public static ArrayList<CargoItem> getItemsList() {
+        return itemsList;
+    }
+
+
+
+/** ***************************************** CargoItem ***************************************** */
 
     /**
      * Constructor for the CargoItem object. Creates the object with an item name.

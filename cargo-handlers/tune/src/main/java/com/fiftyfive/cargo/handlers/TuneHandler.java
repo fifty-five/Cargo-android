@@ -479,7 +479,7 @@ public class TuneHandler extends AbstractTagHandler {
         List<String> itemsString = new ArrayList<>();
         TuneEventItem tuneItem = null;
 
-        for (CargoItem item : CargoItem.itemsList) {
+        for (CargoItem item : CargoItem.getItemsList()) {
             tuneItem = buildItem(item);
             tuneEventItems.add(tuneItem);
             itemsString.add(tuneItem.toJson().toString());

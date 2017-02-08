@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
             bundle.putString("currencyCode", "EUR");
             bundle.putDouble("totalRevenue", revenue);
-            if (CargoItem.itemsList != null && CargoItem.itemsList.size() != 0)
+            if (CargoItem.getItemsList() != null)
                 bundle.putBoolean("eventItems", true);
             mFirebaseAnalytics.logEvent("tagPurchase", bundle);
         }
