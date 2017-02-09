@@ -9,16 +9,17 @@ import java.util.ArrayList;
 
 /**
  * Created by Julien Gil on 06/01/2017.
+ *
+ * This class allows to create generic item objects for handlers which send events with item objects.
+ * This class also contains an ArrayList which stores CargoItem objects. When en event needing Item
+ * objects is about to be sent, each handlers requiring Item objects check on this ArrayList and
+ * translate the CargoItem objects into their specific SDK Item objects.
  */
-
 public class CargoItem {
 
     /** a list of CargoItem which will be sent to some SDK at the next event */
     private static ArrayList<CargoItem> itemsList = null;
-    /** a variable which count how many handlers operate event with items */
-    static int handlersWithItems = 0;
-    /** a variable which hold the count of operations left before the list deletion */
-    private static int listValidForHandlers = 0;
+    private static boolean tagFiredSinceLastChange = false;
 
     /** name of the item */
     private String name;
@@ -74,23 +75,11 @@ public class CargoItem {
     public static void attachItemToEvent(@NonNull CargoItem item) {
         if (item == null)
             return ;
+        checkIfTagHasBeenFired();
         if (itemsList == null) {
             itemsList = new ArrayList<CargoItem>();
-            listValidForHandlers = handlersWithItems;
         }
         itemsList.add(item);
-    }
-
-    /**
-     * A method to call each time the list has been used in a handler.
-     * It will decrease the listValidForHandlers variable.
-     * When it reach the 0 value, the list is deleted.
-     */
-    public static void itemsListGotUsed() {
-        listValidForHandlers--;
-        if (listValidForHandlers <= 0) {
-            itemsList = null;
-        }
     }
 
     /**
@@ -99,14 +88,13 @@ public class CargoItem {
      * @param newList A new ArrayList of CargoItem objects, which value can be null.
      */
     public static void setItemsList(ArrayList<CargoItem> newList) {
+        checkIfTagHasBeenFired();
         // changes the value of the list and its linked data depending on the given list value.
         if (newList != null && !newList.isEmpty()) {
-            listValidForHandlers = handlersWithItems;
             itemsList = newList;
         }
         else {
             itemsList = null;
-            listValidForHandlers = 0;
         }
     }
 
@@ -118,6 +106,28 @@ public class CargoItem {
      */
     public static ArrayList<CargoItem> getItemsList() {
         return itemsList;
+    }
+
+    /**
+     * Verifies whether a tag has been fired since the last list modification.
+     * If applicable, reset the 'tagFiredSinceLastChange' boolean to 'false' and set the 'itemsList'
+     * ArrayList to 'null' value.
+     * This method is called each time the 'itemsList' attribute is accessed in writing.
+     */
+    private static void checkIfTagHasBeenFired() {
+        if (tagFiredSinceLastChange) {
+            tagFiredSinceLastChange = false;
+            CargoItem.setItemsList(null);
+            Log.d("CargoItem", "CargoItem.itemsList is set to 'null' after an event " +
+                    "has been sent and before any other itemsList manipulation.");
+        }
+    }
+
+    /**
+     * Called by Tags class to notify this class when a tag is fired, in order to wipe the list.
+     */
+    static void notifyTagFired() {
+        tagFiredSinceLastChange = true;
     }
 
 
@@ -137,7 +147,6 @@ public class CargoItem {
     /**
      * Constructor for the CargoItem object.
      * Creates the object with an item name, its price, and the quantity selected.
-     * The revenue is automatically generated (unitPrice x quantity).
      * Use these objects in order to send items related hits to SDKs.
      *
      * @param name the name of the item.
@@ -148,7 +157,6 @@ public class CargoItem {
         this.name = name;
         this.unitPrice = unitPrice;
         this.quantity = quantity;
-        this.revenue = unitPrice * (double) quantity;
     }
 
     /**
