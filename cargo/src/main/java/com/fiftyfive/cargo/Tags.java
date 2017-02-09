@@ -2,10 +2,18 @@ package com.fiftyfive.cargo;
 
 import java.util.Map;
 
+import static com.fiftyfive.cargo.CargoItem.notifyTagFired;
+
 /**
  * Created by Julien Gil on 12/01/2017.
+ *
+ * The Tags class implements the CustomTagProvider interface of the GTM SDK in order to be able
+ * to receive and redirect custom functions calls with parameters.
+ * Once a function call has been received, calls on the Cargo execute method to redirect it to
+ * the handler matching the call.
+ *
+ * This class also plays a role in the CargoItem.itemsList, notifies it when a tag is fired.
  */
-
 public class Tags implements com.google.android.gms.tagmanager.CustomTagProvider {
 
     /**
@@ -20,6 +28,7 @@ public class Tags implements com.google.android.gms.tagmanager.CustomTagProvider
     @Override
     public void execute(Map<String, Object> map) {
         Cargo.getInstance().execute(map);
+        notifyTagFired();
     }
 
 }
