@@ -484,7 +484,6 @@ public class TuneHandler extends AbstractTagHandler {
             tuneEventItems.add(tuneItem);
             itemsString.add(tuneItem.toJson().toString());
         }
-        CargoItem.itemsListGotUsed();
         logParamSetWithSuccess("eventItems", Arrays.toString(itemsString.toArray()));
         return tuneEventItems;
     }
