@@ -33,8 +33,6 @@ public abstract class AbstractTagHandler {
     /** Key of the handler, which will be used for the logs. */
     protected String key;
 
-    protected boolean isHandlerWithItems;
-
 
 
 /* ************************************ Handlers core methods *********************************** */
@@ -98,7 +96,7 @@ public abstract class AbstractTagHandler {
         }
         else {
             Log.w(this.key + "_handler",
-                    "DUH ! Something went wrong, the handler hasn't been initialized");
+                    "Something went wrong, the handler hasn't been initialized");
         }
     }
 
