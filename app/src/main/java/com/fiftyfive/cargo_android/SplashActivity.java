@@ -12,7 +12,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 /**
  * Created by Julien Gil on 06/12/2016.
  */
-
 public class SplashActivity extends AppCompatActivity {
 
     FirebaseAnalytics mFirebaseAnalytics;
@@ -26,6 +25,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // initialize the Firebase tracker
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // initialize Cargo with the context and the GTM container
@@ -37,9 +37,12 @@ public class SplashActivity extends AppCompatActivity {
         // Register a single handler with a Handler enum
         Cargo.getInstance().registerHandler(Cargo.Handler.TUN);
 
+        // Launch an event to trigger the initialization method of the handlers,
+        // with the required parameters. This is configured in the GTM container.
         mFirebaseAnalytics.logEvent("applicationStart", null);
 
-        // register to the callback which is triggered when the tracking is ready
+        // register to the callback which is triggered when the all the handlers have been
+        // correctly initialized in order not to miss tracking.
         Cargo.getInstance().trackingReady = new CargoInterface() {
             @Override
             public void isReady() {

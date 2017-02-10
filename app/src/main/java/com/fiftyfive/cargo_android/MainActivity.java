@@ -2,12 +2,8 @@ package com.fiftyfive.cargo_android;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.fiftyfive.cargo.CargoItem;
@@ -105,8 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
             bundle.putString("currencyCode", "EUR");
             bundle.putDouble("totalRevenue", revenue);
-            if (CargoItem.getItemsList() != null)
-                bundle.putBoolean("eventItems", true);
+            bundle.putBoolean("eventItems", CargoItem.getItemsList() != null);
             mFirebaseAnalytics.logEvent("tagPurchase", bundle);
         }
     };
