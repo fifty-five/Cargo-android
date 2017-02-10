@@ -109,8 +109,9 @@ public class TuneHandler extends AbstractTagHandler {
     public void execute(String s, Map<String, Object> map) {
         logReceivedFunction(s, map);
 
-        if (TUN_INIT.equals(s))
+        if (TUN_INIT.equals(s)) {
             init(map);
+        }
         else if (initialized) {
             switch (s) {
                 case TUN_IDENTIFY:
@@ -123,8 +124,9 @@ public class TuneHandler extends AbstractTagHandler {
                     logUnknownFunction(s);
             }
         }
-        else
+        else {
             logUninitializedFramework();
+        }
     }
 
 
@@ -140,7 +142,6 @@ public class TuneHandler extends AbstractTagHandler {
      *              * advertiserId & conversionKey (String) : ids you got when you register your app
      */
     private void init(Map<String, Object> map) {
-
         Double advertIdDouble = getDouble(map, ADVERTISER_ID, 0);
         Long advertIdLong = advertIdDouble.longValue();
         final String advertiserId = Long.toString(advertIdLong);
@@ -156,8 +157,9 @@ public class TuneHandler extends AbstractTagHandler {
             tune = Tune.getInstance();
             setInitialized(true);
         }
-        else
+        else {
             logMissingParam(new String[]{ADVERTISER_ID, CONVERSION_KEY}, TUN_INIT);
+        }
     }
 
 
@@ -226,8 +228,9 @@ public class TuneHandler extends AbstractTagHandler {
             tune.setAge(age);
             logParamSetWithSuccess(User.USER_AGE, age);
         }
-        if (userGender != null)
+        if (userGender != null) {
             setGender(userGender);
+        }
     }
 
     /**
@@ -275,14 +278,17 @@ public class TuneHandler extends AbstractTagHandler {
             return ;
         }
 
-        if (map.size() > 0)
+        // if there is more parameters than just an event name, builds a complex event
+        if (map.size() > 0) {
             tuneEvent = eventBuilder(map, tuneEvent);
-
+        }
         // if the returned event is not null, the event is fired.
-        if (tuneEvent != null)
+        if (tuneEvent != null) {
             tune.measureEvent(tuneEvent);
-        else
-            Log.e(this.key="_handler", "Event object is null, the event hasn't been send.");
+        }
+        else {
+            Log.e(this.key = "_handler", "Event object is null, the event hasn't been send.");
+        }
     }
 
 
@@ -373,8 +379,9 @@ public class TuneHandler extends AbstractTagHandler {
                 tuneEvent.withRating(rating);
                 logParamSetWithSuccess(EVENT_RATING, tuneEvent.getRating());
             }
-            else
+            else {
                 logUncastableParam(EVENT_RATING, "double");
+            }
         }
 
         if (map.containsKey(EVENT_REVENUE)) {
@@ -383,8 +390,9 @@ public class TuneHandler extends AbstractTagHandler {
                 tuneEvent.withRevenue(revenue);
                 logParamSetWithSuccess(EVENT_REVENUE, tuneEvent.getRevenue());
             }
-            else
+            else {
                 logUncastableParam(EVENT_REVENUE, "double");
+            }
         }
 
         if (map.containsKey(EVENT_LEVEL)) {
@@ -394,8 +402,9 @@ public class TuneHandler extends AbstractTagHandler {
                 tuneEvent.withLevel(level);
                 logParamSetWithSuccess(EVENT_LEVEL, tuneEvent.getLevel());
             }
-            else
+            else {
                 logUncastableParam(EVENT_LEVEL, "int");
+            }
         }
 
         if (map.containsKey(EVENT_QUANTITY)) {
@@ -405,8 +414,9 @@ public class TuneHandler extends AbstractTagHandler {
                 tuneEvent.withQuantity(quantity);
                 logParamSetWithSuccess(EVENT_QUANTITY, tuneEvent.getQuantity());
             }
-            else
+            else {
                 logUncastableParam(EVENT_QUANTITY, "int");
+            }
         }
 
         return tuneEvent;
@@ -436,8 +446,9 @@ public class TuneHandler extends AbstractTagHandler {
                         logUncastableParam(EVENT_DATE2, "date");
                 }
             }
-            else
+            else {
                 logUncastableParam(EVENT_DATE1, "date");
+            }
         }
 
         if (map.containsKey(EVENT_ITEMS)) {
@@ -447,8 +458,9 @@ public class TuneHandler extends AbstractTagHandler {
                 if (items != null) {
                     tuneEvent.withEventItems(items);
                 }
-                else
+                else {
                     logUncastableParam(EVENT_ITEMS, "List");
+                }
             }
         }
 
@@ -460,8 +472,9 @@ public class TuneHandler extends AbstractTagHandler {
                 logParamSetWithSuccess(EVENT_RECEIPT_DATA, tuneEvent.getReceiptData());
                 logParamSetWithSuccess(EVENT_RECEIPT_SIGNATURE, tuneEvent.getReceiptSignature());
             }
-            else
-                logUncastableParam(EVENT_RECEIPT_DATA+" and/or "+EVENT_RECEIPT_SIGNATURE, "String");
+            else {
+                logUncastableParam(EVENT_RECEIPT_DATA + " and/or " + EVENT_RECEIPT_SIGNATURE, "String");
+            }
         }
 
         return tuneEvent;
@@ -498,22 +511,30 @@ public class TuneHandler extends AbstractTagHandler {
         TuneEventItem tuneItem = new TuneEventItem(item.getName());
 
         // fills the attributes of the item if they exist
-        if (item.getQuantity() != -1)
+        if (item.getQuantity() != -1) {
             tuneItem.quantity = item.getQuantity();
-        if (item.getUnitPrice() != -1)
+        }
+        if (item.getUnitPrice() != -1) {
             tuneItem.unitPrice = item.getUnitPrice();
-        if (item.getRevenue() != -1)
+        }
+        if (item.getRevenue() != -1) {
             tuneItem.revenue = item.getRevenue();
-        if (item.getAttribute1() != null)
+        }
+        if (item.getAttribute1() != null) {
             tuneItem.attribute1 = item.getAttribute1();
-        if (item.getAttribute2() != null)
+        }
+        if (item.getAttribute2() != null) {
             tuneItem.attribute2 = item.getAttribute2();
-        if (item.getAttribute3() != null)
+        }
+        if (item.getAttribute3() != null) {
             tuneItem.attribute3 = item.getAttribute3();
-        if (item.getAttribute4() != null)
+        }
+        if (item.getAttribute4() != null) {
             tuneItem.attribute4 = item.getAttribute4();
-        if (item.getAttribute5() != null)
+        }
+        if (item.getAttribute5() != null) {
             tuneItem.attribute5 = item.getAttribute5();
+        }
 
         return tuneItem;
     }

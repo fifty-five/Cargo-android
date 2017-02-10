@@ -39,10 +39,12 @@ public class MainActivity extends AppCompatActivity {
             username = userText.getText().toString();
             userMail = mailAdressText.getText().toString();
 
-            if (username.length() > 0)
+            if (username.length() > 0) {
                 bundle.putString("username", username);
-            if (userMail.length() > 0)
+            }
+            if (userMail.length() > 0) {
                 bundle.putString("userEmail", userMail);
+            }
 
             mFirebaseAnalytics.logEvent("tagEvent", bundle);
         }
@@ -62,10 +64,12 @@ public class MainActivity extends AppCompatActivity {
             username = userText.getText().toString();
             userMail = mailAdressText.getText().toString();
 
-            if (username.length() > 0)
+            if (username.length() > 0) {
                 bundle.putString("username", username);
-            if (userMail.length() > 0)
+            }
+            if (userMail.length() > 0) {
                 bundle.putString("userEmail", userMail);
+            }
 
             mFirebaseAnalytics.logEvent("identify", bundle);
         }
@@ -108,8 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
     int getQty(EditText eTxt) {
         String str = eTxt.getText().toString();
-        if (str.length() == 0)
+        if (str.length() == 0) {
             return 0;
+        }
         return Integer.parseInt(str);
     }
 

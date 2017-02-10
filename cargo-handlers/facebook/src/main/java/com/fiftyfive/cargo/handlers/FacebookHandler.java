@@ -61,8 +61,9 @@ public class FacebookHandler extends AbstractTagHandler {
         logReceivedFunction(s, map);
 
         // a check fo the init method
-        if (FB_INIT.equals(s))
+        if (FB_INIT.equals(s)) {
             init(map);
+        }
         // if the SDK is properly initialized, check for which method is called
         else if (initialized) {
             switch (s) {
@@ -76,8 +77,9 @@ public class FacebookHandler extends AbstractTagHandler {
                     logUnknownFunction(s);
             }
         }
-        else
+        else {
             logUninitializedFramework();
+        }
     }
 
 
@@ -196,7 +198,7 @@ public class FacebookHandler extends AbstractTagHandler {
         double total = getDouble(map, Transaction.TRANSACTION_TOTAL, -1);
         String currency = getString(map, Transaction.TRANSACTION_CURRENCY_CODE);
 
-        if (total >= 0 && currency != null){
+        if (total >= 0 && currency != null) {
             facebookLogger.logPurchase(BigDecimal.valueOf(total), Currency.getInstance(currency));
             logParamSetWithSuccess(Transaction.TRANSACTION_TOTAL, total);
             logParamSetWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currency);
@@ -223,25 +225,29 @@ public class FacebookHandler extends AbstractTagHandler {
      *
      */
     private Bundle eventParamBuilder(Map<String, Object> map) {
-
-        Bundle bundle = new Bundle();
+        Bundle paramBundle = new Bundle();
 
         Set<String> keys = map.keySet();
         for (String key : keys) {
-            if (map.get(key) instanceof String)
-                bundle.putString(key, getString(map, key));
-            else if (map.get(key) instanceof Boolean) {
-                if (getBoolean(map, key, false))
-                    bundle.putInt(key, 1);
-                else
-                    bundle.putInt(key, 0);
+            if (map.get(key) instanceof String) {
+                paramBundle.putString(key, getString(map, key));
             }
-            else if (map.get(key) instanceof Integer)
-                bundle.putInt(key, getInt(map, key, 0));
-            else
+            else if (map.get(key) instanceof Boolean) {
+                if (getBoolean(map, key, false)) {
+                    paramBundle.putInt(key, 1);
+                }
+                else {
+                    paramBundle.putInt(key, 0);
+                }
+            }
+            else if (map.get(key) instanceof Integer) {
+                paramBundle.putInt(key, getInt(map, key, 0));
+            }
+            else {
                 logUncastableParam(key, "String/Boolean/Int");
+            }
         }
-        return bundle;
+        return paramBundle;
     }
 
     /**
@@ -262,8 +268,9 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-        if (isInitialized())
+        if (isInitialized()) {
             AppEventsLogger.activateApp(activity);
+        }
     }
 
     /**
@@ -274,8 +281,9 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityPaused(Activity activity) {
-        if (isInitialized())
+        if (isInitialized()) {
             AppEventsLogger.deactivateApp(activity);
+        }
     }
 
     /**

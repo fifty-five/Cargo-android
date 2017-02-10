@@ -74,8 +74,9 @@ public class CargoItem {
      * @param item the item to add as a parameter to the future event.
      */
     public static void attachItemToEvent(@NonNull CargoItem item) {
-        if (item == null)
-            return ;
+        if (item == null) {
+            return;
+        }
         emptyListIfTagHasBeenFired();
         if (itemsList == null) {
             itemsList = new ArrayList<CargoItem>();
@@ -171,24 +172,33 @@ public class CargoItem {
 
         builder.append("{CargoItem:");
         builder.append(" "+Item.NAME+"=").append(this.name);
-        if (id != null)
-            builder.append(", "+Item.ID+"=").append(this.id);
-        if (unitPrice != -1)
-            builder.append(", "+Item.UNIT_PRICE+"=").append(Double.toString(this.unitPrice));
-        if (quantity != -1)
-            builder.append(", "+Item.QUANTITY+"=").append(Integer.toString(this.quantity));
-        if (revenue != -1)
+        if (id != null) {
+            builder.append(", " + Item.ID + "=").append(this.id);
+        }
+        if (unitPrice != -1) {
+            builder.append(", " + Item.UNIT_PRICE + "=").append(Double.toString(this.unitPrice));
+        }
+        if (quantity != -1) {
+            builder.append(", " + Item.QUANTITY + "=").append(Integer.toString(this.quantity));
+        }
+        if (revenue != -1) {
             builder.append(", "+Item.REVENUE+"=").append(Double.toString(this.revenue));
-        if (brand != null)
+        }
+        if (brand != null) {
             builder.append(", "+Item.BRAND+"=").append(this.brand);
-        if (category != null)
+        }
+        if (category != null) {
             builder.append(", "+Item.CATEGORY+"=").append(this.category);
-        if (variant != null)
+        }
+        if (variant != null) {
             builder.append(", "+Item.VARIANT+"=").append(this.variant);
-        if (position != -1)
+        }
+        if (position != -1) {
             builder.append(", "+Item.POSITION+"=").append(Integer.toString(this.position));
-        if (couponCode != null)
+        }
+        if (couponCode != null) {
             builder.append(", "+Item.COUPON_CODE+"=").append(this.couponCode);
+        }
         if (iDimension != -1 && vDimension != null) {
             builder.append(", customDim='").append(Integer.toString(this.iDimension) + "="
                     + this.vDimension + "'");
@@ -197,16 +207,21 @@ public class CargoItem {
             builder.append(", customMetric='").append(Integer.toString(this.iMetric) + "="
                     + Integer.toString(this.vMetric) + "'");
         }
-        if (attribute1 != null)
+        if (attribute1 != null) {
             builder.append(", "+Item.ATTR1+"=").append(this.attribute1);
-        if (attribute2 != null)
+        }
+        if (attribute2 != null) {
             builder.append(", "+Item.ATTR2+"=").append(this.attribute2);
-        if (attribute3 != null)
+        }
+        if (attribute3 != null) {
             builder.append(", "+Item.ATTR3+"=").append(this.attribute3);
-        if (attribute4 != null)
+        }
+        if (attribute4 != null) {
             builder.append(", "+Item.ATTR4+"=").append(this.attribute4);
-        if (attribute5 != null)
+        }
+        if (attribute5 != null) {
             builder.append(", "+Item.ATTR5+"=").append(this.attribute5);
+        }
         builder.append("}");
         return builder.toString();
     }

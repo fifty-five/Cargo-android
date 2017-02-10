@@ -56,8 +56,9 @@ public class Cargo {
             instance.initManager(application);
             init = true;
         }
-        else
+        else {
             Log.i("55", "Cargo has already been initialized");
+        }
     }
 
     /**
@@ -268,8 +269,9 @@ public class Cargo {
      * @param appContext   the new Application context you want cargo to be set with
      */
     private void setAppContext(Context appContext) {
-        if (appContext != null)
+        if (appContext != null) {
             this.appContext = appContext;
+        }
     }
 
     /**
@@ -277,8 +279,9 @@ public class Cargo {
      * When all the handlers are ready to be used, triggers a callback to inform cargo is ready.
      */
     void setHandlerInit() {
-        if (++handlersReady == manager.getHandlers().size())
+        if (++handlersReady == manager.getHandlers().size()) {
             trackingReady.isReady();
+        }
     }
 
 /* ********************************************************************************************** */

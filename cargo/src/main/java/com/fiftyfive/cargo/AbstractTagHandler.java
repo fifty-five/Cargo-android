@@ -76,10 +76,12 @@ public abstract class AbstractTagHandler {
      */
     public void validate(boolean isValid) {
         this.valid = isValid;
-        if (isValid)
-            Log.v(this.key+"_handler", this.name+" SDK has started without error");
-        else
-            Log.e(this.key+"_handler", "Failed to start the "+this.name+" SDK.");
+        if (isValid) {
+            Log.v(this.key + "_handler", this.name + " SDK has started without error");
+        }
+        else {
+            Log.e(this.key + "_handler", "Failed to start the " + this.name + " SDK.");
+        }
     }
 
     /**
