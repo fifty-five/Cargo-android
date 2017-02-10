@@ -1,7 +1,6 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
-import android.os.Build;
 import android.util.Log;
 
 import com.fiftyfive.cargo.AbstractTagHandler;
