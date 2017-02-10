@@ -19,6 +19,7 @@ public class CargoItem {
 
     /** a list of CargoItem which will be sent to some SDK at the next event */
     private static ArrayList<CargoItem> itemsList = null;
+    /** boolean set to true when a tag custom function is called */
     private static boolean tagFiredSinceLastChange = false;
 
     /** name of the item */
@@ -75,7 +76,7 @@ public class CargoItem {
     public static void attachItemToEvent(@NonNull CargoItem item) {
         if (item == null)
             return ;
-        checkIfTagHasBeenFired();
+        emptyListIfTagHasBeenFired();
         if (itemsList == null) {
             itemsList = new ArrayList<CargoItem>();
         }
@@ -88,7 +89,7 @@ public class CargoItem {
      * @param newList A new ArrayList of CargoItem objects, which value can be null.
      */
     public static void setItemsList(ArrayList<CargoItem> newList) {
-        checkIfTagHasBeenFired();
+        emptyListIfTagHasBeenFired();
         // changes the value of the list and its linked data depending on the given list value.
         if (newList != null && !newList.isEmpty()) {
             itemsList = newList;
@@ -114,7 +115,7 @@ public class CargoItem {
      * ArrayList to 'null' value.
      * This method is called each time the 'itemsList' attribute is accessed in writing.
      */
-    private static void checkIfTagHasBeenFired() {
+    private static void emptyListIfTagHasBeenFired() {
         if (tagFiredSinceLastChange) {
             tagFiredSinceLastChange = false;
             CargoItem.setItemsList(null);
@@ -124,7 +125,7 @@ public class CargoItem {
     }
 
     /**
-     * Called by Tags class to notify this class when a tag is fired, in order to wipe the list.
+     * Called by Tags class to notify this class when a tag is fired, in order to empty the list.
      */
     static void notifyTagFired() {
         tagFiredSinceLastChange = true;
