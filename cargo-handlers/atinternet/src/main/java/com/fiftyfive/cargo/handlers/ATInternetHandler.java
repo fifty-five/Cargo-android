@@ -121,7 +121,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         enableDebug = getBoolean(params, com.fiftyfive.cargo.models.Tracker.ENABLE_DEBUG, false);
 
         if (appIdLong != 0 && siteId != null && log != null && logSSL != null) {
-            HashMap config = new HashMap<>();
+            HashMap<String, Object> config = new HashMap<String, Object>();
             config.put(SITE, siteId);
             config.put(LOG, log);
             config.put(LOG_SSL, logSSL);
@@ -155,7 +155,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         params.remove(OVERRIDE);
         logParamSetWithSuccess(OVERRIDE, override);
 
-        HashMap<String, Object> map = new HashMap<>(params);
+        HashMap<String, Object> map = new HashMap<String, Object>(params);
         atTracker.setConfig(map, override, new SetConfigCallback() {
             @Override
             public void setConfigEnd() {

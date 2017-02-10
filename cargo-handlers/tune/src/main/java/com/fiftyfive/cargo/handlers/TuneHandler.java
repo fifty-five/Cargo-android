@@ -454,7 +454,7 @@ public class TuneHandler extends AbstractTagHandler {
         if (map.containsKey(EVENT_ITEMS)) {
             Boolean eventItemsBool = getBoolean(map, EVENT_ITEMS, false);
             if (eventItemsBool) {
-                List items = getItems();
+                ArrayList<TuneEventItem> items = getItems();
                 if (items != null) {
                     tuneEvent.withEventItems(items);
                 }
@@ -485,12 +485,17 @@ public class TuneHandler extends AbstractTagHandler {
      *
      * @return the list of TuneEventItem objects
      */
-    private List<TuneEventItem> getItems() {
+    private ArrayList<TuneEventItem> getItems() {
         // fill the List with TuneEventItem objects from the CargoItem list
-        List<TuneEventItem> tuneEventItems = new ArrayList<>();
-        List<String> itemsString = new ArrayList<>();
+        ArrayList<TuneEventItem> tuneEventItems = new ArrayList<TuneEventItem>();
+        // for logs purposes
+        ArrayList<String> itemsString = new ArrayList<String>();
         TuneEventItem tuneItem = null;
 
+        ArrayList<CargoItem> cargoItemList = CargoItem.getItemsList();
+        if (cargoItemList == null) {
+            return null;
+        }
         for (CargoItem item : CargoItem.getItemsList()) {
             tuneItem = buildItem(item);
             tuneEventItems.add(tuneItem);
