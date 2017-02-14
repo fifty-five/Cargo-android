@@ -93,7 +93,7 @@ public class ATInternetHandlerTest extends TestCase {
     public void testInit(){
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("site", "fifty-five");
+        map.put("site", "123456.0");
         map.put("log", "logc1");
         map.put("logSSL", "logSecure2");
 
@@ -101,7 +101,6 @@ public class ATInternetHandlerTest extends TestCase {
 
         verify(atTrackerMock, times(1)).setConfig(any(HashMap.class), anyBoolean(),
                 any(SetConfigCallback.class));
-        assertEquals(true, handler.isInitialized());
     }
 
 /* ************************************** identify Tests **************************************** */

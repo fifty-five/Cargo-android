@@ -4,19 +4,19 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.fiftyfive.cargo.AbstractTagHandler;
+import com.fiftyfive.cargo.CargoItem;
 import com.fiftyfive.cargo.models.Event;
-import com.fiftyfive.cargo.models.Item;
 import com.fiftyfive.cargo.models.User;
-import com.google.android.gms.tagmanager.Container;
 import com.tune.Tune;
 import com.tune.TuneEvent;
 import com.tune.TuneEventItem;
 import com.tune.TuneGender;
+import com.tune.ma.application.TuneActivity;
 
-import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -101,30 +101,17 @@ public class TuneHandler extends AbstractTagHandler {
     }
 
     /**
-     * Register the callbacks to the container. After a dataLayer.push(),
-     * these will trigger the execute method of this handler.
-     *
-     * @param container The instance of the GTM container we register the callbacks to
-     */
-    @Override
-    public void register(Container container) {
-        container.registerFunctionCallTagCallback(TUN_INIT, this);
-        container.registerFunctionCallTagCallback(TUN_IDENTIFY, this);
-        container.registerFunctionCallTagCallback(TUN_TAG_EVENT, this);
-    }
-
-    /**
      * A callback method for the registered callbacks method name mentioned in the register method.
      *
      * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
-    @Override
     public void execute(String s, Map<String, Object> map) {
         logReceivedFunction(s, map);
 
-        if (TUN_INIT.equals(s))
+        if (TUN_INIT.equals(s)) {
             init(map);
+        }
         else if (initialized) {
             switch (s) {
                 case TUN_IDENTIFY:
@@ -137,8 +124,9 @@ public class TuneHandler extends AbstractTagHandler {
                     logUnknownFunction(s);
             }
         }
-        else
+        else {
             logUninitializedFramework();
+        }
     }
 
 
@@ -154,19 +142,24 @@ public class TuneHandler extends AbstractTagHandler {
      *              * advertiserId & conversionKey (String) : ids you got when you register your app
      */
     private void init(Map<String, Object> map) {
-        String advertiserId = getString(map, ADVERTISER_ID);
-        String conversionKey = getString(map, CONVERSION_KEY);
+        Double advertIdDouble = getDouble(map, ADVERTISER_ID, 0);
+        Long advertIdLong = advertIdDouble.longValue();
+        final String advertiserId = Long.toString(advertIdLong);
+        final String conversionKey = getString(map, CONVERSION_KEY);
 
-        if (advertiserId != null && conversionKey != null) {
+        if (advertIdLong != 0 && advertiserId != null && conversionKey != null) {
             // set the required parameters
             Tune.init(cargo.getAppContext(), advertiserId, conversionKey);
+            logParamSetWithSuccess(ADVERTISER_ID, advertiserId);
+            logParamSetWithSuccess(CONVERSION_KEY, conversionKey);
 
             // retrieve the Tune instance
             tune = Tune.getInstance();
             setInitialized(true);
         }
-        else
+        else {
             logMissingParam(new String[]{ADVERTISER_ID, CONVERSION_KEY}, TUN_INIT);
+        }
     }
 
 
@@ -235,22 +228,22 @@ public class TuneHandler extends AbstractTagHandler {
             tune.setAge(age);
             logParamSetWithSuccess(User.USER_AGE, age);
         }
-        if (userGender != null)
+        if (userGender != null) {
             setGender(userGender);
+        }
     }
 
     /**
      * Method used to create and fire an event to the Tune Console
-     * The mandatory parameters are EVENT_NAME or EVENT_ID which are a necessity to build the event
+     * The mandatory parameter is EVENT_NAME which is a necessity to build the event
      * Without this parameter, the event won't be built.
      * After the creation of the event object, some attributes can be added through the eventBuilder
      * method, using the map obtained from the gtm container.
      *
      * @param map   the parameters given at the moment of the dataLayer.push(),
      *              passed through the GTM container and the execute method.
-     *              The only parameter requested here is a name or an id for the event
-     *              * eventName (String) : the name of the event (mandatory, unless eventId is set)
-     *              * eventId (int) : id linked to the event (mandatory, unless eventName is set)
+     *              The only parameter requested here is an event name
+     *              * eventName (String) : the name of the event (mandatory)
      *              * eventCurrencyCode (String)
      *              * eventAdvertiserRefId (String)
      *              * eventContentId (String)
@@ -265,7 +258,7 @@ public class TuneHandler extends AbstractTagHandler {
      *              * eventDate1 (Date)
      *              * eventDate2 (Date) : Date1 needs to be set
      *              * eventRevenue (Double)
-     *              * eventItems (list)
+     *              * eventItems (boolean)
      *              * eventLevel (int)
      *              * eventReceiptData (String) : requires eventReceiptSignature
      *              * eventReceiptSignature (String) : requires eventReceiptData
@@ -280,31 +273,22 @@ public class TuneHandler extends AbstractTagHandler {
             logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             map.remove(Event.EVENT_NAME);
         }
-        else if (map.containsKey(Event.EVENT_ID)) {
-            int eventId = getInt(map, Event.EVENT_ID, -1);
-            if (eventId != -1) {
-                tuneEvent = new TuneEvent(eventId);
-                logParamSetWithSuccess(Event.EVENT_ID, eventId);
-                map.remove(Event.EVENT_ID);
-            }
-            else {
-                logUncastableParam(Event.EVENT_ID, "int");
-                return ;
-            }
-        }
         else {
-            logMissingParam(new String[]{Event.EVENT_NAME, Event.EVENT_ID}, TUN_TAG_EVENT);
+            logMissingParam(new String[]{Event.EVENT_NAME}, TUN_TAG_EVENT);
             return ;
         }
 
-        if (map.size() > 0)
+        // if there is more parameters than just an event name, builds a complex event
+        if (map.size() > 0) {
             tuneEvent = eventBuilder(map, tuneEvent);
-
+        }
         // if the returned event is not null, the event is fired.
-        if (tuneEvent != null)
+        if (tuneEvent != null) {
             tune.measureEvent(tuneEvent);
-        else
-            Log.e(this.key="_handler", "Event object is null, the event hasn't been send.");
+        }
+        else {
+            Log.e(this.key = "_handler", "Event object is null, the event hasn't been send.");
+        }
     }
 
 
@@ -393,40 +377,46 @@ public class TuneHandler extends AbstractTagHandler {
             double rating = getDouble(map, EVENT_RATING, -1);
             if (rating != -1) {
                 tuneEvent.withRating(rating);
-                logParamSetWithSuccess(EVENT_RATING, rating);
+                logParamSetWithSuccess(EVENT_RATING, tuneEvent.getRating());
             }
-            else
+            else {
                 logUncastableParam(EVENT_RATING, "double");
+            }
         }
 
         if (map.containsKey(EVENT_REVENUE)) {
             double revenue = getDouble(map, EVENT_REVENUE, -1);
             if (revenue != -1) {
                 tuneEvent.withRevenue(revenue);
-                logParamSetWithSuccess(EVENT_REVENUE, revenue);
+                logParamSetWithSuccess(EVENT_REVENUE, tuneEvent.getRevenue());
             }
-            else
+            else {
                 logUncastableParam(EVENT_REVENUE, "double");
+            }
         }
 
         if (map.containsKey(EVENT_LEVEL)) {
-            int level = getInt(map, EVENT_LEVEL, -1);
+            Double levelDouble = getDouble(map, EVENT_LEVEL, -1);
+            int level = levelDouble.intValue();
             if (level != -1) {
                 tuneEvent.withLevel(level);
-                logParamSetWithSuccess(EVENT_LEVEL, level);
+                logParamSetWithSuccess(EVENT_LEVEL, tuneEvent.getLevel());
             }
-            else
+            else {
                 logUncastableParam(EVENT_LEVEL, "int");
+            }
         }
 
         if (map.containsKey(EVENT_QUANTITY)) {
-            int quantity = getInt(map, EVENT_QUANTITY, -1);
+            Double quantityDouble = getDouble(map, EVENT_QUANTITY, -1);
+            int quantity = quantityDouble.intValue();
             if (quantity != -1) {
                 tuneEvent.withQuantity(quantity);
-                logParamSetWithSuccess(EVENT_QUANTITY, quantity);
+                logParamSetWithSuccess(EVENT_QUANTITY, tuneEvent.getQuantity());
             }
-            else
+            else {
                 logUncastableParam(EVENT_QUANTITY, "int");
+            }
         }
 
         return tuneEvent;
@@ -444,35 +434,34 @@ public class TuneHandler extends AbstractTagHandler {
             Date date = getDate(map, EVENT_DATE1);
             if (date != null) {
                 tuneEvent.withDate1(date);
-                logParamSetWithSuccess(EVENT_DATE1, date);
+                logParamSetWithSuccess(EVENT_DATE1, tuneEvent.getDate1());
 
                 if (map.containsKey(EVENT_DATE2)) {
                     Date date2 = getDate(map, EVENT_DATE2);
                     if (date2 != null) {
                         tuneEvent.withDate2(date2);
-                        logParamSetWithSuccess(EVENT_DATE2, date2);
+                        logParamSetWithSuccess(EVENT_DATE2, tuneEvent.getDate2());
                     }
                     else
                         logUncastableParam(EVENT_DATE2, "date");
                 }
             }
-            else
+            else {
                 logUncastableParam(EVENT_DATE1, "date");
+            }
         }
 
         if (map.containsKey(EVENT_ITEMS)) {
-            String jsonString = getString(map, EVENT_ITEMS);
-            if (jsonString != null) {
-                List items = getItems(jsonString);
+            Boolean eventItemsBool = getBoolean(map, EVENT_ITEMS, false);
+            if (eventItemsBool) {
+                ArrayList<TuneEventItem> items = getItems();
                 if (items != null) {
                     tuneEvent.withEventItems(items);
-                    logParamSetWithSuccess(EVENT_ITEMS, items);
                 }
-                else
+                else {
                     logUncastableParam(EVENT_ITEMS, "List");
+                }
             }
-            else
-                logUncastableParam(EVENT_ITEMS, "String");
         }
 
         if (map.containsKey(EVENT_RECEIPT_DATA)) {
@@ -480,143 +469,79 @@ public class TuneHandler extends AbstractTagHandler {
             String signature = getString(map, EVENT_RECEIPT_SIGNATURE);
             if (data != null && signature != null) {
                 tuneEvent.withReceipt(data, signature);
-                logParamSetWithSuccess(EVENT_RECEIPT_DATA, data);
-                logParamSetWithSuccess(EVENT_RECEIPT_SIGNATURE, signature);
+                logParamSetWithSuccess(EVENT_RECEIPT_DATA, tuneEvent.getReceiptData());
+                logParamSetWithSuccess(EVENT_RECEIPT_SIGNATURE, tuneEvent.getReceiptSignature());
             }
-            else
-                logUncastableParam(EVENT_RECEIPT_DATA+" and/or "+EVENT_RECEIPT_SIGNATURE, "String");
+            else {
+                logUncastableParam(EVENT_RECEIPT_DATA + " and/or " + EVENT_RECEIPT_SIGNATURE, "String");
+            }
         }
 
         return tuneEvent;
     }
 
     /**
-     * Create a List of TuneEventItem objects from a String json formatted.
+     * Create a List of TuneEventItem objects from the CargoItem.itemsList attribute.
      *
-     * @param jsonString the string containing the TuneEventItems in a JSON format
      * @return the list of TuneEventItem objects
      */
-    private List<TuneEventItem> getItems(String jsonString) {
-        // transforms the String object into a JSONObject, logs an error in case of fail, returns null
-        JSONObject jsonItems;
-        try {
-            jsonItems = new JSONObject(jsonString);
-        }
-        catch (Throwable t) {
-            logUncastableParam(EVENT_ITEMS, "JSONObject");
+    private ArrayList<TuneEventItem> getItems() {
+        // fill the List with TuneEventItem objects from the CargoItem list
+        ArrayList<TuneEventItem> tuneEventItems = new ArrayList<TuneEventItem>();
+        // for logs purposes
+        ArrayList<String> itemsString = new ArrayList<String>();
+        TuneEventItem tuneItem = null;
+
+        ArrayList<CargoItem> cargoItemList = CargoItem.getItemsList();
+        if (cargoItemList == null) {
             return null;
         }
-
-        // fill the List with TuneEventItem objects after they get retrieved from the JSONObject
-        List<TuneEventItem> tuneEventItems = new ArrayList<TuneEventItem>();
-        boolean moreItems = true;
-        int i = 0;
-        while (moreItems) {
-            JSONObject jsonItem;
-            try {
-                jsonItem = jsonItems.getJSONObject(Integer.toString(i++));
-
-                // A method to transform the JSONObject into a TuneEventItem object
-                TuneEventItem item = buildItem(jsonItem);
-                if (item == null) {
-                    logUncastableParam(EVENT_ITEMS, "TuneEventItem");
-                    return null;
-                }
-                tuneEventItems.add(item);
-            }
-            catch (Throwable t) {
-                moreItems = false;
-            }
+        for (CargoItem item : CargoItem.getItemsList()) {
+            tuneItem = buildItem(item);
+            tuneEventItems.add(tuneItem);
+            itemsString.add(tuneItem.toJson().toString());
         }
+        logParamSetWithSuccess("eventItems", Arrays.toString(itemsString.toArray()));
         return tuneEventItems;
     }
 
     /**
      * Creates a TuneEventItem from a JSONObject and fills the required fields.
      *
-     * @param jsonItem the item with the JSONObject type
+     * @param item the item with the CargoItem type
      * @return the item with the correct type, which is TuneEventItem
      */
-    private TuneEventItem buildItem(JSONObject jsonItem) {
-        // get the name of the object, if it doesn't work, cancel the operation returning null
-        String name = getStringFromJson(jsonItem, Item.NAME);
-        if (name != null) {
-            int quantity = getIntFromJson(jsonItem, Item.QUANTITY);
-            double unitPrice = getDoubleFromJson(jsonItem, Item.UNIT_PRICE);
-            double revenue = getDoubleFromJson(jsonItem, Item.REVENUE);
-            String attribute1 = getStringFromJson(jsonItem, Item.ATTR1);
-            String attribute2 = getStringFromJson(jsonItem, Item.ATTR2);
-            String attribute3 = getStringFromJson(jsonItem, Item.ATTR3);
-            String attribute4 = getStringFromJson(jsonItem, Item.ATTR4);
-            String attribute5 = getStringFromJson(jsonItem, Item.ATTR5);
+    private TuneEventItem buildItem(CargoItem item) {
 
-            // fills the attributes of the item if they exist
-            TuneEventItem tuneItem = new TuneEventItem(name.toString());
-            if (quantity != -1)
-                tuneItem.quantity = quantity;
-            if (unitPrice != -1)
-                tuneItem.unitPrice = unitPrice;
-            if (revenue != -1)
-                tuneItem.revenue = revenue;
-            if (attribute1 != null)
-                tuneItem.attribute1 = attribute1;
-            if (attribute2 != null)
-                tuneItem.attribute2 = attribute2;
-            if (attribute3 != null)
-                tuneItem.attribute3 = attribute3;
-            if (attribute4 != null)
-                tuneItem.attribute4 = attribute4;
-            if (attribute5 != null)
-                tuneItem.attribute5 = attribute5;
+        TuneEventItem tuneItem = new TuneEventItem(item.getName());
 
-            return tuneItem;
+        // fills the attributes of the item if they exist
+        if (item.getQuantity() != -1) {
+            tuneItem.quantity = item.getQuantity();
         }
-        return null;
-    }
+        if (item.getUnitPrice() != -1) {
+            tuneItem.unitPrice = item.getUnitPrice();
+        }
+        if (item.getRevenue() != -1) {
+            tuneItem.revenue = item.getRevenue();
+        }
+        if (item.getAttribute1() != null) {
+            tuneItem.attribute1 = item.getAttribute1();
+        }
+        if (item.getAttribute2() != null) {
+            tuneItem.attribute2 = item.getAttribute2();
+        }
+        if (item.getAttribute3() != null) {
+            tuneItem.attribute3 = item.getAttribute3();
+        }
+        if (item.getAttribute4() != null) {
+            tuneItem.attribute4 = item.getAttribute4();
+        }
+        if (item.getAttribute5() != null) {
+            tuneItem.attribute5 = item.getAttribute5();
+        }
 
-    /**
-     * retrieves an int entry from a JSONObject
-     * @param json the JSONObject you want to retrieve the entry from
-     * @param key the String key the value is stored under.
-     * @return the int value, with -1 in case of missing key
-     */
-    private int getIntFromJson(JSONObject json, String key) {
-        try {
-            return json.getInt(key);
-        }
-        catch (Throwable t) {
-            return -1;
-        }
-    }
-
-    /**
-     * retrieves a double entry from a JSONObject
-     * @param json the JSONObject you want to retrieve the entry from
-     * @param key the String key the value is stored under.
-     * @return the double value, with -1 in case of missing key
-     */
-    private double getDoubleFromJson(JSONObject json, String key) {
-        try {
-            return json.getDouble(key);
-        }
-        catch (Throwable t) {
-            return -1;
-        }
-    }
-
-    /**
-     * retrieves a String entry from a JSONObject
-     * @param json the JSONObject you want to retrieve the entry from
-     * @param key the String key the value is stored under.
-     * @return the String value, null in case of missing key
-     */
-    private String getStringFromJson(JSONObject json, String key) {
-        try {
-            return json.getString(key);
-        }
-        catch (Throwable t) {
-            return null;
-        }
+        return tuneItem;
     }
 
     /**
@@ -625,7 +550,9 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStarted(Activity activity) {
-
+        if (initialized) {
+            TuneActivity.onStart(activity);
+        }
     }
 
     /**
@@ -636,8 +563,7 @@ public class TuneHandler extends AbstractTagHandler {
     @Override
     public void onActivityResumed(Activity activity) {
         if (initialized) {
-            tune.setReferralSources(activity);
-            tune.measureSession();
+            TuneActivity.onResume(activity);
         }
     }
 
@@ -656,7 +582,9 @@ public class TuneHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
-
+        if (initialized) {
+            TuneActivity.onStop(activity);
+        }
     }
 
 /* ********************************************************************************************** */

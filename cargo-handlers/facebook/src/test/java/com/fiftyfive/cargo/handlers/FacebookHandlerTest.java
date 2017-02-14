@@ -77,7 +77,7 @@ public class FacebookHandlerTest extends TestCase {
         when(cargoMock.getAppContext().getApplicationContext()).thenReturn(context);
 
         HashMap<String, Object> map= new HashMap<>();
-        map.put("applicationId", 123);
+        map.put("applicationId", 1.01234567891011E14);
 
         handler.execute("FB_init", map);
 
@@ -88,7 +88,7 @@ public class FacebookHandlerTest extends TestCase {
         AppEventsLogger.newLogger(context);
 
         verifyStatic();
-        FacebookSdk.setApplicationId("123");
+        FacebookSdk.setApplicationId("101234567891011");
     }
 
     public void testFailedInit(){
