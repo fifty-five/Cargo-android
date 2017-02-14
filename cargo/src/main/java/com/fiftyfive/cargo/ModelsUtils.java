@@ -54,10 +54,13 @@ public class ModelsUtils {
         if (value instanceof Boolean){
             return (boolean) value;
         }
-        else if (value instanceof  String){
-            return Boolean.valueOf(value.toString());
+        else if (value instanceof String){
+            boolean myBool = Boolean.valueOf(value.toString());
+            return myBool;
         }
-        return defaultValue;
+        else {
+            return defaultValue;
+        }
     }
 
     /**

@@ -26,12 +26,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
-    compile 'com.google.android.gms:play-services:9.2.0'
     compile project(':cargo')
     compile project(':cargo-handlers:atinternet')
     compile project(':cargo-handlers:facebook')
-    compile project(':cargo-handlers:firebase')
-    compile project(':cargo-handlers:google-analytics')
     compile project(':cargo-handlers:tune')
     compile 'com.android.support:multidex:1.0.0'
 }

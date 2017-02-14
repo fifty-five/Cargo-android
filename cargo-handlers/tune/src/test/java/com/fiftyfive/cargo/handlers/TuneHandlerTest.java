@@ -3,6 +3,7 @@ package com.fiftyfive.cargo.handlers;
 import android.app.Application;
 
 import com.fiftyfive.cargo.Cargo;
+import com.fiftyfive.cargo.CargoItem;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.User;
 import com.tune.Tune;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -70,7 +72,7 @@ public class TuneHandlerTest extends TestCase {
         PowerMockito.mockStatic(Tune.class);
 
         HashMap<String, Object> map= new HashMap<>();
-        map.put("advertiserId", 123);
+        map.put("advertiserId", 123.0);
         map.put("conversionKey", 432);
 
         handler.execute("TUN_init", map);
@@ -131,32 +133,19 @@ public class TuneHandlerTest extends TestCase {
         verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
     }
 
-    public void testTagEventWithIdAndDifferentParams() throws Exception {
+    public void testTagWithEventItems() throws Exception {
         HashMap<String, Object> map= new HashMap<>();
-        map.put(Event.EVENT_ID, 5542);
-        map.put("eventRating", 25.2);
-        Date date1 = new Date();
-        map.put("eventDate1", date1);
-        map.put("eventRevenue", 55.42);
-        map.put("eventLevel", 55);
-        map.put("eventReceiptData", "test1");
-        map.put("eventReceiptSignature", "test 2");
-        map.put("eventQuantity", 42);
-        Date date2 = new Date();
-        map.put("eventDate2", date2);
-        map.put("lkdshfkjhdsf", "sdkjhd");
+        map.put(Event.EVENT_NAME, "purchase");
+        map.put("eventItems", true);
 
+        CargoItem.attachItemToEvent(new CargoItem("wonderfulItem").setQuantity(1).setUnitPrice(19.99));
+        CargoItem.attachItemToEvent(new CargoItem("amazingItem").setQuantity(6).setUnitPrice(9.99));
         handler.setInitialized(true);
         handler.execute("TUN_tagEvent", map);
-        PowerMockito.verifyNew(TuneEvent.class).withArguments(5542);
+        PowerMockito.verifyNew(TuneEvent.class).withArguments("purchase");
 
-        verify(tuneEventMock, times(1)).withRating(25.2);
-        verify(tuneEventMock, times(1)).withDate1(date1);
-        verify(tuneEventMock, times(1)).withDate2(date2);
-        verify(tuneEventMock, times(1)).withRevenue(55.42);
-        verify(tuneEventMock, times(1)).withLevel(55);
-        verify(tuneEventMock, times(1)).withReceipt("test1", "test 2");
-        verify(tuneEventMock, times(1)).withQuantity(42);
+        verify(tuneEventMock, times(1)).withEventItems(anyList());
+
         verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
     }
 

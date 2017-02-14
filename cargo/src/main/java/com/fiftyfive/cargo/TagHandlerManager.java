@@ -110,5 +110,12 @@ public class TagHandlerManager implements Application.ActivityLifecycleCallbacks
     }
 
 
+/* ************************************** Getters - Setters ************************************* */
+
+    public List<AbstractTagHandler> getHandlers() {
+        return this.handlers;
+    }
+
+
 /* ********************************************************************************************** */
 }

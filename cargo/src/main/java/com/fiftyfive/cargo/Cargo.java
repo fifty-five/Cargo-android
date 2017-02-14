@@ -3,7 +3,11 @@ package com.fiftyfive.cargo;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
-import com.google.android.gms.tagmanager.Container;
+
+import java.util.List;
+import java.util.Map;
+
+import static com.fiftyfive.cargo.ModelsUtils.*;
 
 /**
  * Created by louis on 03/11/15.
@@ -22,18 +26,19 @@ public class Cargo {
     private static final String TAG = "Cargo" ;
     /** A boolean which defines whether the instance has been correctly initialized */
     private static boolean init = false;
+    private int handlersReady = 0;
 
     /** An instance of the appContext within Cargo is instantiated */
     private Context appContext;
-    /** The container which contains tags, triggers and variables defined in the GTM interface */
-    private Container container;
     /** Used to store initialized handlers and call on their activity life cycle callback methods */
     private TagHandlerManager manager;
+    /** Callback called when Cargo and its handlers are ready */
+    public CargoInterface trackingReady;
+
+    private static final String HANDLER_METHOD = "handlerMethod";
 
     private static final String AT_INTERNET = "AT Internet";
     private static final String FACEBOOK = "Facebook";
-    private static final String FIREBASE = "Firebase";
-    private static final String GOOGLE_ANALYTICS = "Google Analytics";
     private static final String TUNE = "Tune";
 
 /* *************************************** Init methods ***************************************** */
@@ -43,19 +48,17 @@ public class Cargo {
      * Static method, its call should be followed by Cargo.getInstance()
      *
      * @param application   Your appContext instance
-     * @param container     The GTM container
      */
-    public static void init(Application  application, Container container ){
+    public static void init(Application  application){
         if (!init){
             instance = new Cargo();
             instance.setAppContext(application.getApplicationContext());
-            instance.setContainer(container);
-
             instance.initManager(application);
             init = true;
         }
-        else
+        else {
             Log.i("55", "Cargo has already been initialized");
+        }
     }
 
     /**
@@ -122,12 +125,6 @@ public class Cargo {
             case FACEBOOK:
                 register("com.fiftyfive.cargo.handlers.FacebookHandler");
                 break;
-            case FIREBASE:
-                register("com.fiftyfive.cargo.handlers.FirebaseHandler");
-                break;
-            case GOOGLE_ANALYTICS:
-                register("com.fiftyfive.cargo.handlers.GoogleAnalyticsHandler");
-                break;
             case TUNE:
                 register("com.fiftyfive.cargo.handlers.TuneHandler");
                 break;
@@ -169,14 +166,56 @@ public class Cargo {
 
             // Calls the tagHandlerManager.registerHandler() method to store handlers in a list
             manager.registerHandler(instance);
-
-            instance.register(this.getContainer());
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * The method handling callbacks from GTM container when a tag is triggered.
+     * Actually, this one is called from the class Tags, which redirects the callback here.
+     * The execute() method will dispatch the map of parameters to the corresponding handler method.
+     *
+     * @param map the map obtained from the container, containing the following :
+     *            * handlerKey (String) : the key of the handler
+     *                                  (the same as the one used in the registerHandler() method)
+     *            * handlerMethod (String) : the method aimed by this call. e.g : 'FB_init'
+     *            * parameters : other key-value pairs are used as parameters for the method.
+     */
+    void execute(Map<String, Object> map) {
+        if(!init){
+            Log.w(TAG, "You should initialize Cargo before trying to call its methods");
+            return;
+        }
+        String handlerMethod = getString(map, HANDLER_METHOD);
+        map.remove(HANDLER_METHOD);
+
+        if (handlerMethod != null) {
+            String handlerKey = handlerMethod.split("\\_")[0];
+
+            if (handlerKey != null && handlerKey.length() > 1 && handlerKey.length() < 4) {
+                Log.d(TAG, "Received '"+ handlerMethod + "' method name " +
+                        "for the handler matching the '"+ handlerKey +"' key.");
+                List<AbstractTagHandler> handlers = manager.getHandlers();
+                for (AbstractTagHandler handler : handlers) {
+                    if (handlerKey.toUpperCase().equals(handler.key.toUpperCase())) {
+                        handler.execute(handlerMethod, map);
+                        return ;
+                    }
+                }
+                Log.w(TAG, "Unable to find a handler matching the key '" + handlerKey + "'.");
+            }
+            else {
+                Log.w(TAG, "Something went wrong while analyzing '"+HANDLER_METHOD+"' format, " +
+                        "check it again please.");
+            }
+        }
+        else {
+            Log.w(TAG, "Parameter '"+ HANDLER_METHOD +"' is " +
+                    "required in method cargo.execute(Map<String, Object> map)");
+        }
     }
 
     /**
@@ -187,15 +226,16 @@ public class Cargo {
         AT(AT_INTERNET),
         /** The enum constant for the Facebook handler */
         FB(FACEBOOK),
-        /** The enum constant for the Firebase handler */
-        FIR(FIREBASE),
-        /** The enum constant for the Google Analytics handler */
-        GA(GOOGLE_ANALYTICS),
         /** The enum constant for the Tune handler */
         TUN(TUNE);
 
         private final String stringValue;
 
+        /**
+         * Sets the String value of the handler.
+         *
+         * @param toString the string value associated to the handler.
+         */
         private Handler(String toString) {
             stringValue = toString;
         }
@@ -229,26 +269,19 @@ public class Cargo {
      * @param appContext   the new Application context you want cargo to be set with
      */
     private void setAppContext(Context appContext) {
-        if (appContext != null)
+        if (appContext != null) {
             this.appContext = appContext;
+        }
     }
 
     /**
-     * Gets the GTM container Cargo has been instantiated with.
-     *
-     * @return Container      the GTM container you registered to
+     * A setter which is triggered when a handler has been initialized correctly.
+     * When all the handlers are ready to be used, triggers a callback to inform cargo is ready.
      */
-    public Container getContainer() {
-        return container;
-    }
-
-    /**
-     * Sets the GTM container to the instance
-     *
-     * @param _container    the GTM container
-     */
-    private void setContainer(Container _container) {
-        this.container = _container;
+    void setHandlerInit() {
+        if (++handlersReady == manager.getHandlers().size()) {
+            trackingReady.isReady();
+        }
     }
 
 /* ********************************************************************************************** */

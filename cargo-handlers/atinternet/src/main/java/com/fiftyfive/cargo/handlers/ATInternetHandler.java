@@ -11,7 +11,6 @@ import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Screen;
 import com.fiftyfive.cargo.models.User;
-import com.google.android.gms.tagmanager.Container;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +32,7 @@ public class ATInternetHandler extends AbstractTagHandler {
     public Tracker atTracker;
 
     private boolean enableDebug = false;
+    private boolean debugEnabled = false;
 
     /** Constants used to define callbacks in the register and in the execute method */
     private final String AT_INIT = "AT_init";
@@ -55,25 +55,8 @@ public class ATInternetHandler extends AbstractTagHandler {
     @Override
     public void initialize() {
         super.initialize("AT", "AT Internet");
-//        atTracker = ((ATInternet)cargo.getAppContext()).getDefaultTracker();
         atTracker = new Tracker(cargo.getAppContext());
-
         validate(atTracker != null);
-    }
-
-    /**
-     * Register the callbacks to the container. After a dataLayer.push(),
-     * these will trigger the execute method of this handler.
-     *
-     * @param container The instance of the GTM container we register the callbacks to
-     */
-    @Override
-    public void register(Container container) {
-        container.registerFunctionCallTagCallback(AT_INIT, this);
-        container.registerFunctionCallTagCallback(AT_SET_CONFIG, this);
-        container.registerFunctionCallTagCallback(AT_TAG_SCREEN, this);
-        container.registerFunctionCallTagCallback(AT_TAG_EVENT, this);
-        container.registerFunctionCallTagCallback(AT_IDENTIFY, this);
     }
 
     /**
@@ -82,12 +65,12 @@ public class ATInternetHandler extends AbstractTagHandler {
      * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
-    @Override
     public void execute(String s, Map<String, Object> map) {
         logReceivedFunction(s, map);
 
-        if (AT_INIT.equals(s))
+        if (AT_INIT.equals(s)) {
             init(map);
+        }
         else if (isInitialized()) {
             switch (s) {
                 case AT_SET_CONFIG:
@@ -106,8 +89,9 @@ public class ATInternetHandler extends AbstractTagHandler {
                     logUnknownFunction(s);
             }
         }
-        else
+        else {
             logUninitializedFramework();
+        }
     }
 
 
@@ -129,13 +113,15 @@ public class ATInternetHandler extends AbstractTagHandler {
         final String LOG = "log";
         final String LOG_SSL = "logSSL";
 
-        final String siteId = getString(params, SITE);
+        Double appIdDouble = getDouble(params, SITE, 0);
+        Long appIdLong = appIdDouble.longValue();
+        final String siteId = Long.toString(appIdLong);
         final String log = getString(params, LOG);
         final String logSSL = getString(params, LOG_SSL);
         enableDebug = getBoolean(params, com.fiftyfive.cargo.models.Tracker.ENABLE_DEBUG, false);
 
-        if (siteId != null && log != null && logSSL != null) {
-            HashMap config = new HashMap<>();
+        if (appIdLong != 0 && siteId != null && log != null && logSSL != null) {
+            HashMap<String, Object> config = new HashMap<String, Object>();
             config.put(SITE, siteId);
             config.put(LOG, log);
             config.put(LOG_SSL, logSSL);
@@ -146,12 +132,13 @@ public class ATInternetHandler extends AbstractTagHandler {
                     logParamSetWithSuccess(SITE, siteId);
                     logParamSetWithSuccess(LOG, log);
                     logParamSetWithSuccess(LOG_SSL, logSSL);
+                    setInitialized(true);
                 }
             });
-            setInitialized(true);
         }
-        else
-            logMissingParam(new String[]{SITE,LOG, LOG_SSL}, AT_INIT);
+        else {
+            logMissingParam(new String[]{SITE, LOG, LOG_SSL}, AT_INIT);
+        }
     }
 
     /**
@@ -168,7 +155,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         params.remove(OVERRIDE);
         logParamSetWithSuccess(OVERRIDE, override);
 
-        HashMap<String, Object> map = new HashMap<>(params);
+        HashMap<String, Object> map = new HashMap<String, Object>(params);
         atTracker.setConfig(map, override, new SetConfigCallback() {
             @Override
             public void setConfigEnd() {
@@ -195,15 +182,16 @@ public class ATInternetHandler extends AbstractTagHandler {
 
         final String screenName = getString(params, Screen.SCREEN_NAME);
 
-        if (screenName != null){
+        if (screenName != null) {
             com.atinternet.tracker.Screen atScreen = atTracker.Screens().add(screenName);
             logParamSetWithSuccess(Screen.SCREEN_NAME, screenName);
 
             atScreen = setAdditionalScreenProperties(atScreen, params);
             atScreen.sendView();
         }
-        else
+        else {
             logMissingParam(new String[]{Screen.SCREEN_NAME}, AT_TAG_SCREEN);
+        }
     }
 
     /**
@@ -230,7 +218,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         if (eventName != null && eventType != null) {
             Gesture gesture = setChapters(eventName, params);
 
-            if (params.containsKey(LEVEL2)){
+            if (params.containsKey(LEVEL2)) {
                 int    level2 = getInt(params, LEVEL2, -1);
                 gesture.setLevel2(level2);
                 logParamSetWithSuccess(LEVEL2, Integer.toString(level2));
@@ -258,11 +246,13 @@ public class ATInternetHandler extends AbstractTagHandler {
                     logNotFoundValue(eventType, Event.EVENT_TYPE, values);
                     eventType = null;
             }
-            if (eventType != null)
+            if (eventType != null) {
                 logParamSetWithSuccess(Event.EVENT_TYPE, eventType);
+            }
         }
-        else
+        else {
             logMissingParam(new String[]{Event.EVENT_NAME, Event.EVENT_TYPE}, AT_TAG_EVENT);
+        }
     }
 
     /**
@@ -314,12 +304,12 @@ public class ATInternetHandler extends AbstractTagHandler {
             logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             return (atTracker.Gestures().add(eventName));
         }
-        else if (chapter2 == null){
+        else if (chapter2 == null) {
             logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             logParamSetWithSuccess(CHAPTER1, chapter1);
             return (atTracker.Gestures().add(eventName, chapter1));
         }
-        else if (chapter3 == null){
+        else if (chapter3 == null) {
             logParamSetWithSuccess(Event.EVENT_NAME, eventName);
             logParamSetWithSuccess(CHAPTER1, chapter1);
             logParamSetWithSuccess(CHAPTER2, chapter2);
@@ -361,7 +351,7 @@ public class ATInternetHandler extends AbstractTagHandler {
         if (chapter1 != null) {
             atScreen.setChapter1(chapter1);
             logParamSetWithSuccess(CHAPTER1, chapter1);
-            if (chapter2 != null){
+            if (chapter2 != null) {
                 atScreen.setChapter2(chapter2);
                 logParamSetWithSuccess(CHAPTER2, chapter2);
                 if (chapter3 != null) {
@@ -372,12 +362,12 @@ public class ATInternetHandler extends AbstractTagHandler {
         }
 
         if (parameters.containsKey(LEVEL2)) {
-            int    level2 = getInt(parameters, LEVEL2, -1);
+            int level2 = getInt(parameters, LEVEL2, -1);
             atScreen.setLevel2(level2);
             logParamSetWithSuccess(LEVEL2, Integer.toString(level2));
         }
 
-        if (parameters.containsKey(BASKET_VIEW)){
+        if (parameters.containsKey(BASKET_VIEW)) {
             boolean basket = getBoolean(parameters, BASKET_VIEW, false);
             atScreen.setIsBasketScreen(basket);
             logParamSetWithSuccess(BASKET_VIEW, basket);
@@ -392,8 +382,10 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStarted(Activity activity) {
-        if (enableDebug && isInitialized())
+        if (enableDebug && isInitialized()) {
             Debugger.show(activity, atTracker);
+            debugEnabled = true;
+        }
     }
 
     /**
@@ -420,8 +412,10 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
-        if (enableDebug && isInitialized())
+        if (enableDebug && isInitialized() && debugEnabled) {
             Debugger.setViewerVisibility(false);
+            debugEnabled = false;
+        }
     }
 
 /* ********************************************************************************************** */

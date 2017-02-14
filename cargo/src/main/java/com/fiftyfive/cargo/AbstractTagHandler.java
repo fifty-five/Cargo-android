@@ -4,8 +4,6 @@ package com.fiftyfive.cargo;
 import android.app.Activity;
 import android.util.Log;
 
-import com.google.android.gms.tagmanager.Container;
-
 import java.util.Arrays;
 import java.util.Map;
 
@@ -16,7 +14,7 @@ import java.util.Map;
  * An Abstract class which TagHandlerManager extends from.
  * It defines what methods should be implemented in each handler.
  */
-public abstract class AbstractTagHandler implements Container.FunctionCallTagCallback {
+public abstract class AbstractTagHandler {
 
 /* ************************************ Variables declaration *********************************** */
 
@@ -42,8 +40,7 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     /**
      * Default method.
      */
-    public void initialize(){
-
+    protected void initialize(){
     }
 
     /**
@@ -59,14 +56,6 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
         this.key = hKey;
         this.name = hName;
     }
-
-    /**
-     * Link a callback at a specific trigger for this handler.
-     * eg. of the calls you make :  container.registerFunctionCallTagCallback("handler_init", this);
-     *
-     * @param container     the container you register your callbacks to
-     */
-    public abstract void register(Container container);
 
     /**
      * This method which will allow you to redistribute the callbacks suscribed
@@ -87,10 +76,12 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
      */
     public void validate(boolean isValid) {
         this.valid = isValid;
-        if (isValid)
-            Log.v(this.key+"_handler", this.name+" SDK has started without error");
-        else
-            Log.e(this.key+"_handler", "Failed to start the "+this.name+" SDK.");
+        if (isValid) {
+            Log.v(this.key + "_handler", this.name + " SDK has started without error");
+        }
+        else {
+            Log.e(this.key + "_handler", "Failed to start the " + this.name + " SDK.");
+        }
     }
 
     /**
@@ -101,12 +92,13 @@ public abstract class AbstractTagHandler implements Container.FunctionCallTagCal
     public void setInitialized(boolean value) {
         initialized = value;
         if (initialized) {
+            this.cargo.setHandlerInit();
             Log.d(this.key + "_handler",
                     "The handler has been correctly initialized and is ready to use");
         }
         else {
             Log.w(this.key + "_handler",
-                    "DUH ! Something went wrong, the handler hasn't been initialized");
+                    "Something went wrong, the handler hasn't been initialized");
         }
     }
 

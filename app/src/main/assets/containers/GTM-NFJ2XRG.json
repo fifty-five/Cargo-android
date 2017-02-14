@@ -1,0 +1,138 @@
+{
+
+"fingerprint":"MTA$0",
+
+"resource": {
+  "version":"10",
+  "macros":[
+    {
+      "function":"__e",
+      "instance_name":"Event Name",
+      "vendor_template_version":"1"
+    },
+    {
+      "function":"__md",
+      "instance_name":"string",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"string"
+    },
+    {
+      "function":"__md",
+      "instance_name":"date",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"date"
+    },
+    {
+      "function":"__ai",
+      "instance_name":"App ID",
+      "vendor_template_version":"1"
+    },
+    {
+      "function":"__an",
+      "instance_name":"App Name",
+      "vendor_template_version":"1"
+    },
+    {
+      "function":"__av",
+      "instance_name":"App Version Code",
+      "vendor_template_version":"1"
+    }
+  ],
+  "tags":[
+    {
+      "function":"__funct",
+      "instance_name":"init_FB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","applicationId","value","708090462697956"],["map","key","enableDebug","value","true"],["map","key","handlerKey","value","FB"],["map","key","handlerMethod","value","FB_init"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":1
+    },
+    {
+      "function":"__funct",
+      "instance_name":"tagEvent_FB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","eventName","value","test_eventWithGTM5"],["map","key","handlerKey","value","FB"],["map","key","handlerMethod","value","FB_tagEvent"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":3
+    },
+    {
+      "function":"__funct",
+      "instance_name":"tagPurchase_FB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","transactionCurrencyCode","value","EUR"],["map","key","transactionTotal","value","55"],["map","key","handlerKey","value","FB"],["map","key","handlerMethod","value","FB_tagPurchase"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":4
+    },
+    {
+      "function":"__funct",
+      "instance_name":"init_GA",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","applicationId","value","UA-74607529-3"],["map","key","handlerKey","value","GA"],["map","key","handlerMethod","value","GA_init"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":6
+    },
+    {
+      "function":"__funct",
+      "instance_name":"tagEvent_GA",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerKey","value","GA"],["map","key","handlerMethod","value","GA_tagEvent"],["map","key","eventAction","value","touchEventGTM5"],["map","key","eventCategory","value","gtmv5"],["map","key","eventLabel","value","label gtm v5"],["map","key","eventValue","value","42"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":7
+    },
+    {
+      "function":"__funct",
+      "instance_name":"tagScreen_GA",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerKey","value","GA"],["map","key","handlerMethod","value","GA_tagScreen"],["map","key","screenName","value","MainActivity"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":8
+    }
+  ],
+  "predicates":[
+    {
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"applicationStart"
+    },
+    {
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"tagEvent"
+    },
+    {
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"tagPurchase"
+    },
+    {
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"tagScreen"
+    }
+  ],
+  "rules":[
+    [["if",0],["add",0,3]],
+    [["if",1],["add",1,4]],
+    [["if",2],["add",2]],
+    [["if",3],["add",5]]
+  ]
+},
+"runtime":
+[[50,"__ai_main",[46],[36,[2,[17,[15,"gtmUtils"],"mobile"],"applicationId",[7]]]],[50,"__ai",[46,"data"],[36,["__ai_main",[15,"data"]]]],
+[50,"__an_main",[46],[36,[2,[17,[15,"gtmUtils"],"mobile"],"applicationName",[7]]]],[50,"__an",[46,"data"],[36,["__an_main",[15,"data"]]]],
+[50,"__av_main",[46],[36,[2,[17,[15,"gtmUtils"],"mobile"],"applicationVersion",[7]]]],[50,"__av",[46,"data"],[36,["__av_main",[15,"data"]]]],
+[50,"__e_main",[46],[41,"a","b"],[3,"a",[2,[17,[15,"gtmUtils"],"mobile"],"event",[7]]],[22,[1,[1,[15,"a"],[18,[17,[15,"a"],"length"],0]],[12,[16,[15,"a"],0],"_"]],[46,[3,"b",[8,"_f","first_open","_iap","in_app_purchase","_e","user_engagement","_s","session_start","_au","app_update","_ui","app_remove","_ou","os_update","_cd","app_clear_data","_ae","app_exception","_nf","notification_foreground","_nr","notification_receive","_no","notification_open","_nd","notification_dismiss","_cmp","firebase_campaign"]],[3,"a",[30,[16,[15,"b"],[15,"a"]],[15,"a"]]]]],[36,[15,"a"]]],[50,"__e",[46,"data"],[36,["__e_main",[15,"data"]]]],
+[50,"__md_main",[46,"a"],[41,"b","c","d","e"],[22,[12,[17,[15,"a"],"eventType"],"CUSTOM"],[46,[3,"b",[16,[15,"a"],"key"]]],[46,[22,[12,[17,[15,"a"],"eventType"],"SUGGESTED"],[46,[47,"c",[15,"a"],[46,[3,"d",[2,[15,"c"],"lastIndexOf",[7,"Param"]]],[22,[1,[29,[15,"d"],[27,1]],[12,[15,"d"],[37,[17,[15,"c"],"length"],5]]],[46,[22,[20,[15,"b"],[44]],[46,[3,"b",[16,[15,"a"],[15,"c"]]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e",[0,[0,[0,"Ignoring unexpected additional parameter ","key in the data (key \u003d \""],[15,"c"]],"\")."]]]]]]]]]],[46,[22,[20,[17,[15,"a"],"eventType"],[44]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w","Missing expected eventType param"]],[3,"b",[16,[15,"a"],"key"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e",[0,"Unexpected eventType param value: ",[17,[15,"a"],"eventType"]]]],[36]]]]]]],[22,[20,[15,"b"],[44]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e","No parameter key specified in the data."]],[36]]],[3,"e",[16,[30,[2,[17,[15,"gtmUtils"],"mobile"],"eventParameters",[7]],[8]],[15,"b"]]],[22,[21,[15,"e"],[44]],[46,[36,[15,"e"]]],[46,[22,[21,[17,[15,"a"],"defaultValue"],[44]],[46,[36,[17,[15,"a"],"defaultValue"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w",[0,[0,"Event does not have parameter \"",[15,"b"]],"\" and no default value was defined. Returning \"undefined\"."]]]]]]]],[50,"__md",[46,"data"],[36,["__md_main",[15,"data"]]]],
+[50,"__funct_main",[46,"a"],[41,"b"],[3,"b",[8]],[22,[17,[15,"a"],"functionArgument"],[46,[3,"b",[30,[2,[17,[15,"gtmUtils"],"common"],"tableToMap",[7,[17,[15,"a"],"functionArgument"],"key","value"]],[8]]]]],[2,[17,[15,"gtmUtils"],"mobile"],"customTag",[7,[17,[15,"a"],"classPath"],[15,"b"]]]],[50,"__funct",[46,"data"],[36,["__funct_main",[15,"data"]]]],
+[50,"main",[46,"a"],[43,[17,[15,"a"],"common"],"tableToMap",[15,"tableToMap"]],[43,[17,[15,"a"],"common"],"stringify",[15,"stringify"]]],[50,"tableToMap",[46,"a","b","c"],[41,"d","e","f"],[3,"d",[8]],[3,"e",false],[3,"f",0],[42,[1,[15,"a"],[23,[15,"f"],[17,[15,"a"],"length"]]],[33,[15,"f"],[3,"f",[0,[15,"f"],1]]],false,[46,[22,[1,[1,[16,[15,"a"],[15,"f"]],[2,[16,[15,"a"],[15,"f"]],"hasOwnProperty",[7,[15,"b"]]]],[2,[16,[15,"a"],[15,"f"]],"hasOwnProperty",[7,[15,"c"]]]],[46,[43,[15,"d"],[16,[16,[15,"a"],[15,"f"]],[15,"b"]],[16,[16,[15,"a"],[15,"f"]],[15,"c"]]],[3,"e",true]]]]],[36,[39,[15,"e"],[15,"d"],[45]]]],[50,"stringify",[46,"a"],[41,"b","c","d","e"],[22,[20,[15,"a"],[45]],[46,[36,"null"]]],[22,[20,[15,"a"],[44]],[46,[36,[44]]]],[22,[30,[12,[40,[15,"a"]],"number"],[12,[40,[15,"a"]],"boolean"]],[46,[36,[2,[15,"a"],"toString",[7]]]]],[22,[12,[40,[15,"a"]],"string"],[46,[36,[0,[0,"\"",[2,["split",[15,"a"],"\""],"join",[7,"\\\""]]],"\""]]]],[22,[2,[17,[15,"gtmUtils"],"common"],"isArray",[7,[15,"a"]]],[46,[3,"b",[7]],[3,"c",0],[42,[23,[15,"c"],[17,[15,"a"],"length"]],[33,[15,"c"],[3,"c",[0,[15,"c"],1]]],false,[46,[3,"d",["stringify",[16,[15,"a"],[15,"c"]]]],[22,[12,[15,"d"],[44]],[46,[2,[15,"b"],"push",[7,"null"]]],[46,[2,[15,"b"],"push",[7,[15,"d"]]]]]]],[36,[0,[0,"[",[2,[15,"b"],"join",[7,","]]],"]"]]]],[22,[12,[40,[15,"a"]],"object"],[46,[3,"b",[7]],[47,"e",[15,"a"],[46,[3,"d",["stringify",[16,[15,"a"],[15,"e"]]]],[22,[29,[15,"d"],[44]],[46,[2,[15,"b"],"push",[7,[0,[0,[0,"\"",[15,"e"]],"\":"],[15,"d"]]]]]]]],[36,[0,[0,"{",[2,[15,"b"],"join",[7,","]]],"}"]]]],[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e","Attempting to stringify unknown type!"]],[36,[44]]],[50,"split",[46,"a","b"],[41,"c","d","e","f"],[3,"c",[7]],[22,[20,[15,"b"],""],[46,[3,"d",[17,[15,"a"],"length"]],[3,"e",0],[42,[23,[15,"e"],[15,"d"]],[33,[15,"e"],[3,"e",[0,[15,"e"],1]]],false,[46,[2,[15,"c"],"push",[7,[16,[15,"a"],[15,"e"]]]]]],[36,[15,"c"]]]],[42,[1,[15,"a"],[19,[2,[15,"a"],"indexOf",[7,[15,"b"]]],0]],[46],false,[46,[3,"f",[2,[15,"a"],"indexOf",[7,[15,"b"]]]],[22,[12,[15,"f"],0],[46,[2,[15,"c"],"push",[7,""]]],[46,[2,[15,"c"],"push",[7,[2,[15,"a"],"substring",[7,0,[15,"f"]]]]]]],[3,"a",[2,[15,"a"],"substring",[7,[0,[15,"f"],[17,[15,"b"],"length"]]]]]]],[2,[15,"c"],"push",[7,[15,"a"]]],[36,[15,"c"]]]]
+}

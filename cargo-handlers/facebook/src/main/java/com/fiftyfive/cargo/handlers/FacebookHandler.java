@@ -2,6 +2,7 @@ package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -9,7 +10,6 @@ import com.fiftyfive.cargo.AbstractTagHandler;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Tracker;
 import com.fiftyfive.cargo.models.Transaction;
-import com.google.android.gms.tagmanager.Container;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -52,32 +52,18 @@ public class FacebookHandler extends AbstractTagHandler {
     }
 
     /**
-     * Register the callbacks to the container. After a dataLayer.push(),
-     * these will trigger the execute method of this handler.
-     *
-     * @param container The instance of the GTM container we register the callbacks to
-     */
-    @Override
-    public void register(Container container) {
-        container.registerFunctionCallTagCallback(FB_INIT, this);
-        container.registerFunctionCallTagCallback(FB_TAG_EVENT, this);
-        container.registerFunctionCallTagCallback(FB_PURCHASE, this);
-
-    }
-
-    /**
      * A callback method for the registered callbacks method name mentioned in the register method.
      *
      * @param s     The method name called through the container (defined in the GTM interface)
      * @param map   A map key-object used as a way to give parameters to the class method aimed here
      */
-    @Override
     public void execute(String s, Map<String, Object> map) {
         logReceivedFunction(s, map);
 
         // a check fo the init method
-        if (FB_INIT.equals(s))
+        if (FB_INIT.equals(s)) {
             init(map);
+        }
         // if the SDK is properly initialized, check for which method is called
         else if (initialized) {
             switch (s) {
@@ -91,8 +77,9 @@ public class FacebookHandler extends AbstractTagHandler {
                     logUnknownFunction(s);
             }
         }
-        else
+        else {
             logUninitializedFramework();
+        }
     }
 
 
@@ -109,9 +96,11 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     private void init(Map<String, Object> map) {
 
-        String applicationId = getString(map, Tracker.APPLICATION_ID);
+        Double appIdDouble = getDouble(map, Tracker.APPLICATION_ID, 0);
+        Long appIdLong = appIdDouble.longValue();
+        String applicationId = Long.toString(appIdLong);
 
-        if(applicationId != null) {
+        if(appIdLong != 0 && applicationId != null) {
             // Since the applicationId isn't declared in the AndroidManifest, it is a necessity to
             // set it before initializing the FacebookSDK, or it will throw an error.
             FacebookSdk.setApplicationId(applicationId);
@@ -126,6 +115,7 @@ public class FacebookHandler extends AbstractTagHandler {
             logMissingParam(new String[]{Tracker.APPLICATION_ID}, FB_INIT);
         }
         FacebookSdk.setIsDebugEnabled(getBoolean(map, Tracker.ENABLE_DEBUG, false));
+        Log.d(this.key+"_handler", "debug enabled : " + Boolean.toString(FacebookSdk.isDebugEnabled()));
     }
 
 
@@ -208,7 +198,7 @@ public class FacebookHandler extends AbstractTagHandler {
         double total = getDouble(map, Transaction.TRANSACTION_TOTAL, -1);
         String currency = getString(map, Transaction.TRANSACTION_CURRENCY_CODE);
 
-        if (total >= 0 && currency != null){
+        if (total >= 0 && currency != null) {
             facebookLogger.logPurchase(BigDecimal.valueOf(total), Currency.getInstance(currency));
             logParamSetWithSuccess(Transaction.TRANSACTION_TOTAL, total);
             logParamSetWithSuccess(Transaction.TRANSACTION_CURRENCY_CODE, currency);
@@ -235,25 +225,29 @@ public class FacebookHandler extends AbstractTagHandler {
      *
      */
     private Bundle eventParamBuilder(Map<String, Object> map) {
-
-        Bundle bundle = new Bundle();
+        Bundle paramBundle = new Bundle();
 
         Set<String> keys = map.keySet();
         for (String key : keys) {
-            if (map.get(key) instanceof String)
-                bundle.putString(key, getString(map, key));
-            else if (map.get(key) instanceof Boolean) {
-                if (getBoolean(map, key, false))
-                    bundle.putInt(key, 1);
-                else
-                    bundle.putInt(key, 0);
+            if (map.get(key) instanceof String) {
+                paramBundle.putString(key, getString(map, key));
             }
-            else if (map.get(key) instanceof Integer)
-                bundle.putInt(key, getInt(map, key, 0));
-            else
+            else if (map.get(key) instanceof Boolean) {
+                if (getBoolean(map, key, false)) {
+                    paramBundle.putInt(key, 1);
+                }
+                else {
+                    paramBundle.putInt(key, 0);
+                }
+            }
+            else if (map.get(key) instanceof Integer) {
+                paramBundle.putInt(key, getInt(map, key, 0));
+            }
+            else {
                 logUncastableParam(key, "String/Boolean/Int");
+            }
         }
-        return bundle;
+        return paramBundle;
     }
 
     /**
@@ -274,10 +268,9 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-        if (isInitialized())
+        if (isInitialized()) {
             AppEventsLogger.activateApp(activity);
-        else
-            logUninitializedFramework();
+        }
     }
 
     /**
@@ -288,10 +281,9 @@ public class FacebookHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityPaused(Activity activity) {
-        if (isInitialized())
+        if (isInitialized()) {
             AppEventsLogger.deactivateApp(activity);
-        else
-            logUninitializedFramework();
+        }
     }
 
     /**
