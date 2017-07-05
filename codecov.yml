@@ -1,0 +1,7 @@
+coverage:
+  range: 50...95
+  round: nearest
+  precision: 0
+
+ignore:
+  - "app/**/*"  # ignore the app folders and all its contents
