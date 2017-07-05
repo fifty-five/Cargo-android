@@ -28,8 +28,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:10.0.1'
     compile 'com.google.android.gms:play-services-tagmanager:10.0.1'
     compile 'com.google.android.gms:play-services:10.0.1'
+    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.6.0'
 }
 
 ext{
     artifact = 'cargo'
 }
+
+apply plugin: 'com.vanniktech.android.junit.jacoco'
