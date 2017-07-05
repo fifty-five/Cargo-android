@@ -130,11 +130,11 @@ public class FacebookHandlerTest extends TestCase {
         verify(facebookLoggerMock, times(0)).logEvent("hello");
     }
 
-    public void testNullString(){
+    public void testNoString(){
         HashMap<String, Object> map= new HashMap<>();
 
         handler.setInitialized(true);
-        handler.execute(null, map);
+        handler.execute("", map);
 
         verifyNoMoreInteractions(facebookLoggerMock);
     }
