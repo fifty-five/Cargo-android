@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.vanniktech.android.junit.jacoco'
 
 apply from: rootProject.file('gradle/android.gradle')
 apply from: rootProject.file('gradle/bintray-push.gradle')
