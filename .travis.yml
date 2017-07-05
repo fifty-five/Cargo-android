@@ -23,7 +23,11 @@ android:
     - sys-img-armeabi-v7a-android-23
 
 script:
-    - ./gradlew install && ./gradlew test
+    - ./gradlew install && ./gradlew jacocoTestReport
+    - ./gradlew connectedCheck
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash) -t 443c5b9d-aa68-4199-a741-eaafafd26e91
 
 notifications:
   slack: cargo55:q9T7nhZcJ7J0Gkl7UG2oVXao
