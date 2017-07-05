@@ -24,7 +24,6 @@ android:
 
 script:
     - ./gradlew install && ./gradlew jacocoTestReportDebug
-    - ./gradlew connectedCheck
 
 after_success:
     - bash <(curl -s https://codecov.io/bash) -t 443c5b9d-aa68-4199-a741-eaafafd26e91
