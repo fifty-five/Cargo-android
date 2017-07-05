@@ -93,13 +93,30 @@ public class FacebookHandlerTest extends TestCase {
         FacebookSdk.setApplicationId("101234567891011");
     }
 
-    public void testFailedInit(){
+    public void testSetEnableDebug(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("enableDebug", "true");
+
+        handler.execute("FB_init", map);
+        verifyStatic();
+        FacebookSdk.setIsDebugEnabled(true);
+    }
+
+    public void testMissingInit(){
         HashMap<String, Object> map= new HashMap<>();
         map.put("eventName", "hello");
 
         handler.execute("FB_tagEvent", map);
 
         verify(facebookLoggerMock, times(0)).logEvent("hello");
+    }
+
+    public void testNullString(){
+        HashMap<String, Object> map= new HashMap<>();
+
+        handler.execute(null, map);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
     }
 
     public void testWrongMethod(){
@@ -207,16 +224,26 @@ public class FacebookHandlerTest extends TestCase {
         handler.setInitialized(true);
         handler.execute("FB_tagPurchase", map);
 
-        verify(facebookLoggerMock, times(0)).logPurchase(any(BigDecimal.class), any(Currency.class));
+        verifyNoMoreInteractions(facebookLoggerMock);
     }
 
-    public void testSetEnableDebug(){
+    public void testFailedPurchase2(){
         HashMap<String, Object> map= new HashMap<>();
-        map.put("enableDebug", "true");
+        map.put(Transaction.TRANSACTION_CURRENCY_CODE, "USD");
 
-        handler.execute("FB_init", map);
-        verifyStatic();
-        FacebookSdk.setIsDebugEnabled(true);
+        handler.setInitialized(true);
+        handler.execute("FB_tagPurchase", map);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
+    }
+
+    public void testFailedPurchase3(){
+        HashMap<String, Object> map= new HashMap<>();
+
+        handler.setInitialized(true);
+        handler.execute("FB_tagPurchase", map);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
     }
 
 /* *************************************** Activities Tests ************************************* */
