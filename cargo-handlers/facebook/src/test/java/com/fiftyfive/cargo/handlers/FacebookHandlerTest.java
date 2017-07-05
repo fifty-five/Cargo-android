@@ -93,6 +93,26 @@ public class FacebookHandlerTest extends TestCase {
         FacebookSdk.setApplicationId("101234567891011");
     }
 
+    public void testWrongInit(){
+        PowerMockito.when(Cargo.getInstance()).thenReturn(cargoMock);
+        when(cargoMock.getAppContext()).thenReturn(context);
+        when(cargoMock.getAppContext().getApplicationContext()).thenReturn(context);
+
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("applicationId", 0);
+
+        handler.execute("FB_init", map);
+
+        verifyStatic(times(0));
+        FacebookSdk.sdkInitialize(context);
+
+        verifyStatic(times(0));
+        AppEventsLogger.newLogger(context);
+
+        verifyStatic(times(0));
+        FacebookSdk.setApplicationId("0");
+    }
+
     public void testSetEnableDebug(){
         HashMap<String, Object> map= new HashMap<>();
         map.put("enableDebug", "true");
