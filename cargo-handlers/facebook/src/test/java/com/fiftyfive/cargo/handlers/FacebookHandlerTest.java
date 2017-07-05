@@ -99,7 +99,6 @@ public class FacebookHandlerTest extends TestCase {
         when(cargoMock.getAppContext().getApplicationContext()).thenReturn(context);
 
         HashMap<String, Object> map= new HashMap<>();
-        map.put("applicationId", 0);
 
         handler.execute("FB_init", map);
 
@@ -110,7 +109,7 @@ public class FacebookHandlerTest extends TestCase {
         AppEventsLogger.newLogger(context);
 
         verifyStatic(times(0));
-        FacebookSdk.setApplicationId("0");
+        FacebookSdk.setApplicationId(anyString());
     }
 
     public void testSetEnableDebug(){
@@ -134,6 +133,7 @@ public class FacebookHandlerTest extends TestCase {
     public void testNullString(){
         HashMap<String, Object> map= new HashMap<>();
 
+        handler.setInitialized(true);
         handler.execute(null, map);
 
         verifyNoMoreInteractions(facebookLoggerMock);
