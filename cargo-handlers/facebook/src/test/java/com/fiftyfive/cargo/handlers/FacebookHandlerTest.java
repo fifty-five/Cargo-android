@@ -1,5 +1,6 @@
 package com.fiftyfive.cargo.handlers;
 
+import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
@@ -26,6 +27,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
@@ -100,6 +102,16 @@ public class FacebookHandlerTest extends TestCase {
         verify(facebookLoggerMock, times(0)).logEvent("hello");
     }
 
+    public void testWrongMethod(){
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("eventName", "hello");
+
+        handler.setInitialized(true);
+        handler.execute("FB_tagNothingAtAll", map);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
+    }
+
 /* *************************************** tagEvent Tests *************************************** */
 
     public void testSimpleTagEvent(){
@@ -140,12 +152,39 @@ public class FacebookHandlerTest extends TestCase {
         HashMap<String, Object> map= new HashMap<>();
         map.put("eventName", "addToCart");
         map.put("itemName", "Power Ball");
+        map.put("onSale", true);
         map.put("itemId", 5542);
 
         handler.setInitialized(true);
         handler.execute("FB_tagEvent", map);
 
         verify(facebookLoggerMock, times(1)).logEvent(anyString(), any(Bundle.class));
+    }
+
+    public void testTagEventWithMoreParams(){
+        HashMap<String, Object> map= new HashMap<>();
+        Bundle testBundle = new Bundle();
+        testBundle.putFloat("someFloat", 0.1f);
+
+        map.put("eventName", "addToCart");
+        map.put("itemName", "Power Ball");
+        map.put("itemId", 5542);
+        map.put("onSale", false);
+        map.put("randomParam", testBundle);
+
+        handler.setInitialized(true);
+        handler.execute("FB_tagEvent", map);
+
+        verify(facebookLoggerMock, times(1)).logEvent(anyString(), any(Bundle.class));
+    }
+
+    public void testTagEventNoParam(){
+        HashMap<String, Object> map= new HashMap<>();
+
+        handler.setInitialized(true);
+        handler.execute("FB_tagEvent", map);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
     }
 
 /* ************************************** tagPurchase Tests ************************************* */
@@ -178,6 +217,54 @@ public class FacebookHandlerTest extends TestCase {
         handler.execute("FB_init", map);
         verifyStatic();
         FacebookSdk.setIsDebugEnabled(true);
+    }
+
+/* *************************************** Activities Tests ************************************* */
+
+    public void testOnActivityStarted(){
+        Activity testActivity = new Activity();
+        handler.onActivityStarted(testActivity);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
+    }
+
+    public void testOnActivityResumedFail(){
+        Activity testActivity = new Activity();
+        handler.onActivityResumed(testActivity);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
+    }
+
+    public void testOnActivityResumed(){
+        Activity testActivity = new Activity();
+        handler.setInitialized(true);
+        handler.onActivityResumed(testActivity);
+
+        verifyStatic();
+        AppEventsLogger.activateApp(any(Activity.class));
+    }
+
+    public void testOnActivityPausedFail(){
+        Activity testActivity = new Activity();
+        handler.onActivityPaused(testActivity);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
+    }
+
+    public void testOnActivityPaused(){
+        Activity testActivity = new Activity();
+        handler.setInitialized(true);
+        handler.onActivityPaused(testActivity);
+
+        verifyStatic();
+        AppEventsLogger.deactivateApp(any(Activity.class));
+    }
+
+    public void testOnActivityStopped(){
+        Activity testActivity = new Activity();
+        handler.onActivityStopped(testActivity);
+
+        verifyNoMoreInteractions(facebookLoggerMock);
     }
 
 }
