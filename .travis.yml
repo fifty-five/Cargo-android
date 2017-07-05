@@ -23,7 +23,7 @@ android:
     - sys-img-armeabi-v7a-android-23
 
 script:
-    - ./gradlew install && ./gradlew jacocoTestReport
+    - ./gradlew install && ./gradlew jacocoTestReportDebug
     - ./gradlew connectedCheck
 
 after_success:
