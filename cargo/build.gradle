@@ -19,6 +19,7 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {
