@@ -3,3 +3,6 @@ apply from: rootProject.file('gradle/handlers.gradle')
 dependencies{
     compile 'com.atinternet:Tracker:2.2.0'
 }
+android {
+    buildToolsVersion '26.0.2'
+}

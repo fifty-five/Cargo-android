@@ -7,6 +7,9 @@ apply from: rootProject.file('gradle/bintray-push.gradle')
 android {
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -16,6 +19,7 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "com.fiftyfive.cargo_android"
@@ -24,13 +24,14 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
+    //noinspection GradleCompatible
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
     compile project(':cargo')
     compile project(':cargo-handlers:atinternet')
     compile project(':cargo-handlers:facebook')
     compile project(':cargo-handlers:tune')
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
