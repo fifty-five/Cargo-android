@@ -16,6 +16,7 @@ import com.fiftyfive.cargo.models.User;
 import junit.framework.TestCase;
 
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -64,6 +65,7 @@ public class ATInternetHandlerTest extends TestCase {
 /* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
+        super.setUp();
         initMocks(this);
         handler = new ATInternetHandler();
         handler.cargo = cargo;
@@ -85,7 +87,7 @@ public class ATInternetHandlerTest extends TestCase {
     }
 
     public void tearDown() throws Exception {
-
+        super.tearDown();
     }
 
 /* **************************************** init Tests ****************************************** */

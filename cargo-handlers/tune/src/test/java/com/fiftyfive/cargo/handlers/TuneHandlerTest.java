@@ -8,11 +8,13 @@ import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.User;
 import com.tune.Tune;
 import com.tune.TuneEvent;
+import com.tune.TuneEventItem;
 import com.tune.TuneGender;
 
 import junit.framework.TestCase;
 
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
@@ -21,7 +23,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyString;
@@ -53,6 +57,7 @@ public class TuneHandlerTest extends TestCase {
 /* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
+        super.setUp();
         initMocks(this);
         handler = new TuneHandler();
         handler.tune = tuneMock;
@@ -62,7 +67,7 @@ public class TuneHandlerTest extends TestCase {
     }
 
     public void tearDown() throws Exception {
-
+        super.tearDown();
     }
 
 /* **************************************** Init Tests ****************************************** */
@@ -130,7 +135,7 @@ public class TuneHandlerTest extends TestCase {
         verify(tuneEventMock, times(1)).withAttribute4("eventAttribute4");
         verify(tuneEventMock, times(1)).withAttribute5("eventAttribute5");
 
-        verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
+        verify(tuneMock, times(1)).measureEvent((TuneEvent) ArgumentMatchers.any());
     }
 
     public void testTagWithEventItems() throws Exception {
@@ -144,9 +149,9 @@ public class TuneHandlerTest extends TestCase {
         handler.execute("TUN_tagEvent", map);
         PowerMockito.verifyNew(TuneEvent.class).withArguments("purchase");
 
-        verify(tuneEventMock, times(1)).withEventItems(anyList());
+        verify(tuneEventMock, times(1)).withEventItems(ArgumentMatchers.<TuneEventItem>anyList());
 
-        verify(tuneMock, times(1)).measureEvent((TuneEvent) Matchers.any());
+        verify(tuneMock, times(1)).measureEvent((TuneEvent) ArgumentMatchers.any());
     }
 
     public void testFailIDTagEvent() throws Exception {
