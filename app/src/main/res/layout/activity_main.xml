@@ -12,10 +12,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="wrap_content">
+
 
         <TextView
             android:text="user name"
@@ -57,27 +55,24 @@
             android:text="tag event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tagEventButton"
-            android:layout_centerHorizontal="true" />
+            android:id="@+id/tagEventButton" />
 
         <Button
             android:text="tag screen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tagScreenButton"
-            android:layout_centerHorizontal="true"/>
+            android:id="@+id/tagScreenButton" />
 
         <Button
             android:text="set user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/identifyButton"
-            android:layout_centerHorizontal="true" />
+            android:id="@+id/identifyButton"/>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:layout_width="wrap_content"
@@ -104,7 +99,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:layout_width="wrap_content"
@@ -131,7 +126,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:layout_width="wrap_content"
@@ -158,8 +153,7 @@
         android:text="tag purchase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tagPurchaseButton"
-        android:layout_centerHorizontal="true"/>
+        android:id="@+id/tagPurchaseButton" />
 
     </LinearLayout>
 
