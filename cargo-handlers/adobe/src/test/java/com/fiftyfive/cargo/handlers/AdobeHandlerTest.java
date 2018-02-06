@@ -8,6 +8,7 @@ import com.adobe.mobile.Analytics;
 import com.adobe.mobile.Config;
 import com.adobe.mobile.MobilePrivacyStatus;
 import com.fiftyfive.cargo.Cargo;
+import com.fiftyfive.cargo.CargoLocation;
 
 import junit.framework.TestCase;
 
@@ -164,6 +165,12 @@ public class AdobeHandlerTest extends TestCase {
     public void testSimpleTrackLocation(){
         HashMap<String, Object> map = new HashMap<>();
 
+        Location userLocation = new Location("unitTest");
+        userLocation.setLongitude(2.294254);
+        userLocation.setLatitude(48.858278);
+        userLocation.setAltitude(357.5);
+        CargoLocation.setLocation(userLocation);
+
         handler.setInitialized(true);
         handler.execute("ADB_trackLocation", map);
 
@@ -175,6 +182,12 @@ public class AdobeHandlerTest extends TestCase {
         HashMap<String, Object> map = new HashMap<>();
         map.put("reason", "visitPhysicalStore");
         map.put("moneySpent", 12.50);
+
+        Location userLocation = new Location("unitTest");
+        userLocation.setLongitude(2.294254);
+        userLocation.setLatitude(48.858278);
+        userLocation.setAltitude(357.5);
+        CargoLocation.setLocation(userLocation);
 
         handler.setInitialized(true);
         handler.execute("ADB_trackLocation", map);
