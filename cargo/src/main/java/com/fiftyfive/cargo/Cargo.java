@@ -37,6 +37,7 @@ public class Cargo {
 
     private static final String HANDLER_METHOD = "handlerMethod";
 
+    private static final String ADOBE = "Adobe";
     private static final String AT_INTERNET = "AT Internet";
     private static final String FACEBOOK = "Facebook";
     private static final String TUNE = "Tune";
@@ -119,6 +120,9 @@ public class Cargo {
         }
 
         switch (handler.toString()) {
+            case ADOBE:
+                register("com.fiftyfive.cargo.handlers.AdobeHandler");
+                break;
             case AT_INTERNET:
                 register("com.fiftyfive.cargo.handlers.ATInternetHandler");
                 break;
@@ -222,6 +226,8 @@ public class Cargo {
      * An enum which allows to initialize the desired handlers without any risk of mistake.
      */
     public enum Handler {
+        /** The enum constant for the Adobe handler */
+        ADB(ADOBE),
         /** The enum constant for the AT Internet handler */
         AT(AT_INTERNET),
         /** The enum constant for the Facebook handler */
