@@ -23,6 +23,9 @@ android:
     - sys-img-armeabi-v7a-android-23
     - sys-img-armeabi-v7a-android-27
 
+before_install:
+    - yes | sdkmanager "platforms;android-27"
+
 script:
     - ./gradlew install && ./gradlew jacocoTestReportDebug
 
