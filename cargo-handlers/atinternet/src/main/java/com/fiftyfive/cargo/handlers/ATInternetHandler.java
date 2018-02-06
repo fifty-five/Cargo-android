@@ -199,7 +199,7 @@ public class ATInternetHandler extends AbstractTagHandler {
      * The mandatory parameters are EVENT_NAME, EVENT_TYPE which are a necessity to build the event.
      * Without these parameters, the event won't be built.
      *
-     * @param params    the parameters given at the moment of the dataLayer.push(),
+     * @param params    00the parameters given at the moment of the dataLayer.push(),
      *                  passed through the GTM container and the execute method.
      *                  * eventName (String) : the name for this event.
      *                  * eventType (String) : defines the type of event you want to send.
@@ -382,10 +382,7 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStarted(Activity activity) {
-        if (enableDebug && isInitialized()) {
-            Debugger.show(activity, atTracker);
-            debugEnabled = true;
-        }
+
     }
 
     /**
@@ -394,7 +391,10 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityResumed(Activity activity) {
-
+        if (enableDebug && isInitialized()) {
+            Debugger.show(activity, atTracker);
+            debugEnabled = true;
+        }
     }
 
     /**
@@ -403,7 +403,10 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityPaused(Activity activity) {
-
+        if (enableDebug && isInitialized() && debugEnabled) {
+            Debugger.setViewerVisibility(false);
+            debugEnabled = false;
+        }
     }
 
     /**
@@ -412,10 +415,7 @@ public class ATInternetHandler extends AbstractTagHandler {
      */
     @Override
     public void onActivityStopped(Activity activity) {
-        if (enableDebug && isInitialized() && debugEnabled) {
-            Debugger.setViewerVisibility(false);
-            debugEnabled = false;
-        }
+
     }
 
 /* ********************************************************************************************** */
