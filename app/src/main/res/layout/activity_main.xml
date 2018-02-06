@@ -47,113 +47,113 @@
             android:hint="email adress"
             android:textAlignment="center" />
 
+        <Button
+            android:id="@+id/identifyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="set user" />
+
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="23dp" />
 
-        <Button
-            android:text="tag event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tagEventButton" />
-
-        <Button
-            android:text="tag screen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tagScreenButton" />
-
-        <Button
-            android:text="set user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/identifyButton"/>
-
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/editTextXbox"
-                android:layout_weight="1"
-                android:hint="0"
-                android:textAlignment="center"
-                android:textStyle="normal|bold" />
-
-            <TextView
-                android:text="xBox One"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/textView5"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/screenNameInput"
                 android:layout_weight="1"
-                android:textSize="30sp"
+                android:hint="screen name"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/eventNameInput"
+                android:layout_weight="1"
+                android:hint="event name"
                 android:textAlignment="center" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/editTextPlay"
-                android:layout_weight="1"
-                android:hint="0"
-                android:textAlignment="center"
-                android:textStyle="normal|bold" />
-
-            <TextView
-                android:text="PlayStation 4"
+            <Button
+                android:id="@+id/tagScreenButton"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/textView6"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="30sp"
-                android:textAlignment="center" />
+                android:text="tag screen" />
+
+            <Button
+                android:id="@+id/tagEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="tag event" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/editTextNintendo"
-                android:layout_weight="1"
-                android:hint="0"
-                android:textAlignment="center"
-                android:textStyle="normal|bold" />
-
-            <TextView
-                android:text="Nintendo Switch"
+            <Button
+                android:id="@+id/locationButton"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/textView7"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="30sp"
-                android:textAlignment="center" />
+                android:text="set location" />
+
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/sendQueueHits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="send queue hits" />
+
+            <Button
+                android:id="@+id/clearQueue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="clear queue" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
+            android:layout_weight="1" />
+
         <Button
-        android:text="tag purchase"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tagPurchaseButton" />
+            android:id="@+id/marketButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Market Page" />
+
 
     </LinearLayout>
 
