@@ -33,3 +33,5 @@ dependencies {
 ext{
     artifact = 'cargo'
 }
+
+apply plugin: 'jacoco-android'
