@@ -1,0 +1,39 @@
+{
+  "lastModified": "2018-01-31T13:52:00.162Z",
+  "marketingCloud": {
+    "org": "FBD139F75694F1C67F000101@AdobeOrg"
+  },
+  "target": {
+    "clientCode": "",
+    "timeout": 5
+  },
+  "audienceManager": {
+    "server": "",
+    "analyticsForwardingEnabled": false,
+    "timeout": 5
+  },
+  "acquisition": {
+    "server": "c00.adobe.com",
+    "appid": "9b69a9b32091c8aa77e3c703e86ce76760ff8442b06b79c5a87b637df8192325"
+  },
+  "analytics": {
+    "rsids": "55smobiledev",
+    "server": "55sas.sc.omtrdc.net",
+    "ssl": false,
+    "offlineEnabled": false,
+    "charset": "UTF-8",
+    "lifecycleTimeout": 1800,
+    "privacyDefault": "optedin",
+    "batchLimit": 0,
+    "timezone": "CET",
+    "timezoneOffset": 60,
+    "referrerTimeout": 0,
+    "backdateSessionInfo": false,
+    "poi": []
+  },
+  "messages": [],
+  "remotes": {
+    "analytics.poi": "https://assets.adobedtm.com/b213090c5204bf94318f4ef0539a38b487d10368/scripts/satellite-5a71a2b064746d3f9f00006f.json",
+    "messages": "https://assets.adobedtm.com/b213090c5204bf94318f4ef0539a38b487d10368/scripts/satellite-5a71a2b064746d1a65000260.json"
+  }
+}
