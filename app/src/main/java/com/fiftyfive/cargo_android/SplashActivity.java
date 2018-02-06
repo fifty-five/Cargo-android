@@ -18,7 +18,8 @@ public class SplashActivity extends AppCompatActivity {
 
     Cargo.Handler[] handlerArray = new Cargo.Handler[]{
             Cargo.Handler.AT,
-            Cargo.Handler.FB
+            Cargo.Handler.FB,
+            Cargo.Handler.ADB
     };
 
     @Override
