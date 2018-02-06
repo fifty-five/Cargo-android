@@ -110,18 +110,21 @@ public abstract class AbstractTagHandler {
      */
     public boolean isInitialized() { return initialized; }
 
-/* ************************************ Variables declaration *********************************** */
+
+/* ************************************* Logging methods **************************************** */
 
     /**
      * Logs a warning about a mandatory parameter missing in a method call.
      * Prints the name of the handler it happens in.
      *
-     * @param parameter the missing parameter.
+     * @param parameters the missing parameters.
      * @param methodName the tag of the method the parameter is missing in.
      */
-    protected void logMissingParam(String[] parameter, String methodName){
-        Log.w(this.key+"_handler", "Parameter '"+ parameter.toString() +"' is required " +
-                "in method '"+ methodName +"'");
+    protected void logMissingParam(String[] parameters, String methodName){
+        for (String parameter : parameters) {
+            Log.w(this.key+"_handler", "Parameter '"+ parameter +"' is required " +
+                    "in method '"+ methodName +"'");
+        }
     }
 
     /**
@@ -176,6 +179,7 @@ public abstract class AbstractTagHandler {
     protected void logUncastableParam(String parameter, String type) {
         Log.e(this.key+"_handler", "Parameter "+ parameter +" cannot be casted to "+ type +".");
     }
+
 
 /* ***************************** ActivityLifeCycle callback methods ***************************** */
 
