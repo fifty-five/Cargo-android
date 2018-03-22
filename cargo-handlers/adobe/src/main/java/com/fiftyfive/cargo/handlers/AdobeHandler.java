@@ -1,6 +1,7 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
+import android.app.Application;
 import android.location.Location;
 import android.util.Log;
 
@@ -11,6 +12,8 @@ import com.fiftyfive.cargo.CargoLocation;
 import com.fiftyfive.cargo.models.Event;
 import com.fiftyfive.cargo.models.Screen;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +34,7 @@ public class AdobeHandler extends AbstractTagHandler {
 /* ************************************ Variables declaration *********************************** */
 
     /** Constants used to define callbacks in the register and in the execute method */
+    private final String ADB_INIT = "ADB_init";
     private final String ADB_TAG_SCREEN = "ADB_tagScreen";
     private final String ADB_TAG_EVENT = "ADB_tagEvent";
     private final String ADB_TRACK_LOCATION = "ADB_trackLocation";
@@ -58,7 +62,6 @@ public class AdobeHandler extends AbstractTagHandler {
         super.initialize("ADB", "Adobe Analytics");
         Config.setContext(Cargo.getInstance().getAppContext());
         validate(true);
-        setInitialized(true);
     }
 
     /**
@@ -71,7 +74,10 @@ public class AdobeHandler extends AbstractTagHandler {
     public void execute(String s, Map<String, Object> map) {
         logReceivedFunction(s, map);
 
-        if (isInitialized()) {
+        if (ADB_INIT.equals(s)) {
+            init(map);
+        }
+        else if (isInitialized()) {
             switch (s) {
                 case ADB_TAG_EVENT:
                     tagEvent(map);
@@ -111,6 +117,26 @@ public class AdobeHandler extends AbstractTagHandler {
             logUninitializedFramework();
         }
     }
+
+/* ************************************* SDK initialization ************************************* */
+
+private void init(Map<String, Object> params){
+    String overrideConfigPath = "overrideConfigPath";
+    Boolean debug = getBoolean(params, "enableDebug", false);
+    String configPath = getString(params, overrideConfigPath);
+
+    Config.setDebugLogging(debug);
+    setInitialized(true);
+    if (configPath != null) {
+        try {
+            InputStream configInput = Cargo.getInstance().getAppContext().getAssets().open(configPath+".json");
+            Config.overrideConfigStream(configInput);
+        } catch (IOException ex) {
+            Log.e(this.key, "overrideConfigPath failed: "+ex);
+            setInitialized(false);
+        }
+    }
+}
 
 
 /* ****************************************** Tracking ****************************************** */

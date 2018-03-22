@@ -148,6 +148,47 @@
             android:layout_height="23dp"
             android:layout_weight="1" />
 
+        <TextView
+            android:id="@+id/privacyStatusTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Privacy Status :"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButtonOptIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="Opt In" />
+
+            <RadioButton
+                android:id="@+id/radioButtonOptOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Opt Out" />
+
+            <RadioButton
+                android:id="@+id/radioButtonUnknown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Unknown" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
+            android:layout_weight="1" />
+
         <Button
             android:id="@+id/marketButton"
             android:layout_width="match_parent"

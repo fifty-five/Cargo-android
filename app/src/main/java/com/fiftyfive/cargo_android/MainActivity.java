@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.fiftyfive.cargo.CargoLocation;
@@ -27,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
     EditText eventNameText;
     EditText screenNameText;
 
+    RadioButton optInButton;
+    RadioButton optOutButton;
+    RadioButton unknownButton;
+
+    String PRIVACY_STATUS = "privacyStatus";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +157,54 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    RadioButton.OnCheckedChangeListener optInButtonValueChanged = new RadioButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                Bundle privacybundle = new Bundle();
+                privacybundle.putString(PRIVACY_STATUS, "OPT_IN");
+                mFirebaseAnalytics.logEvent("setPrivacyStatus", privacybundle);
+                optOutButton.setChecked(false);
+                unknownButton.setChecked(false);
+            }
+            else if (!optOutButton.isChecked() || !unknownButton.isChecked()){
+                optInButton.setActivated(true);
+            }
+        }
+    };
+
+    RadioButton.OnCheckedChangeListener optOutButtonValueChanged = new RadioButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                Bundle privacybundle = new Bundle();
+                privacybundle.putString(PRIVACY_STATUS, "OPT_OUT");
+                mFirebaseAnalytics.logEvent("setPrivacyStatus", privacybundle);
+                optInButton.setChecked(false);
+                unknownButton.setChecked(false);
+            }
+            else if (!optInButton.isChecked() || !unknownButton.isChecked()){
+                optOutButton.setActivated(true);
+            }
+        }
+    };
+
+    RadioButton.OnCheckedChangeListener unknownButtonValueChanged = new RadioButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                Bundle privacybundle = new Bundle();
+                privacybundle.putString(PRIVACY_STATUS, "UNKNOWN");
+                mFirebaseAnalytics.logEvent("setPrivacyStatus", privacybundle);
+                optInButton.setChecked(false);
+                optOutButton.setChecked(false);
+            }
+            else if (!optInButton.isChecked() || !optOutButton.isChecked()){
+                unknownButton.setActivated(true);
+            }
+        }
+    };
+
     void setupUI() {
         Button tagEventButton = findViewById(R.id.tagEventButton);
         tagEventButton.setOnClickListener(tagEventListener);
@@ -165,6 +220,13 @@ public class MainActivity extends AppCompatActivity {
         clearQueue.setOnClickListener(clearQueueListener);
         Button sendHits = findViewById(R.id.sendQueueHits);
         sendHits.setOnClickListener(sendHitsListener);
+
+        optInButton = findViewById(R.id.radioButtonOptIn);
+        optInButton.setOnCheckedChangeListener(optInButtonValueChanged);
+        optOutButton = findViewById(R.id.radioButtonOptOut);
+        optOutButton.setOnCheckedChangeListener(optOutButtonValueChanged);
+        unknownButton = findViewById(R.id.radioButtonUnknown);
+        unknownButton.setOnCheckedChangeListener(unknownButtonValueChanged);
 
         userText = findViewById(R.id.usernameInput);
         mailAdressText = findViewById(R.id.mailAdressInput);
