@@ -1,7 +1,10 @@
 package com.fiftyfive.cargo.handlers;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.ComponentName;
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
@@ -50,6 +53,9 @@ public class AdobeHandler extends AbstractTagHandler {
     private static final String PRIVACY_STATUS = "privacyStatus";
     private static final String ACTION_NAME = "actionName";
     private static final String ADDITIONAL_LIFETIME_VALUE = "additionalLifetimeValue";
+
+    private Activity latestActivity;
+    private boolean needOverrideConfigPath = false;
 
 
 /* ************************************ Handler core methods ************************************ */
@@ -125,16 +131,35 @@ private void init(Map<String, Object> params){
     Boolean debug = getBoolean(params, "enableDebug", false);
     String configPath = getString(params, overrideConfigPath);
 
+    this.initialized = true;
     Config.setDebugLogging(debug);
-    setInitialized(true);
     if (configPath != null) {
-        try {
-            InputStream configInput = Cargo.getInstance().getAppContext().getAssets().open(configPath+".json");
-            Config.overrideConfigStream(configInput);
-        } catch (IOException ex) {
-            Log.e(this.key, "overrideConfigPath failed: "+ex);
-            setInitialized(false);
+        if (this.needOverrideConfigPath) {
+            try {
+                InputStream configInput = Cargo.getInstance().getAppContext().getAssets().open(configPath + ".json");
+                Config.overrideConfigStream(configInput);
+                this.needOverrideConfigPath = false;
+                this.onActivityResumed(latestActivity);
+                logParamSetWithSuccess(overrideConfigPath, configPath+".json");
+                setInitialized(true);
+            } catch (IOException ex) {
+                Log.e(this.key, "overrideConfigPath failed: " + ex);
+                setInitialized(false);
+            }
         }
+        else {
+            setInitialized(true);
+            Log.w(this.key,
+                    "overrideConfigPath failed since the default config file has been used already (ADBMobileConfig.json). " +
+                            "In order to use another config file, delete the default one in the assets folder.");
+        }
+    }
+    else if (this.needOverrideConfigPath) {
+        setInitialized(false);
+        Log.w(this.key,
+                "Unable to find the default config file (ADBMobileConfig.json) and no other file has been provided." +
+                        "Either provide ADBMobileConfig.json or setup a replacement file name in the GTM container." +
+                        "The config file has to be saved in the assets folder of your app.");
     }
 }
 
@@ -423,6 +448,15 @@ private void init(Map<String, Object> params){
      */
     @Override
     public void onActivityResumed(Activity activity) {
+        if (!this.isInitialized()) {
+            try {
+                Cargo.getInstance().getAppContext().getAssets().open("ADBMobileConfig.json");
+            } catch (IOException e) {
+                this.needOverrideConfigPath = true;
+                this.latestActivity = activity;
+                return;
+            }
+        }
         Config.collectLifecycleData(activity);
     }
 

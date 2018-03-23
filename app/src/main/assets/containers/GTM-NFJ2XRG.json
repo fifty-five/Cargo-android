@@ -1,138 +1,492 @@
 {
 
-"fingerprint":"MTA$0",
+"fingerprint":"NDU$0",
 
 "resource": {
-  "version":"10",
-  "macros":[
-    {
+  "version":"45",
+  "macros":[{
       "function":"__e",
       "instance_name":"Event Name",
       "vendor_template_version":"1"
-    },
-    {
+    },{
       "function":"__md",
-      "instance_name":"string",
+      "instance_name":"eventName",
       "vendor_template_version":"1",
       "vtp_setDefaultValue":false,
       "vtp_eventType":"CUSTOM",
-      "vtp_key":"string"
-    },
-    {
+      "vtp_key":"eventName"
+    },{
       "function":"__md",
-      "instance_name":"date",
+      "instance_name":"currencyCode",
       "vendor_template_version":"1",
       "vtp_setDefaultValue":false,
       "vtp_eventType":"CUSTOM",
-      "vtp_key":"date"
-    },
-    {
+      "vtp_key":"currencyCode"
+    },{
+      "function":"__md",
+      "instance_name":"totalRevenue",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"totalRevenue"
+    },{
+      "function":"__md",
+      "instance_name":"screenName",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"screenName"
+    },{
+      "function":"__c",
+      "instance_name":"GA_trackingId",
+      "vendor_template_version":"1",
+      "vtp_value":"UA-74607529-3"
+    },{
+      "function":"__md",
+      "instance_name":"eventItems",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"eventItems"
+    },{
+      "function":"__md",
+      "instance_name":"username",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":true,
+      "vtp_defaultValue":"none",
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"username"
+    },{
+      "function":"__md",
+      "instance_name":"userEmail",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"userEmail"
+    },{
+      "function":"__md",
+      "instance_name":"actionName",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"actionName"
+    },{
+      "function":"__md",
+      "instance_name":"revenue",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"revenue"
+    },{
+      "function":"__md",
+      "instance_name":"quantity",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"quantity"
+    },{
+      "function":"__md",
+      "instance_name":"item",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"item"
+    },{
+      "function":"__md",
+      "instance_name":"successfulAction",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"successfulAction"
+    },{
+      "function":"__md",
+      "instance_name":"privacyStatus",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"privacyStatus"
+    },{
+      "function":"__md",
+      "instance_name":"enableDebug",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"enableDebug"
+    },{
+      "function":"__md",
+      "instance_name":"overrideConfigPath",
+      "vendor_template_version":"1",
+      "vtp_setDefaultValue":false,
+      "vtp_eventType":"CUSTOM",
+      "vtp_key":"overrideConfigPath"
+    },{
+      "function":"__c",
+      "instance_name":"TUN_advertiser ID",
+      "vendor_template_version":"1",
+      "vtp_value":"165042"
+    },{
+      "function":"__c",
+      "instance_name":"TUN_siteID",
+      "vendor_template_version":"1",
+      "vtp_value":"131951"
+    },{
+      "function":"__c",
+      "instance_name":"TUN_userID",
+      "vendor_template_version":"1",
+      "vtp_value":"Sample App"
+    },{
+      "function":"__c",
+      "instance_name":"TUN_privateKey",
+      "vendor_template_version":"1",
+      "vtp_value":"1805fa845a5d2b81abdd4392c4e46cbf"
+    },{
+      "function":"__c",
+      "instance_name":"TUN_consumerKey",
+      "vendor_template_version":"1",
+      "vtp_value":"b9ecce9dd512b2d362d1ace539f5e7be"
+    },{
       "function":"__ai",
       "instance_name":"App ID",
       "vendor_template_version":"1"
-    },
-    {
+    },{
       "function":"__an",
       "instance_name":"App Name",
       "vendor_template_version":"1"
-    },
-    {
+    },{
       "function":"__av",
       "instance_name":"App Version Code",
       "vendor_template_version":"1"
-    }
-  ],
-  "tags":[
-    {
+    }],
+  "tags":[{
       "function":"__funct",
       "instance_name":"init_FB",
       "once_per_event":true,
       "vendor_template_version":"1",
-      "vtp_functionArgument":["list",["map","key","applicationId","value","708090462697956"],["map","key","enableDebug","value","true"],["map","key","handlerKey","value","FB"],["map","key","handlerMethod","value","FB_init"]],
+      "vtp_functionArgument":["list",["map","key","applicationId","value","708090462697956"],["map","key","enableDebug","value","true"],["map","key","handlerMethod","value","FB_init"]],
       "vtp_classPath":"com.fiftyfive.cargo.Tags",
       "tag_id":1
-    },
-    {
+    },{
       "function":"__funct",
       "instance_name":"tagEvent_FB",
       "once_per_event":true,
       "vendor_template_version":"1",
-      "vtp_functionArgument":["list",["map","key","eventName","value","test_eventWithGTM5"],["map","key","handlerKey","value","FB"],["map","key","handlerMethod","value","FB_tagEvent"]],
+      "vtp_functionArgument":["list",["map","key","eventName","value",["macro",1]],["map","key","handlerMethod","value","FB_tagEvent"]],
       "vtp_classPath":"com.fiftyfive.cargo.Tags",
       "tag_id":3
-    },
-    {
+    },{
       "function":"__funct",
       "instance_name":"tagPurchase_FB",
       "once_per_event":true,
       "vendor_template_version":"1",
-      "vtp_functionArgument":["list",["map","key","transactionCurrencyCode","value","EUR"],["map","key","transactionTotal","value","55"],["map","key","handlerKey","value","FB"],["map","key","handlerMethod","value","FB_tagPurchase"]],
+      "vtp_functionArgument":["list",["map","key","transactionCurrencyCode","value",["macro",2]],["map","key","transactionTotal","value",["macro",3]],["map","key","handlerMethod","value","FB_tagPurchase"]],
       "vtp_classPath":"com.fiftyfive.cargo.Tags",
       "tag_id":4
-    },
-    {
+    },{
       "function":"__funct",
-      "instance_name":"init_GA",
+      "instance_name":"init_AT",
       "once_per_event":true,
       "vendor_template_version":"1",
-      "vtp_functionArgument":["list",["map","key","applicationId","value","UA-74607529-3"],["map","key","handlerKey","value","GA"],["map","key","handlerMethod","value","GA_init"]],
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","AT_init"],["map","key","log","value","logc407"],["map","key","logSSL","value","logs1407"],["map","key","site","value","575114"],["map","key","enableDebug","value","true"]],
       "vtp_classPath":"com.fiftyfive.cargo.Tags",
-      "tag_id":6
-    },
-    {
+      "tag_id":9
+    },{
       "function":"__funct",
+      "instance_name":"identify_AT",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","AT_identify"],["map","key","userId","value","5542"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":10
+    },{
+      "function":"__funct",
+      "instance_name":"tagEvent_AT",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","AT_tagEvent"],["map","key","eventName","value",["macro",1]],["map","key","eventType","value","sendTouch"],["map","key","chapter1","value","sent from emulator"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":11
+    },{
+      "function":"__funct",
+      "instance_name":"tagScreen_AT",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","AT_tagScreen"],["map","key","screenName","value",["macro",4]],["map","key","level2","value","1"],["map","key","chapter1","value","tagScreenButton"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":12
+    },{
+      "function":"__ua",
       "instance_name":"tagEvent_GA",
       "once_per_event":true,
       "vendor_template_version":"1",
-      "vtp_functionArgument":["list",["map","key","handlerKey","value","GA"],["map","key","handlerMethod","value","GA_tagEvent"],["map","key","eventAction","value","touchEventGTM5"],["map","key","eventCategory","value","gtmv5"],["map","key","eventLabel","value","label gtm v5"],["map","key","eventValue","value","42"]],
-      "vtp_classPath":"com.fiftyfive.cargo.Tags",
-      "tag_id":7
-    },
-    {
-      "function":"__funct",
+      "vtp_nonInteraction":false,
+      "vtp_overrideGaSettings":true,
+      "vtp_eventValue":"55",
+      "vtp_eventCategory":"testPurposes",
+      "vtp_trackType":"TRACK_EVENT",
+      "vtp_collectAdid":false,
+      "vtp_sendFirebaseCampaignData":true,
+      "vtp_eventAction":"sendEvent",
+      "vtp_eventLabel":["macro",1],
+      "vtp_trackingId":["macro",5],
+      "vtp_enableUaRlsa":false,
+      "vtp_enableUseInternalVersion":false,
+      "vtp_enableFirebaseCampaignData":true,
+      "vtp_trackTypeIsEvent":true,
+      "vtp_enableFirebaseEcommerce":true,
+      "tag_id":14
+    },{
+      "function":"__ua",
       "instance_name":"tagScreen_GA",
       "once_per_event":true,
       "vendor_template_version":"1",
-      "vtp_functionArgument":["list",["map","key","handlerKey","value","GA"],["map","key","handlerMethod","value","GA_tagScreen"],["map","key","screenName","value","MainActivity"]],
+      "vtp_overrideGaSettings":true,
+      "vtp_fieldsToSet":["list",["map","fieldName","screenName","value",["macro",4]]],
+      "vtp_trackType":"TRACK_SCREENVIEW",
+      "vtp_collectAdid":false,
+      "vtp_trackingId":["macro",5],
+      "vtp_enableUaRlsa":false,
+      "vtp_enableUseInternalVersion":false,
+      "vtp_enableFirebaseCampaignData":true,
+      "vtp_enableFirebaseEcommerce":true,
+      "tag_id":15
+    },{
+      "function":"__fm",
+      "instance_name":"tagEvent_FIR",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_editParamTable":["list",["map","editParamKey","eventAction","editParamValue",["macro",1]],["map","editParamKey","eventCategory","editParamValue","engagement"]],
+      "vtp_action":"filter",
+      "tag_id":16
+    },{
+      "function":"__fm",
+      "instance_name":"tagPurchase_FIR",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_overrideEventName":"ecommerce_purchase",
+      "vtp_editParamTable":["list",["map","editParamKey","currency","editParamValue",["macro",2]],["map","editParamKey","value","editParamValue",["macro",3]],["map","editParamKey","shipping","editParamValue","free"]],
+      "vtp_action":"filter",
+      "tag_id":17
+    },{
+      "function":"__funct",
+      "instance_name":"init_TUN",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","TUN_init"],["map","key","advertiserId","value","165042"],["map","key","conversionKey","value","ffbf699d5cb077d9bccfdeb6202383f4"]],
       "vtp_classPath":"com.fiftyfive.cargo.Tags",
-      "tag_id":8
-    }
-  ],
-  "predicates":[
-    {
+      "tag_id":18
+    },{
+      "function":"__funct",
+      "instance_name":"tagPurchase_TUN",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","TUN_tagEvent"],["map","key","eventCurrencyCode","value",["macro",2]],["map","key","eventRevenue","value",["macro",3]],["map","key","eventItems","value",["macro",6]],["map","key","eventName","value","purchase"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":19
+    },{
+      "function":"__funct",
+      "instance_name":"identify_TUN",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","TUN_identify"],["map","key","userName","value",["macro",7]],["map","key","userEmail","value",["macro",8]],["map","key","userId","value","ID4255"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":20
+    },{
+      "function":"__funct",
+      "instance_name":"tagEvent_TUN",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","TUN_tagEvent"],["map","key","eventName","value",["macro",1]],["map","key","eventCurrencyCode","value","EUR"],["map","key","eventAttribute1","value","testAttributeOne"],["map","key","eventAttribute2","value","testAttributeTwo"],["map","key","eventRevenue","value","5.55"],["map","key","eventQuantity","value","10"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":21
+    },{
+      "function":"__funct",
+      "instance_name":"tagScreen_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_tagScreen"],["map","key","screenName","value",["macro",4]],["map","key","screenType","value","HP"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":22
+    },{
+      "function":"__funct",
+      "instance_name":"tagEvent_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","eventName","value",["macro",1]],["map","key","handlerMethod","value","ADB_tagEvent"],["map","key","truc","value","muche"],["map","key","baba","value","oRhum"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":23
+    },{
+      "function":"__funct",
+      "instance_name":"tagLocation_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_trackLocation"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":24
+    },{
+      "function":"__funct",
+      "instance_name":"tagActionStart_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_trackTimeStart"],["map","key","actionName","value",["macro",9]]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":25
+    },{
+      "function":"__funct",
+      "instance_name":"tagActionUpdate_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_trackTimeUpdate"],["map","key","actionName","value",["macro",9]],["map","key","revenue","value",["macro",10]],["map","key","quantity","value",["macro",11]],["map","key","item","value",["macro",12]]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":26
+    },{
+      "function":"__funct",
+      "instance_name":"tagActionEnd_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_trackTimeEnd"],["map","key","actionName","value",["macro",9]],["map","key","successfulAction","value",["macro",13]]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":27
+    },{
+      "function":"__funct",
+      "instance_name":"sendQueueHits_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_sendQueueHits"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":28
+    },{
+      "function":"__funct",
+      "instance_name":"clearQueue_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_clearQueue"]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":29
+    },{
+      "function":"__funct",
+      "instance_name":"setPrivacy_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_setPrivacyStatus"],["map","key","privacyStatus","value",["macro",14]]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":30
+    },{
+      "function":"__funct",
+      "instance_name":"init_ADB",
+      "once_per_event":true,
+      "vendor_template_version":"1",
+      "vtp_functionArgument":["list",["map","key","handlerMethod","value","ADB_init"],["map","key","enableDebug","value",["macro",15]],["map","key","overrideConfigPath","value",["macro",16]]],
+      "vtp_classPath":"com.fiftyfive.cargo.Tags",
+      "tag_id":31
+    }],
+  "predicates":[{
       "function":"_eq",
       "arg0":["macro",0],
       "arg1":"applicationStart"
-    },
-    {
+    },{
       "function":"_eq",
       "arg0":["macro",0],
       "arg1":"tagEvent"
-    },
-    {
+    },{
       "function":"_eq",
       "arg0":["macro",0],
       "arg1":"tagPurchase"
-    },
-    {
+    },{
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"identify"
+    },{
       "function":"_eq",
       "arg0":["macro",0],
       "arg1":"tagScreen"
-    }
-  ],
+    },{
+      "function":"_cn",
+      "arg0":["macro",0],
+      "arg1":"tagLocation"
+    },{
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"tagActionStart"
+    },{
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"tagActionUpdate"
+    },{
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"tagActionEnd"
+    },{
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"sendQueueHits"
+    },{
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"clearQueue"
+    },{
+      "function":"_eq",
+      "arg0":["macro",0],
+      "arg1":"setPrivacyStatus"
+    }],
   "rules":[
-    [["if",0],["add",0,3]],
-    [["if",1],["add",1,4]],
-    [["if",2],["add",2]],
-    [["if",3],["add",5]]
-  ]
+    [["if",0],["add",0,3,11,24]],
+    [["if",1],["add",1,5,7,9,14,16]],
+    [["if",2],["add",2,10,12]],
+    [["if",3],["add",4,13]],
+    [["if",4],["add",6,8,15]],
+    [["if",5],["add",17]],
+    [["if",6],["add",18]],
+    [["if",7],["add",19]],
+    [["if",8],["add",20]],
+    [["if",9],["add",21]],
+    [["if",10],["add",22]],
+    [["if",11],["add",23]]]
 },
 "runtime":
-[[50,"__ai_main",[46],[36,[2,[17,[15,"gtmUtils"],"mobile"],"applicationId",[7]]]],[50,"__ai",[46,"data"],[36,["__ai_main",[15,"data"]]]],
+[
+
+
+[50,"__ai_main",[46],[36,[2,[17,[15,"gtmUtils"],"mobile"],"applicationId",[7]]]],[50,"__ai",[46,"data"],[36,["__ai_main",[15,"data"]]]],
 [50,"__an_main",[46],[36,[2,[17,[15,"gtmUtils"],"mobile"],"applicationName",[7]]]],[50,"__an",[46,"data"],[36,["__an_main",[15,"data"]]]],
+
 [50,"__av_main",[46],[36,[2,[17,[15,"gtmUtils"],"mobile"],"applicationVersion",[7]]]],[50,"__av",[46,"data"],[36,["__av_main",[15,"data"]]]],
-[50,"__e_main",[46],[41,"a","b"],[3,"a",[2,[17,[15,"gtmUtils"],"mobile"],"event",[7]]],[22,[1,[1,[15,"a"],[18,[17,[15,"a"],"length"],0]],[12,[16,[15,"a"],0],"_"]],[46,[3,"b",[8,"_f","first_open","_iap","in_app_purchase","_e","user_engagement","_s","session_start","_au","app_update","_ui","app_remove","_ou","os_update","_cd","app_clear_data","_ae","app_exception","_nf","notification_foreground","_nr","notification_receive","_no","notification_open","_nd","notification_dismiss","_cmp","firebase_campaign"]],[3,"a",[30,[16,[15,"b"],[15,"a"]],[15,"a"]]]]],[36,[15,"a"]]],[50,"__e",[46,"data"],[36,["__e_main",[15,"data"]]]],
-[50,"__md_main",[46,"a"],[41,"b","c","d","e"],[22,[12,[17,[15,"a"],"eventType"],"CUSTOM"],[46,[3,"b",[16,[15,"a"],"key"]]],[46,[22,[12,[17,[15,"a"],"eventType"],"SUGGESTED"],[46,[47,"c",[15,"a"],[46,[3,"d",[2,[15,"c"],"lastIndexOf",[7,"Param"]]],[22,[1,[29,[15,"d"],[27,1]],[12,[15,"d"],[37,[17,[15,"c"],"length"],5]]],[46,[22,[20,[15,"b"],[44]],[46,[3,"b",[16,[15,"a"],[15,"c"]]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e",[0,[0,[0,"Ignoring unexpected additional parameter ","key in the data (key \u003d \""],[15,"c"]],"\")."]]]]]]]]]],[46,[22,[20,[17,[15,"a"],"eventType"],[44]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w","Missing expected eventType param"]],[3,"b",[16,[15,"a"],"key"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e",[0,"Unexpected eventType param value: ",[17,[15,"a"],"eventType"]]]],[36]]]]]]],[22,[20,[15,"b"],[44]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e","No parameter key specified in the data."]],[36]]],[3,"e",[16,[30,[2,[17,[15,"gtmUtils"],"mobile"],"eventParameters",[7]],[8]],[15,"b"]]],[22,[21,[15,"e"],[44]],[46,[36,[15,"e"]]],[46,[22,[21,[17,[15,"a"],"defaultValue"],[44]],[46,[36,[17,[15,"a"],"defaultValue"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w",[0,[0,"Event does not have parameter \"",[15,"b"]],"\" and no default value was defined. Returning \"undefined\"."]]]]]]]],[50,"__md",[46,"data"],[36,["__md_main",[15,"data"]]]],
+
+
+
+
+[50,"__c_main",[46,"a"],[36,[17,[15,"a"],"value"]]],[50,"__c",[46,"data"],[36,["__c_main",[15,"data"]]]],
+
+[50,"__e_main",[46],[41,"a","b"],[3,"a",[2,[17,[15,"gtmUtils"],"mobile"],"event",[7]]],[22,[1,[1,[15,"a"],[18,[17,[15,"a"],"length"],0]],[12,[16,[15,"a"],0],"_"]],[46,[3,"b",[8,"_f","first_open","_iap","in_app_purchase","_e","user_engagement","_s","session_start","_au","app_update","_ui","app_remove","_ou","os_update","_cd","app_clear_data","_ae","app_exception","_nf","notification_foreground","_nr","notification_receive","_no","notification_open","_nd","notification_dismiss","_cmp","firebase_campaign","_vs","screen_view","_ar","ad_reward"]],[3,"a",[30,[16,[15,"b"],[15,"a"]],[15,"a"]]]]],[36,[15,"a"]]],[50,"__e",[46,"data"],[36,["__e_main",[15,"data"]]]],
+
+
+
+
+
+
+
+
+[50,"__ua_main",[46,"a"],[41,"b","c","d","e","f"],[43,[15,"a"],"fieldsToSet",["__ua_convertFieldsToSet",[17,[15,"a"],"fieldsToSet"]]],["__ua_convertIndexedField",[17,[15,"a"],"fieldsToSet"],[17,[15,"a"],"dimension"],"\u0026cd","index","dimension"],["__ua_convertIndexedField",[17,[15,"a"],"fieldsToSet"],[17,[15,"a"],"metric"],"\u0026cm","index","metric"],["__ua_convertIndexedField",[17,[15,"a"],"fieldsToSet"],[17,[15,"a"],"contentGroup"],"\u0026cg","index","group"],[22,[17,[15,"a"],"gaSettings"],[46,[3,"b",[17,[15,"a"],"gaSettings"]],[43,[15,"b"],"fieldsToSet",["__ua_convertFieldsToSet",[17,[15,"b"],"fieldsToSet"]]],["__ua_convertIndexedField",[17,[15,"b"],"fieldsToSet"],[17,[15,"b"],"dimension"],"\u0026cd","index","dimension"],["__ua_convertIndexedField",[17,[15,"b"],"fieldsToSet"],[17,[15,"b"],"metric"],"\u0026cm","index","metric"],["__ua_convertIndexedField",[17,[15,"b"],"fieldsToSet"],[17,[15,"b"],"contentGroup"],"\u0026cg","index","group"],[43,[15,"a"],"gaSettings",[45]],[3,"c",[2,[17,[15,"gtmUtils"],"common"],"copy",[7,[15,"b"],[44]]]],[3,"a",[2,[17,[15,"gtmUtils"],"common"],"copy",[7,[15,"a"],[15,"c"]]]]]],[3,"d",[17,[15,"a"],"fieldsToSet"]],[43,[15,"d"],"\u0026tid",[17,[15,"a"],"trackingId"]],[3,"e","screenview"],[3,"f",true],[38,[17,[15,"a"],"trackType"],[46,"TRACK_EVENT","TRACK_EXCEPTION","TRACK_SOCIAL","TRACK_TIMING","TRACK_TRANSACTION"],[46,[5,[46,[3,"e","event"],[22,[21,[17,[15,"a"],"eventCategory"],[44]],[46,[43,[15,"d"],"\u0026ec",[17,[15,"a"],"eventCategory"]]]],[22,[21,[17,[15,"a"],"eventAction"],[44]],[46,[43,[15,"d"],"\u0026ea",[17,[15,"a"],"eventAction"]]]],[22,[21,[17,[15,"a"],"eventLabel"],[44]],[46,[43,[15,"d"],"\u0026el",[17,[15,"a"],"eventLabel"]]]],[22,[21,[17,[15,"a"],"eventValue"],[44]],[46,[43,[15,"d"],"\u0026ev",[17,[15,"a"],"eventValue"]]]],[22,[21,[17,[15,"a"],"nonInteraction"],[44]],[46,[43,[15,"d"],"\u0026ni",[17,[15,"a"],"nonInteraction"]]]],[22,[17,[15,"a"],"enableFirebaseCampaignData"],[46,["__ua_convertCampaignParams",[15,"d"],[17,[15,"a"],"sendFirebaseCampaignData"]]]],[4]]],[5,[46,[3,"e","exception"],[22,[21,[17,[15,"a"],"exceptionDescription"],[44]],[46,[43,[15,"d"],"\u0026exd",[17,[15,"a"],"exceptionDescription"]]]],[22,[21,[17,[15,"a"],"exceptionFatal"],[44]],[46,[43,[15,"d"],"\u0026exf",[17,[15,"a"],"exceptionFatal"]]]],[4]]],[5,[46,[3,"e","social"],[22,[21,[17,[15,"a"],"socialNetwork"],[44]],[46,[43,[15,"d"],"\u0026sn",[17,[15,"a"],"socialNetwork"]]]],[22,[21,[17,[15,"a"],"socialAction"],[44]],[46,[43,[15,"d"],"\u0026sa",[17,[15,"a"],"socialAction"]]]],[22,[21,[17,[15,"a"],"socialActionTarget"],[44]],[46,[43,[15,"d"],"\u0026st",[17,[15,"a"],"socialActionTarget"]]]],[4]]],[5,[46,[3,"e","timing"],[22,[21,[17,[15,"a"],"timingVar"],[44]],[46,[43,[15,"d"],"\u0026utv",[17,[15,"a"],"timingVar"]]]],[22,[21,[17,[15,"a"],"timingCategory"],[44]],[46,[43,[15,"d"],"\u0026utc",[17,[15,"a"],"timingCategory"]]]],[22,[21,[17,[15,"a"],"timingValue"],[44]],[46,[43,[15,"d"],"\u0026utt",[17,[15,"a"],"timingValue"]]]],[22,[21,[17,[15,"a"],"timingLabel"],[44]],[46,[43,[15,"d"],"\u0026utl",[17,[15,"a"],"timingLabel"]]]],[4]]],[5,[46,[3,"e","transaction"],[3,"f",false],[4]]]]],[43,[15,"d"],"\u0026t",[15,"e"]],[22,[1,[17,[15,"a"],"enableEcommerce"],[12,[17,[15,"a"],"readDataFrom"],"FIREBASE_EVENT_DATA"]],[46,[22,[28,["__ua_sendEnhancedEcommerce",[15,"d"],[15,"a"]]],[46,[2,[17,[15,"gtmUtils"],"mobile"],"universalAnalytics",[7,[15,"d"],[15,"f"],[12,[15,"e"],"transaction"],[44],[44],false,false,[17,[15,"a"],"ecommerceVariableData"],[17,[15,"a"],"collectAdid"]]]]]],[46,[2,[17,[15,"gtmUtils"],"mobile"],"universalAnalytics",[7,[15,"d"],[15,"f"],[12,[15,"e"],"transaction"],[44],[44],[17,[15,"a"],"enableEcommerce"],false,[17,[15,"a"],"ecommerceVariableData"],[17,[15,"a"],"collectAdid"]]]]]],[50,"__ua_sendEnhancedEcommerce",[46,"a","b"],[41,"c","d","e","f","g","h","i","j","k","l","m","n","o","p","q"],[3,"c",[8,"select_content","click","view_item","detail","add_to_cart","add","remove_from_cart","remove","begin_checkout","checkout","checkout_progress","checkout","set_checkout_option","checkout_option","ecommerce_purchase","purchase","purchase_refund","refund"]],[3,"d",[8,"view_item_list","","view_search_results",""]],[3,"e",[8,"select_content",""]],[3,"f",[8,"view_item","","view_item_list","","view_search_results",""]],[3,"g",[8,"item_id","id","item_name","name","item_brand","brand","item_category","category","item_variant","variant","coupon","coupon","index","position","price","price","quantity","quantity"]],[3,"h",[8,"transaction_id","id","affiliation","affiliation","coupon","coupon","item_list","list","checkout_option","option","value","revenue","tax","tax","shipping","shipping","checkout_step","step"]],[3,"i",[8,"item_id","id","item_name","name","creative_name","creative","creative_slot","position"]],[3,"j",[2,[17,[15,"gtmUtils"],"mobile"],"event",[7]]],[3,"k",[30,[2,[17,[15,"gtmUtils"],"mobile"],"eventParameters",[7]],[8]]],[3,"l",[8]],[3,"m",false],[43,[15,"l"],"currencyCode",[16,[15,"k"],"currency"]],[22,[2,[15,"k"],"hasOwnProperty",[7,"promotions"]],[46,[22,[2,[15,"e"],"hasOwnProperty",[7,[15,"j"]]],[46,[43,[15,"a"],"\u0026t","event"],[43,[15,"a"],"\u0026ea","click"],[22,[2,[15,"k"],"hasOwnProperty",[7,"content_type"]],[46,[43,[15,"a"],"\u0026ec",[16,[15,"k"],"content_type"]]]],[22,[2,[15,"k"],"hasOwnProperty",[7,"item_id"]],[46,[43,[15,"a"],"\u0026el",[16,[15,"k"],"item_id"]]]],[43,[15,"l"],"promoClick",["__ua_convertPromotions",[15,"k"],[15,"i"]]],[3,"m",true]],[46,[22,[2,[15,"f"],"hasOwnProperty",[7,[15,"j"]]],[46,[43,[15,"l"],"promoView",["__ua_convertPromotions",[15,"k"],[15,"i"]]],[3,"m",true]]]]]],[46,[22,[2,[15,"c"],"hasOwnProperty",[7,[15,"j"]]],[46,[22,[12,[15,"j"],"set_checkout_option"],[46,[43,[15,"a"],"\u0026t","event"],[43,[15,"a"],"\u0026ea","Option"],[43,[15,"a"],"\u0026ec","Checkout"]]],[3,"n",[8]],[22,[2,[15,"k"],"hasOwnProperty",[7,"items"]],[46,[43,[15,"n"],"products",["__ua_convertProductList",[15,"k"],[15,"g"],false]]]],[3,"o",[8]],[3,"p",false],[47,"q",[15,"h"],[46,[22,[2,[15,"k"],"hasOwnProperty",[7,[15,"q"]]],[46,[43,[15,"o"],[16,[15,"h"],[15,"q"]],[16,[15,"k"],[15,"q"]]],[3,"p",true]]]]],[22,[15,"p"],[46,[43,[15,"n"],"actionField",[15,"o"]]]],[43,[15,"l"],[16,[15,"c"],[15,"j"]],[15,"n"]],[3,"m",true]],[46,[22,[2,[15,"d"],"hasOwnProperty",[7,[15,"j"]]],[46,[43,[15,"l"],"impressions",["__ua_convertProductList",[15,"k"],[15,"g"],true]],[3,"m",true]]]]]]],[22,[15,"m"],[46,[2,[17,[15,"gtmUtils"],"mobile"],"universalAnalytics",[7,[15,"a"],false,false,[44],[44],[17,[15,"b"],"enableEcommerce"],false,[15,"l"],[17,[15,"b"],"collectAdid"]]]]],[36,[15,"m"]]],[50,"__ua_convertScionFields",[46,"a","b"],[41,"c","d"],[22,[30,[12,[15,"b"],[44]],[12,[15,"b"],[45]]],[46,[36,[8]]]],[3,"c",[8]],[47,"d",[15,"a"],[46,[22,[2,[15,"b"],"hasOwnProperty",[7,[15,"d"]]],[46,[43,[15,"c"],[16,[15,"a"],[15,"d"]],[16,[15,"b"],[15,"d"]]]]]]],[36,[15,"c"]]],[50,"__ua_convertPromotions",[46,"a","b"],[41,"c","d","e"],[3,"c",[7]],[3,"d",[16,[15,"a"],"promotions"]],[3,"e",0],[42,[23,[15,"e"],[17,[15,"d"],"length"]],[33,[15,"e"],[3,"e",[0,[15,"e"],1]]],false,[46,[2,[15,"c"],"push",[7,["__ua_convertScionFields",[15,"b"],[16,[15,"d"],[15,"e"]]]]]]],[36,[8,"promotions",[15,"c"]]]],[50,"__ua_convertProductList",[46,"a","b","c"],[41,"d","e","f","g"],[3,"d",[16,[15,"a"],"items"]],[3,"e",[7]],[22,[28,[2,[17,[15,"gtmUtils"],"common"],"isArray",[7,[15,"d"]]]],[46,[2,[15,"e"],"push",[7,["__ua_convertScionFields",[15,"b"],[15,"d"]]]]],[46,[3,"f",0],[42,[23,[15,"f"],[17,[15,"d"],"length"]],[33,[15,"f"],[3,"f",[0,[15,"f"],1]]],false,[46,[3,"g",["__ua_convertScionFields",[15,"b"],[16,[15,"d"],[15,"f"]]]],[22,[1,[15,"c"],[2,[15,"a"],"hasOwnProperty",[7,"item_list"]]],[46,[43,[15,"g"],"list",[16,[15,"a"],"item_list"]]]],[2,[15,"e"],"push",[7,[15,"g"]]]]]]],[36,[15,"e"]]],[50,"__ua_convertFieldsToSet",[46,"a"],[41,"b","c","d","e","f","g"],[22,[28,[15,"a"]],[46,[36,[8]]]],[3,"b",[8,"account","\u0026tid","anonymizeIp","\u0026aip","appName","\u0026an","appVersion","\u0026av","contentDescription","\u0026cd","contentGroup","\u0026cg","dimension","\u0026cd","eventAction","\u0026ea","eventCategory","\u0026ec","eventLabel","\u0026el","eventValue","\u0026ev","exceptionDescription","\u0026exd","exceptionFatal","\u0026exf","firebaseCampaignAdNetworkClickId","\u0026aclid","firebaseCampaignAdNetworkId","\u0026anid","firebaseCampaignContent","\u0026cc","firebaseCampaignGoogleClickId","\u0026gclid","firebaseCampaignMedium","\u0026cm","firebaseCampaignName","\u0026cn","firebaseCampaignSource","\u0026cs","firebaseCampaignTerm","\u0026ck","metric","\u0026cm","noninteraction","\u0026ni","page","\u0026dp","referrer","\u0026dr","sampleRate","\u0026sf","screenName","\u0026cd","sessionControl","\u0026sc","socialAction","\u0026sa","socialActionTarget","\u0026st","socialNetwork","\u0026sn","timingCategory","\u0026utc","timingLabel","\u0026utl","timingValue","\u0026utt","timingVar","\u0026utv","title","\u0026dt","userId","\u0026uid"]],[3,"c",[8]],[3,"d",0],[42,[23,[15,"d"],[17,[15,"a"],"length"]],[33,[15,"d"],[3,"d",[0,[15,"d"],1]]],false,[46,[3,"e",[16,[16,[15,"a"],[15,"d"]],"fieldName"]],[3,"f",[16,[16,[15,"a"],[15,"d"]],"value"]],[22,[1,[21,[15,"f"],[44]],[21,[15,"f"],[45]]],[46,[22,[12,[2,[15,"e"],"charAt",[7,0]],"\u0026"],[46,[43,[15,"c"],[15,"e"],[15,"f"]]],[46,[3,"g",[16,[15,"b"],[15,"e"]]],[22,[21,[15,"g"],[44]],[46,[43,[15,"c"],[15,"g"],[15,"f"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w",[0,"Dropping the invalid UA tag field name ",[15,"e"]]]]]]]]]]]],[36,[15,"c"]]],[50,"__ua_convertIndexedField",[46,"a","b","c","d","e"],[41,"f","g"],[22,[15,"b"],[46,[3,"f",0],[42,[23,[15,"f"],[17,[15,"b"],"length"]],[33,[15,"f"],[3,"f",[0,[15,"f"],1]]],false,[46,[3,"g",[16,[15,"b"],[15,"f"]]],[22,[1,[1,[15,"g"],[21,[16,[15,"g"],[15,"e"]],[44]]],[21,[16,[15,"g"],[15,"e"]],[45]]],[46,[43,[15,"a"],[0,[15,"c"],[16,[15,"g"],[15,"d"]]],[16,[15,"g"],[15,"e"]]]]]]]]]],[50,"__ua_convertCampaignParams",[46,"a","b"],[41,"c","d","e"],[22,[21,[2,[17,[15,"gtmUtils"],"mobile"],"event",[7]],"_cmp"],[46,[36]]],[3,"c",[30,[2,[17,[15,"gtmUtils"],"mobile"],"eventParameters",[7]],[8]]],[22,[15,"b"],[46,[3,"d",[8,"content","\u0026cc","anid","\u0026anid","medium","\u0026cm","campaign","\u0026cn","source","\u0026cs","term","\u0026ck","gclid","\u0026gclid","aclid","\u0026aclid"]]],[46,[3,"d",[8,"anid","\u0026anid","gclid","\u0026gclid","aclid","\u0026aclid"]]]],[47,"e",[15,"d"],[46,[22,[1,[16,[15,"c"],[15,"e"]],[28,[2,[15,"a"],"hasOwnProperty",[7,[16,[15,"d"],[15,"e"]]]]]],[46,[43,[15,"a"],[16,[15,"d"],[15,"e"]],[16,[15,"c"],[15,"e"]]]]]]]],[50,"__ua",[46,"data"],[36,["__ua_main",[15,"data"]]]],
+
+
+
+
+[50,"__fm_main",[46,"a"],[41,"b","c"],[38,[17,[15,"a"],"action"],[46,"measure","filter","block"],[46,[5,[46,[3,"b",[39,[17,[15,"a"],"mergeEventParameters"],[17,[15,"a"],"dropParamTable"],[7]]],["__fm_sendFirebaseEvent",[17,[15,"a"],"eventName"],[17,[15,"a"],"editParamTable"],[15,"b"],[17,[15,"a"],"mergeEventParameters"]],[4]]],[5,[46,[3,"c",[30,[17,[15,"a"],"overrideEventName"],[2,[17,[15,"gtmUtils"],"mobile"],"event",[7]]]],["__fm_sendFirebaseEvent",[15,"c"],[17,[15,"a"],"editParamTable"],[17,[15,"a"],"dropParamTable"],true],[2,[17,[15,"gtmUtils"],"mobile"],"suppressPassthrough",[7]],[4]]],[5,[46,[2,[17,[15,"gtmUtils"],"mobile"],"suppressPassthrough",[7]],[4]]],[9,[46,[36]]]]]],[50,"__fm_sendFirebaseEvent",[46,"a","b","c","d"],[41,"e","f","g","h","i","j","k"],[3,"e",[30,[2,[17,[15,"gtmUtils"],"common"],"tableToMap",[7,[15,"b"],"editParamKey","editParamValue"]],[8]]],[22,[28,["__fm_validateEventData",[15,"a"],[15,"e"]]],[46,[36]]],[3,"f",[7]],[47,"g",[15,"c"],[46,[2,[15,"f"],"push",[7,[16,[16,[15,"c"],[15,"g"]],"dropParamKey"]]]]],[3,"h",[30,[2,[17,[15,"gtmUtils"],"mobile"],"eventParameters",[7]],[8]]],[3,"i",[39,[15,"d"],[15,"h"],[8]]],[47,"j",[15,"e"],[46,[22,[12,[2,[15,"f"],"indexOf",[7,[15,"j"]]],[27,1]],[46,[43,[15,"i"],[15,"j"],[16,[15,"e"],[15,"j"]]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w",[0,[0,"Dropped param ",[15,"j"]]," is also specified in param override table"]]]]]]],[3,"k",[8]],[47,"j",[15,"i"],[46,[22,[12,[2,[15,"f"],"indexOf",[7,[15,"j"]]],[27,1]],[46,[43,[15,"k"],[15,"j"],[16,[15,"i"],[15,"j"]]]]]]],[2,[17,[15,"gtmUtils"],"mobile"],"sendMeasurement",[7,[15,"a"],[15,"k"]]]],[50,"__fm_validateEventData",[46,"a","b"],[41,"c"],[22,[30,[12,[2,[15,"a"],"charAt",[7,0]],"_"],[28,[2,[15,"a"],"match",[7,"^[A-Za-z0-9_]*$"]]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w",[0,[0,[0,"Invalid Event name: ",[15,"a"]]," (Must not start with an underscore and must consist of letters,"]," digits and/or underscores)"]]],[36,false]]],[47,"c",[15,"b"],[46,[22,[30,[12,[2,[15,"c"],"charAt",[7,0]],"_"],[28,[2,[15,"c"],"match",[7,"^[A-Za-z0-9_]*$"]]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w",[0,[0,[0,"Invalid parameter name: ",[15,"c"]]," (Must not start with an underscore and must consist of"]," letters, digits and/or underscores)"]]],[36,false]]]]],[36,true]],[50,"__fm",[46,"data"],[36,["__fm_main",[15,"data"]]]],
+
+
+
+
+
+
+
+[50,"__md_main",[46,"a"],[41,"b","c","d","e","f","g","h","i","j","k","l"],[22,[12,[17,[15,"a"],"eventType"],"CUSTOM"],[46,[3,"b",[16,[15,"a"],"key"]]],[46,[22,[12,[17,[15,"a"],"eventType"],"SUGGESTED"],[46,[47,"c",[15,"a"],[46,[3,"d",[2,[15,"c"],"lastIndexOf",[7,"Param"]]],[22,[1,[29,[15,"d"],[27,1]],[12,[15,"d"],[37,[17,[15,"c"],"length"],5]]],[46,[22,[20,[15,"b"],[44]],[46,[3,"b",[16,[15,"a"],[15,"c"]]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e",[0,[0,[0,"Ignoring unexpected additional parameter ","key in the data (key \u003d \""],[15,"c"]],"\")."]]]]]]]]]],[46,[22,[20,[17,[15,"a"],"eventType"],[44]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w","Missing expected eventType param"]],[3,"b",[16,[15,"a"],"key"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e",[0,"Unexpected eventType param value: ",[17,[15,"a"],"eventType"]]]],[36]]]]]]],[22,[20,[15,"b"],[44]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e","No parameter key specified in the data."]],[36]]],[3,"e",[30,[2,[17,[15,"gtmUtils"],"mobile"],"eventParameters",[7]],[8]]],[22,[12,[2,[15,"b"],"indexOf",[7,"."]],[27,1]],[46,[3,"f",[16,[15,"e"],[15,"b"]]],[22,[1,[1,[20,[15,"f"],[44]],[12,[17,[15,"a"],"eventType"],"SUGGESTED"]],[17,[15,"a"],"checkEcommerceValue"]],[46,[3,"g",[7,"items","promotions"]],[47,"h",[15,"g"],[46,[3,"i",[16,[15,"g"],[15,"h"]]],[22,[21,[16,[15,"e"],[15,"i"]],[44]],[46,[3,"j",[16,[15,"e"],[15,"i"]]],[22,[2,[17,[15,"gtmUtils"],"common"],"isArray",[7,[15,"j"]]],[46,[22,[21,[16,[16,[15,"j"],0],[15,"b"]],[44]],[46,[36,[16,[16,[15,"j"],0],[15,"b"]]]]]],[46,[22,[21,[16,[15,"j"],[15,"b"]],[44]],[46,[36,[16,[15,"j"],[15,"b"]]]]]]]]]]]]]],[46,[3,"k",[2,[17,[15,"gtmUtils"],"common"],"split",[7,[15,"b"],"."]]],[3,"f",[15,"e"]],[47,"l",[15,"k"],[46,[3,"f",[16,[15,"f"],[16,[15,"k"],[15,"l"]]]],[22,[20,[15,"f"],[44]],[46,[4]]]]]]],[22,[21,[15,"f"],[44]],[46,[36,[15,"f"]]],[46,[22,[21,[17,[15,"a"],"defaultValue"],[44]],[46,[36,[17,[15,"a"],"defaultValue"]]],[46,[2,[17,[15,"gtmUtils"],"common"],"log",[7,"w",[0,[0,"Event does not have parameter \"",[15,"b"]],"\" and no default value was defined. Returning \"undefined\"."]]]]]]]],[50,"__md",[46,"data"],[36,["__md_main",[15,"data"]]]],
+
+
+
+
 [50,"__funct_main",[46,"a"],[41,"b"],[3,"b",[8]],[22,[17,[15,"a"],"functionArgument"],[46,[3,"b",[30,[2,[17,[15,"gtmUtils"],"common"],"tableToMap",[7,[17,[15,"a"],"functionArgument"],"key","value"]],[8]]]]],[2,[17,[15,"gtmUtils"],"mobile"],"customTag",[7,[17,[15,"a"],"classPath"],[15,"b"]]]],[50,"__funct",[46,"data"],[36,["__funct_main",[15,"data"]]]],
-[50,"main",[46,"a"],[43,[17,[15,"a"],"common"],"tableToMap",[15,"tableToMap"]],[43,[17,[15,"a"],"common"],"stringify",[15,"stringify"]]],[50,"tableToMap",[46,"a","b","c"],[41,"d","e","f"],[3,"d",[8]],[3,"e",false],[3,"f",0],[42,[1,[15,"a"],[23,[15,"f"],[17,[15,"a"],"length"]]],[33,[15,"f"],[3,"f",[0,[15,"f"],1]]],false,[46,[22,[1,[1,[16,[15,"a"],[15,"f"]],[2,[16,[15,"a"],[15,"f"]],"hasOwnProperty",[7,[15,"b"]]]],[2,[16,[15,"a"],[15,"f"]],"hasOwnProperty",[7,[15,"c"]]]],[46,[43,[15,"d"],[16,[16,[15,"a"],[15,"f"]],[15,"b"]],[16,[16,[15,"a"],[15,"f"]],[15,"c"]]],[3,"e",true]]]]],[36,[39,[15,"e"],[15,"d"],[45]]]],[50,"stringify",[46,"a"],[41,"b","c","d","e"],[22,[20,[15,"a"],[45]],[46,[36,"null"]]],[22,[20,[15,"a"],[44]],[46,[36,[44]]]],[22,[30,[12,[40,[15,"a"]],"number"],[12,[40,[15,"a"]],"boolean"]],[46,[36,[2,[15,"a"],"toString",[7]]]]],[22,[12,[40,[15,"a"]],"string"],[46,[36,[0,[0,"\"",[2,["split",[15,"a"],"\""],"join",[7,"\\\""]]],"\""]]]],[22,[2,[17,[15,"gtmUtils"],"common"],"isArray",[7,[15,"a"]]],[46,[3,"b",[7]],[3,"c",0],[42,[23,[15,"c"],[17,[15,"a"],"length"]],[33,[15,"c"],[3,"c",[0,[15,"c"],1]]],false,[46,[3,"d",["stringify",[16,[15,"a"],[15,"c"]]]],[22,[12,[15,"d"],[44]],[46,[2,[15,"b"],"push",[7,"null"]]],[46,[2,[15,"b"],"push",[7,[15,"d"]]]]]]],[36,[0,[0,"[",[2,[15,"b"],"join",[7,","]]],"]"]]]],[22,[12,[40,[15,"a"]],"object"],[46,[3,"b",[7]],[47,"e",[15,"a"],[46,[3,"d",["stringify",[16,[15,"a"],[15,"e"]]]],[22,[29,[15,"d"],[44]],[46,[2,[15,"b"],"push",[7,[0,[0,[0,"\"",[15,"e"]],"\":"],[15,"d"]]]]]]]],[36,[0,[0,"{",[2,[15,"b"],"join",[7,","]]],"}"]]]],[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e","Attempting to stringify unknown type!"]],[36,[44]]],[50,"split",[46,"a","b"],[41,"c","d","e","f"],[3,"c",[7]],[22,[20,[15,"b"],""],[46,[3,"d",[17,[15,"a"],"length"]],[3,"e",0],[42,[23,[15,"e"],[15,"d"]],[33,[15,"e"],[3,"e",[0,[15,"e"],1]]],false,[46,[2,[15,"c"],"push",[7,[16,[15,"a"],[15,"e"]]]]]],[36,[15,"c"]]]],[42,[1,[15,"a"],[19,[2,[15,"a"],"indexOf",[7,[15,"b"]]],0]],[46],false,[46,[3,"f",[2,[15,"a"],"indexOf",[7,[15,"b"]]]],[22,[12,[15,"f"],0],[46,[2,[15,"c"],"push",[7,""]]],[46,[2,[15,"c"],"push",[7,[2,[15,"a"],"substring",[7,0,[15,"f"]]]]]]],[3,"a",[2,[15,"a"],"substring",[7,[0,[15,"f"],[17,[15,"b"],"length"]]]]]]],[2,[15,"c"],"push",[7,[15,"a"]]],[36,[15,"c"]]]]
+
+
+
+[50,"main",[46,"a"],[43,[17,[15,"a"],"common"],"tableToMap",[15,"tableToMap"]],[43,[17,[15,"a"],"common"],"stringify",[15,"stringify"]],[43,[17,[15,"a"],"common"],"copy",[15,"copy"]],[43,[17,[15,"a"],"common"],"split",[15,"split"]]],[50,"tableToMap",[46,"a","b","c"],[41,"d","e","f"],[3,"d",[8]],[3,"e",false],[3,"f",0],[42,[1,[15,"a"],[23,[15,"f"],[17,[15,"a"],"length"]]],[33,[15,"f"],[3,"f",[0,[15,"f"],1]]],false,[46,[22,[1,[1,[16,[15,"a"],[15,"f"]],[2,[16,[15,"a"],[15,"f"]],"hasOwnProperty",[7,[15,"b"]]]],[2,[16,[15,"a"],[15,"f"]],"hasOwnProperty",[7,[15,"c"]]]],[46,[43,[15,"d"],[16,[16,[15,"a"],[15,"f"]],[15,"b"]],[16,[16,[15,"a"],[15,"f"]],[15,"c"]]],[3,"e",true]]]]],[36,[39,[15,"e"],[15,"d"],[45]]]],[50,"stringify",[46,"a"],[41,"b","c","d","e"],[22,[20,[15,"a"],[45]],[46,[36,"null"]]],[22,[20,[15,"a"],[44]],[46,[36,[44]]]],[22,[30,[12,[40,[15,"a"]],"number"],[12,[40,[15,"a"]],"boolean"]],[46,[36,[2,[15,"a"],"toString",[7]]]]],[22,[12,[40,[15,"a"]],"string"],[46,[36,[0,[0,"\"",[2,["split",[15,"a"],"\""],"join",[7,"\\\""]]],"\""]]]],[22,[2,[17,[15,"gtmUtils"],"common"],"isArray",[7,[15,"a"]]],[46,[3,"b",[7]],[3,"c",0],[42,[23,[15,"c"],[17,[15,"a"],"length"]],[33,[15,"c"],[3,"c",[0,[15,"c"],1]]],false,[46,[3,"d",["stringify",[16,[15,"a"],[15,"c"]]]],[22,[12,[15,"d"],[44]],[46,[2,[15,"b"],"push",[7,"null"]]],[46,[2,[15,"b"],"push",[7,[15,"d"]]]]]]],[36,[0,[0,"[",[2,[15,"b"],"join",[7,","]]],"]"]]]],[22,[12,[40,[15,"a"]],"object"],[46,[3,"b",[7]],[47,"e",[15,"a"],[46,[3,"d",["stringify",[16,[15,"a"],[15,"e"]]]],[22,[29,[15,"d"],[44]],[46,[2,[15,"b"],"push",[7,[0,[0,[0,"\"",[15,"e"]],"\":"],[15,"d"]]]]]]]],[36,[0,[0,"{",[2,[15,"b"],"join",[7,","]]],"}"]]]],[2,[17,[15,"gtmUtils"],"common"],"log",[7,"e","Attempting to stringify unknown type!"]],[36,[44]]],[50,"split",[46,"a","b"],[41,"c","d","e","f"],[3,"c",[7]],[22,[20,[15,"b"],""],[46,[3,"d",[17,[15,"a"],"length"]],[3,"e",0],[42,[23,[15,"e"],[15,"d"]],[33,[15,"e"],[3,"e",[0,[15,"e"],1]]],false,[46,[2,[15,"c"],"push",[7,[16,[15,"a"],[15,"e"]]]]]],[36,[15,"c"]]]],[42,[1,[15,"a"],[19,[2,[15,"a"],"indexOf",[7,[15,"b"]]],0]],[46],false,[46,[3,"f",[2,[15,"a"],"indexOf",[7,[15,"b"]]]],[22,[12,[15,"f"],0],[46,[2,[15,"c"],"push",[7,""]]],[46,[2,[15,"c"],"push",[7,[2,[15,"a"],"substring",[7,0,[15,"f"]]]]]]],[3,"a",[2,[15,"a"],"substring",[7,[0,[15,"f"],[17,[15,"b"],"length"]]]]]]],[2,[15,"c"],"push",[7,[15,"a"]]],[36,[15,"c"]]],[50,"copy",[46,"a","b"],[41,"c","d"],[3,"b",[30,[15,"b"],[39,[2,[17,[15,"gtmUtils"],"common"],"isArray",[7,[15,"a"]]],[7],[8]]]],[47,"c",[15,"a"],[46,[3,"d",[16,[15,"a"],[15,"c"]]],[22,[2,[17,[15,"gtmUtils"],"common"],"isArray",[7,[15,"d"]]],[46,[22,[28,[2,[17,[15,"gtmUtils"],"common"],"isArray",[7,[16,[15,"b"],[15,"c"]]]]],[46,[43,[15,"b"],[15,"c"],[7]]]],[43,[15,"b"],[15,"c"],["copy",[15,"d"],[16,[15,"b"],[15,"c"]]]]],[46,[22,[1,[29,[15,"d"],[45]],[12,[40,[15,"d"]],"object"]],[46,[22,[29,[40,[16,[15,"b"],[15,"c"]]],"object"],[46,[43,[15,"b"],[15,"c"],[8]]]],[43,[15,"b"],[15,"c"],["copy",[15,"d"],[16,[15,"b"],[15,"c"]]]]],[46,[43,[15,"b"],[15,"c"],[15,"d"]]]]]]]],[36,[15,"b"]]]
+]
 }
