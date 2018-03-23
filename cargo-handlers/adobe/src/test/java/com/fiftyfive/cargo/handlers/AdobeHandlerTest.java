@@ -19,10 +19,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -68,7 +70,6 @@ public class AdobeHandlerTest extends TestCase {
         handler.initialize();
 
         assertEquals(true, handler.valid);
-        assertEquals(true, handler.isInitialized());
     }
 
     public void testForCoverage() {
@@ -87,6 +88,31 @@ public class AdobeHandlerTest extends TestCase {
     }
 
 /* *************************************** tagEvent Tests *************************************** */
+
+    public void testInitSimple(){
+        HashMap<String, Object> map = new HashMap<>();
+
+        handler.execute("ADB_init", map);
+
+        assertEquals(true, handler.isInitialized());
+        verifyStatic(Config.class, Mockito.times(1));
+        Config.setDebugLogging(false);
+        verifyStatic(Config.class, Mockito.times(0));
+        Config.overrideConfigStream(any(InputStream.class));
+    }
+
+    public void testInitWithDebug(){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("enableDebug", true);
+
+        handler.execute("ADB_init", map);
+
+        assertEquals(true, handler.isInitialized());
+        verifyStatic(Config.class, Mockito.times(1));
+        Config.setDebugLogging(true);
+        verifyStatic(Config.class, Mockito.times(0));
+        Config.overrideConfigStream(any(InputStream.class));
+    }
 
     public void testSimpleTagEvent(){
         HashMap<String, Object> map = new HashMap<>();
