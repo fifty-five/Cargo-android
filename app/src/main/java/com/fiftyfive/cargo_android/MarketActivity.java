@@ -67,6 +67,7 @@ public class MarketActivity extends Activity {
                 actionUpdate.putString("item", "xbox");
                 actionUpdate.putInt("quantity", xboxQty);
                 actionUpdate.putDouble("revenue", revenue);
+                actionUpdate.putString("actionName", "shop");
                 mFirebaseAnalytics.logEvent("tagActionUpdate", actionUpdate);
             }
             if (playQty > 0) {
@@ -78,6 +79,7 @@ public class MarketActivity extends Activity {
                 actionUpdate.putString("item", "PlayStation");
                 actionUpdate.putInt("quantity", playQty);
                 actionUpdate.putDouble("revenue", revenue);
+                actionUpdate.putString("actionName", "shop");
                 mFirebaseAnalytics.logEvent("tagActionUpdate", actionUpdate);
             }
             if (nintendoQty > 0) {
@@ -89,6 +91,7 @@ public class MarketActivity extends Activity {
                 actionUpdate.putString("item", "Nintendo");
                 actionUpdate.putInt("quantity", nintendoQty);
                 actionUpdate.putDouble("revenue", revenue);
+                actionUpdate.putString("actionName", "shop");
                 mFirebaseAnalytics.logEvent("tagActionUpdate", actionUpdate);
             }
 
