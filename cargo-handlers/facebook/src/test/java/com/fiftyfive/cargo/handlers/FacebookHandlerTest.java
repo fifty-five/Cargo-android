@@ -13,6 +13,7 @@ import junit.framework.TestCase;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -52,6 +53,7 @@ public class FacebookHandlerTest extends TestCase {
 /* ***************************************** Test setup ***************************************** */
 
     public void setUp() throws Exception {
+        super.setUp();
         initMocks(this);
         handler = new FacebookHandler();
         handler.cargo = cargoMock;
@@ -62,7 +64,7 @@ public class FacebookHandlerTest extends TestCase {
     }
 
     public void tearDown() throws Exception {
-
+        super.tearDown();
     }
 
 /* **************************************** Init Tests ****************************************** */
@@ -83,13 +85,13 @@ public class FacebookHandlerTest extends TestCase {
 
         handler.execute("FB_init", map);
 
-        verifyStatic();
+        verifyStatic(FacebookSdk.class, Mockito.times(1));
         FacebookSdk.sdkInitialize(context);
 
-        verifyStatic();
+        verifyStatic(AppEventsLogger.class, Mockito.times(1));
         AppEventsLogger.newLogger(context);
 
-        verifyStatic();
+        verifyStatic(FacebookSdk.class, Mockito.times(1));
         FacebookSdk.setApplicationId("101234567891011");
     }
 
@@ -102,13 +104,13 @@ public class FacebookHandlerTest extends TestCase {
 
         handler.execute("FB_init", map);
 
-        verifyStatic(times(0));
+        verifyStatic(FacebookSdk.class, Mockito.times(0));
         FacebookSdk.sdkInitialize(context);
 
-        verifyStatic(times(0));
+        verifyStatic(AppEventsLogger.class, Mockito.times(0));
         AppEventsLogger.newLogger(context);
 
-        verifyStatic(times(0));
+        verifyStatic(FacebookSdk.class, Mockito.times(0));
         FacebookSdk.setApplicationId(anyString());
     }
 
@@ -117,7 +119,8 @@ public class FacebookHandlerTest extends TestCase {
         map.put("enableDebug", "true");
 
         handler.execute("FB_init", map);
-        verifyStatic();
+
+        verifyStatic(FacebookSdk.class, Mockito.times(1));
         FacebookSdk.setIsDebugEnabled(true);
     }
 
@@ -278,7 +281,7 @@ public class FacebookHandlerTest extends TestCase {
         handler.setInitialized(true);
         handler.onActivityResumed(testActivity);
 
-        verifyStatic();
+        verifyStatic(AppEventsLogger.class, Mockito.times(1));
         AppEventsLogger.activateApp(any(Activity.class));
     }
 
@@ -294,7 +297,7 @@ public class FacebookHandlerTest extends TestCase {
         handler.setInitialized(true);
         handler.onActivityPaused(testActivity);
 
-        verifyStatic();
+        verifyStatic(AppEventsLogger.class, Mockito.times(1));
         AppEventsLogger.deactivateApp(any(Activity.class));
     }
 
