@@ -18,7 +18,8 @@ public class SplashActivity extends AppCompatActivity {
 
     Cargo.Handler[] handlerArray = new Cargo.Handler[]{
             Cargo.Handler.AT,
-            Cargo.Handler.FB
+            Cargo.Handler.FB,
+            Cargo.Handler.ADB
     };
 
     @Override
@@ -39,7 +40,10 @@ public class SplashActivity extends AppCompatActivity {
 
         // Launch an event to trigger the initialization method of the handlers,
         // with the required parameters. This is configured in the GTM container.
-        mFirebaseAnalytics.logEvent("applicationStart", null);
+        Bundle appStartBundle = new Bundle();
+        appStartBundle.putString("overrideConfigPath", "grxmlbl");
+        appStartBundle.putBoolean("enableDebug", true);
+        mFirebaseAnalytics.logEvent("applicationStart", appStartBundle);
 
         // register to the callback which is triggered when the all the handlers have been
         // correctly initialized in order not to miss tracking.

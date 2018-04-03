@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 27
+    buildToolsVersion = '27.0.2'
 
     defaultConfig {
         applicationId "com.fiftyfive.cargo_android"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -22,15 +22,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
-    compile project(':cargo')
-    compile project(':cargo-handlers:atinternet')
-    compile project(':cargo-handlers:facebook')
-    compile project(':cargo-handlers:tune')
-    compile 'com.android.support:multidex:1.0.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.android.support:mediarouter-v7:27.0.2'
+    implementation project(':cargo')
+    implementation project(':cargo-handlers:atinternet')
+    implementation project(':cargo-handlers:facebook')
+    implementation project(':cargo-handlers:tune')
+    implementation project(':cargo-handlers:adobe')
+    implementation 'com.android.support:multidex:1.0.2'
+    implementation 'com.google.firebase:firebase-core:10.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'jacoco-android'

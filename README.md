@@ -3,6 +3,8 @@
 
 ![Build Status](https://travis-ci.org/fifty-five/Cargo-android.svg?branch=master)
 
+[![codecov](https://codecov.io/gh/fifty-five/Cargo-android/branch/master/graph/badge.svg)](https://codecov.io/gh/fifty-five/Cargo-android)
+
 
 ### The goal of Cargo
 Cargo is a tool developed by [fifty-five](http://fifty-five.com).
